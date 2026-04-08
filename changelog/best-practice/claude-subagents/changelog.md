@@ -122,3 +122,32 @@ No drift detected — report is fully in sync with official docs. All 16 frontma
 ## [2026-03-28 06:00 PM PKT] Claude Code v2.1.86
 
 No drift detected — report is fully in sync with official docs. All 16 frontmatter fields (15 official + 1 unofficial `color`) and 6 built-in agents match.
+
+---
+
+## [2026-04-01 12:26 PM PKT] Claude Code v2.1.89
+
+No drift detected — report is fully in sync with official docs. All 16 frontmatter fields (15 official + 1 unofficial `color`) and 6 built-in agents match.
+
+---
+
+## [2026-04-02 09:11 PM PKT] Claude Code v2.1.90
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | HIGH | Removed Agent | Remove `Bash` from Official Claude Agents table — official docs list 5 built-in agents, `Bash` is not among them | ✅ COMPLETE (removed Bash row, renumbered 6→5 agents) |
+| 2 | LOW | Field Docs | Update `color` field description — remove "absent from official frontmatter table" note; `color` now appears in official supported frontmatter fields table | ✅ COMPLETE (removed unofficial note from color field description) |
+
+---
+
+## [2026-04-03 08:30 PM PKT] Claude Code v2.1.91
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | LOW | Field Docs | Update `permissionMode` field description — add `auto` as a valid value (official docs now list: `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`) | ✅ COMPLETE (added `auto` between `acceptEdits` and `dontAsk` in permissionMode description) |
+
+---
+
+## [2026-04-04 10:43 PM PKT] Claude Code v2.1.92
+
+No drift detected — report is fully in sync with official docs. All 16 frontmatter fields and 5 built-in agents match.

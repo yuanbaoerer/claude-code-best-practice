@@ -178,3 +178,97 @@
 | 6 | MED | Count Update | Update BMAD skills from 43 to 40 (recount: 29 bmm-skills + 11 core-skills; consolidation in recent patches) | COMPLETE (updated README table) |
 | 7 | MED | Star Update | Update Compound Engineering ★ from 11k to 12k (11,500 actual) | COMPLETE (updated README table) |
 | 8 | MED | Count Update | Update Compound Eng agents from 47 to 48 (1 new), skills from 43 to 42 (41 compound-eng + 1 coding-tutor) | COMPLETE (updated README table) |
+
+---
+
+## [2026-03-31 07:43 PM PKT] Development Workflows Update
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | HIGH | Star Update | Update Superpowers ★ from 122k to 127k (127,473 actual) | COMPLETE (updated README table) |
+| 2 | HIGH | Star Update | Update ECC ★ from 116k to 124k (124,279 actual) | COMPLETE (updated README table) |
+| 3 | HIGH | Star Update | Update gstack ★ from 55k to 59k (59,046 actual — v0.14.x Review Army, composable skills, adversarial review) | COMPLETE (updated README table) |
+| 4 | HIGH | Star Update | Update GSD ★ from 44k to 46k (45,773 actual) | COMPLETE (updated README table) |
+| 5 | HIGH | Count Update | Update gstack skills from 28 to 32 (4 new: design-html, sidebar CSS inspector, composable skill resolver, scope drift detection) | COMPLETE (updated README table) |
+| 6 | MED | Star Update | Update Spec Kit ★ from 83k to 84k (84,042 actual) | COMPLETE (updated README table) |
+| 7 | MED | Star Update | Update OpenSpec ★ from 35k to 36k (35,985 actual) | COMPLETE (updated README table) |
+| 8 | MED | Count Update | Update BMAD skills from 40 to 43 (32 bmm-skills + 11 core-skills; 3 new bmm-skills added including PRFAQ) | COMPLETE (updated README table) |
+| 9 | LOW | Count Verify | ECC commands 63→3, skills 135→30 — research agent only checked .claude/ dirs, missed root commands/ and .agents/skills/ breadth | INVALID (agent undercounting — keeping current values 63 commands, 135 skills) |
+| 10 | LOW | Count Verify | Superpowers agents 5→8 — agent counted 1 explicit + 7 implicit sub-agents, but v5.0.6 replaced subagent review loops with inline self-review | ON HOLD (contradictory signals — v5.0.6 reduced review agents while brainstorm added new ones, needs manual verification) |
+
+---
+
+## [2026-04-01 12:35 PM PKT] Development Workflows Update
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | HIGH | Star Update | Update Superpowers ★ from 127k to 129k (128,925 actual) | COMPLETE (updated README table) |
+| 2 | HIGH | Star Update | Update ECC ★ from 124k to 129k (128,606 actual — neck-and-neck with Superpowers) | COMPLETE (updated README table) |
+| 3 | HIGH | Count Update | Update ECC agents 30→36, commands 63→71, skills 135→143 (6 new agents incl. gan-evaluator/generator/planner, cpp/kotlin/flutter reviewers; 8 new commands; 8 new skills) | COMPLETE (updated README table) |
+| 4 | MED | Star Update | Update gstack ★ from 59k to 60k (60,036 actual — v0.15.0 /checkpoint, /health, cross-session timeline) | COMPLETE (updated README table) |
+| 5 | MED | Count Update | Update gstack skills 32→33 (v0.15.0 added /checkpoint and /health, but some consolidated — net +1) | COMPLETE (updated README table) |
+| 6 | LOW | Count Update | Update CE commands 4→3 (.claude/commands/ now empty; 3 coding-tutor commands remain), skills 42→40 (39 CE + 1 CT) | COMPLETE (updated README table) |
+| 7 | LOW | Count Verify | BMAD skills 43→34 — agent counted from module-help.csv (25 bmm + 9 core), previous directory counts found 43 (32 bmm + 11 core) | ON HOLD (agent likely undercounting — module-help.csv may not list all skills; keeping 43 until manual verification) |
+
+---
+
+## [2026-04-02 09:22 PM PKT] Development Workflows Update
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | HIGH | Sort Order | Move ECC (133k) above Superpowers (132k) — ECC now has more stars | COMPLETE (updated README table) |
+| 2 | HIGH | Star Update | Update ECC ★ from 129k to 133k (133,114 actual — overtook Superpowers) | COMPLETE (updated README table) |
+| 3 | HIGH | Star Update | Update Superpowers ★ from 129k to 132k (131,818 actual) | COMPLETE (updated README table) |
+| 4 | HIGH | Count Update | Update ECC commands 71→68, skills 143→152 (legacy commands collapsed into skills; +9 new skills incl. brand-voice, network-ops) | COMPLETE (updated README table) |
+| 5 | HIGH | Star Update | Update gstack ★ from 60k to 62k (61,800 actual — v0.15.1 design-html routing, Session Intelligence Layer) | COMPLETE (updated README table) |
+| 6 | HIGH | Count Update | Update GSD agents 18→21, commands 57→59 (v1.31.0: 3 new agents, skills discovery, Gemini CLI fix) | COMPLETE (updated README table) |
+| 7 | MED | Star Update | Update Spec Kit ★ from 84k to 85k (84,701 actual) | COMPLETE (updated README table) |
+| 8 | MED | Star Update | Update GSD ★ from 46k to 47k (46,900 actual) | COMPLETE (updated README table) |
+| 9 | MED | Count Update | Update BMAD skills 43→40 (29 bmm-skills + 11 core-skills; removed QA Quinn + Barry solo-dev, added checkpoint-preview) | COMPLETE (updated README table) |
+| 10 | MED | Star Update | Update OpenSpec ★ from 36k to 37k (36,600 actual) | COMPLETE (updated README table) |
+| 11 | MED | Star Update | Update CE ★ from 12k to 13k (12,600 actual) | COMPLETE (updated README table) |
+| 12 | MED | Count Update | Update CE agents 48→49, commands 3→4, skills 40→42 (triage-prs command added; +1 agent, +2 skills) | COMPLETE (updated README table) |
+
+---
+
+## [2026-04-03 10:56 PM PKT] Development Workflows Update
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | HIGH | Star Update | Update ECC ★ from 133k to 136k (135,765 actual — widening lead over Superpowers) | COMPLETE (updated README table) |
+| 2 | HIGH | Count Update | Update ECC agents 36→38, commands 68→75, skills 152→156 (NestJS patterns, Jira integration, C#/Dart support, web frontend rules) | COMPLETE (updated README table) |
+| 3 | HIGH | Star Update | Update Superpowers ★ from 132k to 134k (133,718 actual — v5.0.7 Copilot CLI support, contributor guardrails) | COMPLETE (updated README table) |
+| 4 | MED | Star Update | Update gstack ★ from 62k to 63k (63,065 actual — Session Intelligence Layer, AquaVoice aliases) | COMPLETE (updated README table) |
+| 5 | MED | Count Update | Update gstack skills from 33 to 31 (31 root-level SKILL.md dirs confirmed; checkpoint/health may be subcommands) | COMPLETE (updated README table) |
+| 6 | LOW | Count Update | Update GSD commands from 59 to 60 (v1.31.0: /gsd:docs-update added) | COMPLETE (updated README table) |
+| 7 | LOW | Count Update | Update BMAD skills from 40 to 39 (28 bmm-skills + 11 core-skills; minor consolidation) | COMPLETE (updated README table) |
+
+---
+
+## [2026-04-04 10:45 PM PKT] Development Workflows Update
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | MED | Star Update | Update ECC ★ from 136k to 137k (137,404 actual) | COMPLETE (updated README table) |
+| 2 | MED | Star Update | Update Superpowers ★ from 134k to 135k (134,933 actual) | COMPLETE (updated README table) |
+| 3 | MED | Star Update | Update gstack ★ from 63k to 64k (63,841 actual — GStack Browser .app with CDP, anti-bot stealth) | COMPLETE (updated README table) |
+| 4 | MED | Star Update | Update GSD ★ from 47k to 48k (47,705 actual — v1.32.0 Trae/Kilo/Augment/Cline runtimes) | COMPLETE (updated README table) |
+| 5 | LOW | Star Update | Update BMAD ★ from 43k to 44k (43,538 actual) | COMPLETE (updated README table) |
+| 6 | LOW | Star Update | Update oh-my-claudecode ★ from 23k to 24k (23,709 actual — v4.10.2 HUD, Bedrock hardening) | COMPLETE (updated README table) |
+
+---
+
+## [2026-04-06 09:49 PM PKT] Development Workflows Update
+
+| # | Priority | Type | Action | Status |
+|---|----------|------|--------|--------|
+| 1 | HIGH | Star Update | Update ECC ★ from 137k to 142k (142,218 actual — v1.10.0 Surface Refresh, 10 commits on Apr 6 alone) | COMPLETE (updated README table) |
+| 2 | HIGH | Count Update | Update ECC agents 38→47, commands 75→82, skills 156→182 (agent-introspection-debugging, hookify bundle restored, 26 new skills) | COMPLETE (updated README table) |
+| 3 | HIGH | Star Update | Update Superpowers ★ from 135k to 137k (137,166 actual) | COMPLETE (updated README table) |
+| 4 | HIGH | Count Update | Update GSD agents 21→24, commands 60→68 (v1.33.0: unified behavioral refs, STATE.md drift detection, autonomous --to N) | COMPLETE (updated README table) |
+| 5 | MED | Star Update | Update gstack ★ from 64k to 65k (65,279 actual — v0.15.15.0 token redaction, team mode) | COMPLETE (updated README table) |
+| 6 | MED | Count Update | Update gstack skills from 31 to 34 (3 new: retro, setup-deploy, learn among others) | COMPLETE (updated README table) |
+| 7 | MED | Star Update | Update Spec Kit ★ from 85k to 86k (85,617 actual — v0.5.0 native skills arch) | COMPLETE (updated README table) |
+| 8 | LOW | Star Update | Update OpenSpec ★ from 37k to 38k (37,604 actual) | COMPLETE (updated README table) |
+| 9 | LOW | Star Update | Update oh-my-claudecode ★ from 24k to 25k (24,921 actual — v4.10.0 HUD upgrades, LSP diagnostics) | COMPLETE (updated README table) |
+| 10 | LOW | Count Update | Update CE agents from 49 to 50 (1 new agent added) | COMPLETE (updated README table) |
