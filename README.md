@@ -1,5 +1,14 @@
-# claude-code-best-practice
-from vibe coding to agentic engineering - practice makes claude perfect
+# claude-code-best-practice（中文版）
+
+> 从 Vibe Coding 到 Agentic Engineering — Claude Code 最佳实践
+>
+> ⚠️ 本仓库为 [shanraisshan/claude-code-best-practice](https://github.com/shanraisshan/claude-code-best-practice) 的中文本地化版本
+
+[![原版英文演示](./presentation/index.html)](./presentation/index.html) · [中文演示](./presentation/index.zh.html)
+
+---
+
+# Original / 原版英文
 
 ![updated with Claude Code](https://img.shields.io/badge/updated_with_Claude_Code-v2.1.107%20(Apr%2015%2C%202026%2001%3A34%20AM%20PKT)-white?style=flat&labelColor=555) <a href="https://github.com/shanraisshan/claude-code-best-practice/stargazers"><img src="https://img.shields.io/github/stars/shanraisshan/claude-code-best-practice?style=flat&label=%E2%98%85&labelColor=555&color=white" alt="GitHub Stars"></a><br>
 
