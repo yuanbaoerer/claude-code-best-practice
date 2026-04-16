@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../../!/claude-jumping.svg">
+    <title>Claude Code 学习之旅</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.6; }
+        .slide { display: none; min-height: 100vh; padding: 60px 80px; max-width: 1200px; margin: 0 auto; }
+        .slide.active { display: block; }
+        h1 { font-size: 2.5rem; font-weight: 600; margin-bottom: 40px; color: #1a1a1a; border-bottom: 2px solid #e5e5e5; padding-bottom: 20px; }
+        h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 24px; color: #2a2a2a; }
+        h3 { font-size: 1.3rem; font-weight: 600; margin: 24px 0 12px 0; color: #333; }
+        p { font-size: 1.1rem; margin-bottom: 16px; color: #444; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.95rem; }
+        .slide.title-slide.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 40px; }
+        .title-slide h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; border-bottom: none; padding-bottom: 0; }
+        .title-slide .subtitle { font-size: 1.4rem; color: #555; margin-bottom: 50px; font-weight: 400; }
+        .slide.section-slide.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 40px; }
+        .section-slide h1 { font-size: 3rem; font-weight: 700; border-bottom: none; padding-bottom: 0; margin-bottom: 16px; }
+        .section-slide .section-number { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 3px; color: #999; margin-bottom: 20px; }
+        .section-slide .section-desc { font-size: 1.2rem; color: #666; max-width: 600px; }
+        .trigger-box { background: #f8f9fa; border-left: 4px solid #1a1a1a; padding: 20px 24px; margin: 24px 0; }
+        .trigger-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 8px; }
+        .trigger-box p { font-size: 1.05rem; color: #333; margin: 0; }
+        .analogy-box { background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+        .analogy-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #7b1fa2; margin-bottom: 8px; }
+        .analogy-box p { font-size: 1.05rem; color: #4a148c; margin: 0; }
+        .how-to-trigger { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px 24px; margin: 16px 0 24px 0; }
+        .how-to-trigger h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #2e7d32; margin-bottom: 8px; }
+        .how-to-trigger p { font-size: 1.05rem; color: #1b5e20; margin: 0; }
+        .how-to-trigger code { background: rgba(0,0,0,0.08); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.95rem; }
+        .warning-box { background: #fff3e0; border-left: 4px solid #ff9800; padding: 20px 24px; margin: 16px 0 24px 0; }
+        .warning-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #e65100; margin-bottom: 8px; }
+        .warning-box p { font-size: 1.05rem; color: #bf360c; margin: 0; }
+        .info-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px 24px; margin: 16px 0 24px 0; }
+        .info-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #1565c0; margin-bottom: 8px; }
+        .info-box p { font-size: 1.05rem; color: #0d47a1; margin: 0; }
+        .code-block { background: #1a1a1a; color: #e5e5e5; padding: 20px 24px; border-radius: 8px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; margin: 20px 0; white-space: pre; line-height: 1.7; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .key { color: #9cdcfe; }
+        .code-block .string { color: #ce9178; }
+        .code-block .cmd { color: #dcdcaa; }
+        .code-block .claude-file { color: #ff5252; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+        .col-card { background: #f8f9fa; padding: 24px; border-radius: 8px; }
+        .col-card h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 12px; }
+        .col-card.good { border-left: 4px solid #4caf50; }
+        .col-card.bad { border-left: 4px solid #f44336; }
+        .use-cases { margin: 24px 0; }
+        .use-case-item { display: flex; align-items: flex-start; margin-bottom: 12px; padding: 14px 20px; background: #fafafa; border-radius: 8px; }
+        .use-case-icon { font-size: 1.5rem; margin-right: 16px; min-width: 32px; }
+        .use-case-text { flex: 1; }
+        .use-case-text strong { display: block; font-size: 1.05rem; color: #1a1a1a; margin-bottom: 4px; }
+        .use-case-text span { font-size: 0.95rem; color: #666; }
+        .toc-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 32px; }
+        .toc-item { display: flex; align-items: center; padding: 16px 20px; background: #f8f9fa; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .toc-item:hover { background: #eee; }
+        .toc-number { width: 28px; height: 28px; background: #1a1a1a; color: #fff; border-radius: 50%; text-align: center; line-height: 28px; font-size: 0.85rem; margin-right: 12px; font-weight: 600; flex-shrink: 0; }
+        .toc-name { font-size: 1rem; color: #1a1a1a; }
+        .feature-list { list-style: none; margin: 24px 0; }
+        .feature-list li { padding: 12px 0; border-bottom: 1px solid #eee; font-size: 1.05rem; }
+        .feature-list li:last-child { border-bottom: none; }
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+        th { background: #f8f9fa; padding: 14px 20px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #666; border-bottom: 2px solid #e5e5e5; }
+        td { padding: 14px 20px; border-bottom: 1px solid #eee; font-size: 1rem; color: #444; }
+        tr:last-child td { border-bottom: none; }
+        .navigation { position: fixed; bottom: 30px; right: 30px; display: flex; gap: 12px; z-index: 100; }
+        .nav-btn { width: 50px; height: 50px; border: 2px solid #1a1a1a; background: #fff; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .nav-btn:hover { background: #1a1a1a; color: #fff; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .progress { position: fixed; top: 0; left: 0; height: 4px; background: #1a1a1a; transition: width 0.3s; z-index: 100; }
+        .slide-counter { position: fixed; bottom: 40px; left: 40px; font-size: 0.9rem; color: #999; }
+        .keyboard-hint { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; color: #999; }
+        .keyboard-hint kbd { background: #f0f0f0; padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd; font-family: inherit; }
+        .header-logo { position: fixed; top: 20px; right: 40px; width: 100px; height: 65px; z-index: 50; }
+        .header-logo img { width: 100%; height: 100%; }
+        .title-logo { width: 200px; height: 130px; margin-bottom: 40px; }
+        .title-logo img { width: 100%; height: 100%; }
+        /* Journey Bar */
+        .journey-bar { position: fixed; top: 95px; right: 62px; display: flex; flex-direction: column; align-items: center; z-index: 99; gap: 6px; }
+        .journey-bar.hidden { display: none; }
+        .journey-track-wrap { position: relative; display: flex; align-items: stretch; gap: 4px; }
+        .journey-track { width: 20px; height: 300px; background: #e5e5e5; border-radius: 10px; overflow: hidden; position: relative; flex-shrink: 0; }
+        .journey-fill { position: absolute; bottom: 0; width: 100%; border-radius: 10px; transition: height 0.4s ease, background-color 0.4s ease; height: 0%; }
+        .journey-level-label { font-size: 0.65rem; color: #777; font-weight: 400; }
+        .journey-ticks { display: flex; flex-direction: column; justify-content: space-between; height: 300px; padding: 2px 0; }
+        .journey-tick { font-size: 0.45rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: #999; white-space: nowrap; line-height: 1; }
+        .level-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; margin-left: 12px; vertical-align: middle; }
+        /* Day divider */
+        .day-badge { display: inline-block; background: #1a1a1a; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase; }
+        /* Hiring analogy steps */
+        .hiring-steps { margin: 32px 0; }
+        .hiring-step { display: flex; align-items: flex-start; margin-bottom: 20px; padding: 20px 24px; background: #fafafa; border-radius: 8px; border-left: 4px solid #e5e5e5; }
+        .hiring-step.level-1 { border-left-color: #2196f3; }
+        .hiring-step.level-2 { border-left-color: #ff9800; }
+        .hiring-step.level-3 { border-left-color: #4caf50; }
+        .hiring-step-number { font-size: 1.8rem; font-weight: 700; margin-right: 20px; min-width: 40px; color: #1a1a1a; }
+        .hiring-step-content { flex: 1; }
+        .hiring-step-content strong { display: block; font-size: 1.15rem; color: #1a1a1a; margin-bottom: 4px; }
+        .hiring-step-content span { font-size: 0.95rem; color: #666; }
+        /* Frontmatter field rows */
+        .field-row { display: flex; align-items: baseline; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .field-row:last-child { border-bottom: none; }
+        .field-name { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.9rem; color: #9cdcfe; min-width: 180px; font-weight: 600; }
+        .field-desc { font-size: 0.95rem; color: #555; }
+        .field-required { font-size: 0.7rem; background: #ffcdd2; color: #c62828; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 600; text-transform: uppercase; }
+        .field-recommended { font-size: 0.7rem; background: #fff9c4; color: #f57f17; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 600; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="progress" id="progress"></div>
+    <div class="journey-bar hidden" id="journeyBar">
+        <div class="journey-track-wrap">
+            <div class="journey-track"><div class="journey-fill" id="journeyFill"></div></div>
+            <div class="journey-ticks">
+                <span class="journey-tick">命令</span>
+                <span class="journey-tick">构建</span>
+                <span class="journey-tick">记忆</span>
+                <span class="journey-tick">技能</span>
+                <span class="journey-tick">Agent</span>
+                <span class="journey-tick">提示词</span>
+            </div>
+        </div>
+        <span class="journey-level-label" id="journeyLevelLabel"></span>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 1: 标题                                                -->
+    <!-- ============================================================ -->
+    <div class="slide active title-slide" data-slide="1">
+        <div class="title-logo">
+            <img src="../../!/claude-jumping.svg" alt="Claude Code 吉祥物跳跃" />
+        </div>
+        <h1>Claude Code 学习之旅</h1>
+        <p class="subtitle">从第一次对话到构建你的第一个工作流</p>
+        <p style="margin-top: 60px; font-size: 0.95rem; color: #888;">为期多天的入门指南，适合非工程师和工程师。</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 2: 两日概览                                        -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="2">
+        <h1>学习之旅</h1>
+        <div class="trigger-box">
+            <h4>两天，六个层级</h4>
+            <p>第一天建立理解。第二天付诸实践。</p>
+        </div>
+        <div class="two-col" style="margin-top: 32px;">
+            <div class="col-card" style="border-left: 4px solid #2196f3;">
+                <h4>第一天 &mdash; 理解</h4>
+                <div class="toc-list" style="grid-template-columns: 1fr; margin-top: 12px;">
+                    <div class="toc-item" onclick="goToSlide(3)"><span class="toc-number">1</span><span class="toc-name">提示词 &mdash; 简单提问</span></div>
+                    <div class="toc-item" onclick="goToSlide(7)"><span class="toc-number">2</span><span class="toc-name">Agent &mdash; 专业人士</span></div>
+                    <div class="toc-item" onclick="goToSlide(10)"><span class="toc-number">3</span><span class="toc-name">技能 &mdash; 培训手册</span></div>
+                </div>
+            </div>
+            <div class="col-card" style="border-left: 4px solid #4caf50;">
+                <h4>第二天 &mdash; 构建</h4>
+                <div class="toc-list" style="grid-template-columns: 1fr; margin-top: 12px;">
+                    <div class="toc-item" onclick="goToSlide(16)"><span class="toc-number">4</span><span class="toc-name">项目记忆 &mdash; CLAUDE.md</span></div>
+                    <div class="toc-item" onclick="goToSlide(20)"><span class="toc-number">5</span><span class="toc-name">构建技能与 Agent</span></div>
+                    <div class="toc-item" onclick="goToSlide(27)"><span class="toc-number">6</span><span class="toc-name">命令与编排</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第一天：理解                                          -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- 第一层：提示词 (幻灯片 3-6)                               -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 3: 提示词简介 -->
+    <div class="slide section-slide" data-slide="3" data-level="prompting">
+        <span class="day-badge">第一天</span>
+        <div class="section-number">第一层</div>
+        <h1>提示词（简单提问）</h1>
+        <p class="section-desc">就像给一个知识渊博的朋友发短信 &mdash; 你问一个问题，他们会给你<em>一个</em>答案。但你不知道他们是怎么得到答案的。</p>
+    </div>
+
+    <!-- 幻灯片 4: 大局观 -->
+    <div class="slide" data-slide="4">
+        <h1>大局观</h1>
+        <p>你已经安装了 Claude Code。接下来做什么？</p>
+        <p>第一天涵盖<strong>三个基础层级</strong> &mdash; 每一层都让你对<strong>如何</strong>让 Claude 工作有更多控制。</p>
+        <div class="analogy-box">
+            <h4>把它想象成招聘</h4>
+            <p>每一层都代表着你对关系信任度和结构化程度的提升。</p>
+        </div>
+        <div class="hiring-steps">
+            <div class="hiring-step level-1">
+                <span class="hiring-step-number">1</span>
+                <div class="hiring-step-content">
+                    <strong>提示词</strong>
+                    <span>向街头的陌生人问路</span>
+                </div>
+            </div>
+            <div class="hiring-step level-2">
+                <span class="hiring-step-number">2</span>
+                <div class="hiring-step-content">
+                    <strong>Agent</strong>
+                    <span>聘请一位以特定方式做事的专家</span>
+                </div>
+            </div>
+            <div class="hiring-step level-3">
+                <span class="hiring-step-number">3</span>
+                <div class="hiring-step-content">
+                    <strong>技能</strong>
+                    <span>该专家针对特定任务有专门的培训</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 幻灯片 5: 提示词实战 -->
+    <div class="slide" data-slide="5">
+        <h1>提示词实战</h1>
+        <p>打开终端，输入 <code>claude</code>。你现在处于一个对话中。试着输入：</p>
+        <div class="code-block"><span class="cmd">what is the weather in Karachi?</span></div>
+        <p>Claude 会回答 &mdash; 但<strong>如何</strong>回答是不可预测的。它可能会：</p>
+        <ul class="feature-list">
+            <li>从训练数据中提取（可能是过时的）</li>
+            <li>搜索网络（如果有网络工具可用）</li>
+            <li>给出一个通用答案而不是实时数据</li>
+        </ul>
+        <div class="warning-box">
+            <h4>局限性</h4>
+            <p>每次你问"天气怎么样？"，Claude 可能以不同的方式获取数据 &mdash; 或者根本不获取真实数据。它使用相同来源或方法没有任何保证。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 6: 何时提示词效果最好 -->
+    <div class="slide" data-slide="6">
+        <h1>何时提示词效果最好</h1>
+        <p>提示词非常适合快速的一次性问题！</p>
+        <div class="use-cases">
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x1F50D;</span>
+                <div class="use-case-text">
+                    <strong>询问代码库相关问题</strong>
+                    <span>"这个文件是做什么的？"</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x270F;&#xFE0F;</span>
+                <div class="use-case-text">
+                    <strong>编写或编辑文档</strong>
+                    <span>"把这封邮件改得更专业一些"</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x1F4A1;</span>
+                <div class="use-case-text">
+                    <strong>头脑风暴</strong>
+                    <span>"给我这个活动的5个主题行"</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x1F4AC;</span>
+                <div class="use-case-text">
+                    <strong>解释事物</strong>
+                    <span>"像我不是开发者一样解释这个错误信息"</span>
+                </div>
+            </div>
+        </div>
+        <div class="trigger-box">
+            <h4>要点</h4>
+            <p>要获得<strong>一致、可靠的结果</strong>，仅靠提示词是不够的。你需要更多控制。</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第二层：AGENT (幻灯片 7-9)                                  -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 7: Agent简介 -->
+    <div class="slide section-slide" data-slide="7" data-level="agents">
+        <div class="section-number">第二层</div>
+        <h1>Agent（专业人士）</h1>
+        <p class="section-desc">Agent 是 Claude 扮演的特定角色 &mdash; 就像分配一个职位头衔。</p>
+    </div>
+
+    <!-- 幻灯片 8: 餐厅厨房 -->
+    <div class="slide" data-slide="8">
+        <h1>餐厅厨房</h1>
+        <div class="analogy-box">
+            <h4>这样理解</h4>
+            <p>没有 Agent，你走进一个随机的厨房，喊"给我做意面！"&mdash; 听到的人可能煮方便面，也可能做一顿五道菜的意大利大餐。</p>
+        </div>
+        <div class="two-col" style="margin-top: 32px;">
+            <div class="col-card bad">
+                <h4>没有 Agent</h4>
+                <p>你问 Claude："迪拜天气怎么样？"</p>
+                <p>它可能查训练数据、搜索网络，或者凭猜测回答。</p>
+                <p style="margin-top: 12px; color: #c62828;"><strong>你不知道它会做什么。</strong></p>
+            </div>
+            <div class="col-card good">
+                <h4>有 Agent</h4>
+                <p><code>weather-agent</code> 有明确的工作描述：</p>
+                <p><em>"始终从 Open-Meteo API 获取迪拜数据。始终以特定格式返回温度。"</em></p>
+                <p style="margin-top: 12px; color: #2e7d32;"><strong>同样的问题，同样的方法，每次都一样。</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 幻灯片 9: Agent对比 -->
+    <div class="slide" data-slide="9">
+        <h1>提示词 vs. Agent</h1>
+        <p>使用 Agent 时会发生什么变化 &mdash; 以本仓库中的 <code>weather-agent</code> 为真实示例：</p>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>提示词</th>
+                    <th>Agent</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>数据源</strong></td>
+                    <td>可能是任何地方</td>
+                    <td>始终是 Open-Meteo API</td>
+                </tr>
+                <tr>
+                    <td><strong>位置</strong></td>
+                    <td>Claude 随意选择</td>
+                    <td>始终是迪拜（纬度：25.2，经度：55.3）</td>
+                </tr>
+                <tr>
+                    <td><strong>格式</strong></td>
+                    <td>随机段落</td>
+                    <td>简洁的温度+单位</td>
+                </tr>
+                <tr>
+                    <td><strong>一致性</strong></td>
+                    <td>每次都不同</td>
+                    <td>同样的方法，每次都一样</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="how-to-trigger">
+            <h4>要点</h4>
+            <p>Agent 给你<strong>可预测性</strong>。同样的问题 &rarr; 同样的方法 &rarr; 同样的质量。不是更聪明 &mdash; 是<strong>一致</strong>。</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第三层：技能 (幻灯片 10-12)                                -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 10: 技能简介 -->
+    <div class="slide section-slide" data-slide="10" data-level="skills">
+        <div class="section-number">第三层</div>
+        <h1>技能（培训手册）</h1>
+        <p class="section-desc">技能是 Agent（或 Claude 本身）可以使用的特定能力 &mdash; 就像新员工的操作手册。</p>
+    </div>
+
+    <!-- 幻灯片 11: 培训手册 -->
+    <div class="slide" data-slide="11">
+        <h1>培训手册</h1>
+        <div class="analogy-box">
+            <h4>这样理解</h4>
+            <p>当有人加入你的团队时，他们有一个角色（Agent），但他们也会参加特定的培训模块 &mdash; 如何使用 CRM、如何写提案、如何主持站会。每个培训模块就是一个<strong>技能</strong>。</p>
+        </div>
+        <h3 style="margin-top: 32px;">一个真实人物示例</h3>
+        <p><strong>Shayan</strong> 有很多技能：</p>
+        <div class="use-cases">
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x1F4BB;</span>
+                <div class="use-case-text">
+                    <strong>工程技能</strong>
+                    <span>会写代码</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x1F3AE;</span>
+                <div class="use-case-text">
+                    <strong>游戏技能</strong>
+                    <span>了解游戏机制</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">&#x1F4D6;</span>
+                <div class="use-case-text">
+                    <strong>阅读技能</strong>
+                    <span>能够消化和总结长文档</span>
+                </div>
+            </div>
+        </div>
+        <p>每个技能都有自己的知识和方法。Shayan 根据任务选择正确的技能。<strong>Claude 也是一样。</strong></p>
+    </div>
+
+    <!-- 幻灯片 12: 为什么分离 Agent 和技能 -->
+    <div class="slide" data-slide="12">
+        <h1>为什么分离 Agent 和技能？</h1>
+        <div class="two-col">
+            <div>
+                <h3>Agent = 这个人</h3>
+                <p><code>weather-agent</code> 是职位头衔为<strong>"天气预报员"</strong>的人。</p>
+                <p>它定义了<em>角色</em>和<em>行为</em>。</p>
+            </div>
+            <div>
+                <h3>技能 = 培训</h3>
+                <p><code>weather-fetcher</code> 技能是关于<strong>如何</strong>获取天气数据的具体培训。</p>
+                <p>它包含精确的说明：</p>
+                <ul class="feature-list">
+                    <li>调用这个特定的 API URL</li>
+                    <li>从特定字段提取温度</li>
+                    <li>以特定格式返回</li>
+                </ul>
+            </div>
+        </div>
+        <div class="how-to-trigger" style="margin-top: 24px;">
+            <h4>优势</h4>
+            <p><strong>一个 Agent 可以有多个技能</strong>，<strong>一个技能也可以被多个 Agent 使用</strong>。技能是可复用的构建块。Agent 是使用它们的人。</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第一天总结 (幻灯片 13-15)                                  -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 13: 第一天总结 -->
+    <div class="slide section-slide" data-slide="13">
+        <div class="section-number">第一天总结</div>
+        <h1>综合运用</h1>
+        <p class="section-desc">三个层级，每个层级都增加了对 Claude 工作方式的控制。</p>
+    </div>
+
+    <!-- 幻灯片 14: 三层流程 -->
+    <div class="slide" data-slide="14">
+        <h1>三个层级</h1>
+        <div class="code-block"><span class="comment">第一层：提示词</span>
+<span class="key">你</span> <span class="string">&rarr;</span> "天气怎么样？" <span class="string">&rarr;</span> Claude 想办法搞定
+                                <span class="comment">（不可预测的方法）</span>
+
+<span class="comment">第二层：AGENT</span>
+<span class="key">你</span> <span class="string">&rarr;</span> 天气 Agent <span class="string">&rarr;</span> 始终使用相同方法
+                      <span class="comment">（可预测的方法）</span>
+
+<span class="comment">第三层：技能</span>
+<span class="key">你</span> <span class="string">&rarr;</span> 天气 Agent <span class="string">&rarr;</span> 使用天气获取技能
+                      <span class="comment">（带有具体指令的可预测方法）</span></div>
+        <table style="margin-top: 32px;">
+            <thead>
+                <tr>
+                    <th>层级</th>
+                    <th>你控制什么</th>
+                    <th>适用于</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>提示词</strong></td>
+                    <td>问题</td>
+                    <td>快速的一次性问题</td>
+                </tr>
+                <tr>
+                    <td><strong>Agent</strong></td>
+                    <td>问题 + 谁来回答</td>
+                    <td>可重复的任务</td>
+                </tr>
+                <tr>
+                    <td><strong>技能</strong></td>
+                    <td>问题 + 谁来回答 + 如何执行</td>
+                    <td>关键工作流</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 幻灯片 15: 第一天结束 -->
+    <div class="slide title-slide" data-slide="15">
+        <h1>第一天完成</h1>
+        <p class="subtitle">你已经理解了这三个层级：提示词、Agent、技能。</p>
+        <p style="margin-top: 20px; font-size: 1.1rem; color: #666; max-width: 600px;">在第一层多花时间 &mdash; 只需要提示。在终端中习惯向 Claude 提问。你用得越多，就越会注意到哪些任务会从 Agent 中受益。</p>
+        <p style="margin-top: 60px; font-size: 0.95rem; color: #888;">明天：我们来构建它们。</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第二天：构建你的第一个工作流                           -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
+    <!-- 第四层：项目记忆 (幻灯片 16-19)                        -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 16: 记忆简介 -->
+    <div class="slide section-slide" data-slide="16" data-level="memory">
+        <span class="day-badge">第二天</span>
+        <div class="section-number">第四层</div>
+        <h1>项目记忆</h1>
+        <p class="section-desc">在构建 Agent 和技能之前，Claude 需要了解你的项目。这从 <code>CLAUDE.md</code> 开始。</p>
+    </div>
+
+    <!-- 幻灯片 17: CLAUDE.md 是什么 -->
+    <div class="slide" data-slide="17">
+        <h1>CLAUDE.md &mdash; 项目的大脑</h1>
+        <div class="analogy-box">
+            <h4>这样理解</h4>
+            <p>当新人加入你的团队，他们不会直接开始工作 &mdash; 他们会阅读团队 Wiki、README、入职文档。<code>CLAUDE.md</code> 就是 Claude 的入职文档。</p>
+        </div>
+        <img src="../assets/context-window.jpeg" alt="上下文窗口图示，显示100万token限制如何分配" style="width: 100%; max-width: 800px; margin: 24px auto; display: block; border-radius: 8px;" />
+        <p>它是项目根目录下的一个 markdown 文件，告诉 Claude：</p>
+        <div class="use-cases">
+            <div class="use-case-item">
+                <span class="use-case-icon">1</span>
+                <div class="use-case-text">
+                    <strong>项目是什么</strong>
+                    <span>"这是一个 FastAPI 后端 + React 前端的项目"</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">2</span>
+                <div class="use-case-text">
+                    <strong>如何在其中工作</strong>
+                    <span>"使用 pytest 进行测试，遵循现有的路由模式"</span>
+                </div>
+            </div>
+            <div class="use-case-item">
+                <span class="use-case-icon">3</span>
+                <div class="use-case-text">
+                    <strong>避免什么</strong>
+                    <span>"永远不要直接修改 auth 中间件"</span>
+                </div>
+            </div>
+        </div>
+        <div class="how-to-trigger">
+            <h4>快速开始</h4>
+            <p>在 Claude Code 中运行 <code>/init</code> 来为你的项目自动生成 CLAUDE.md。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 18: CLAUDE.md 示例 -->
+    <div class="slide" data-slide="18">
+        <h1>CLAUDE.md 包含什么</h1>
+        <div class="code-block"><span class="comment"># CLAUDE.md</span>
+
+<span class="comment">## 项目概览</span>
+这是一个带有 FastAPI 后端和 React 前端的 TodoApp。
+
+<span class="comment">## 关键命令</span>
+- <span class="cmd">npm run dev</span>      <span class="comment"># 启动前端</span>
+- <span class="cmd">uvicorn main:app</span>  <span class="comment"># 启动后端</span>
+- <span class="cmd">pytest</span>            <span class="comment"># 运行测试</span>
+
+<span class="comment">## 架构</span>
+- 路由遵循 <span class="string">routes/todos.py</span> 中的模式
+- 前端组件使用 Tailwind CSS
+- 测试镜像源目录树：<span class="string">tests/test_*.py</span>
+
+<span class="comment">## 规则</span>
+- 始终为新端点编写测试
+- 使用现有的 Sidebar 组件进行导航
+- CLAUDE.md 保持在 200 行以内</div>
+        <div class="warning-box">
+            <h4>保持简短</h4>
+            <p>目标控制在 200 行以内。超过 200 行的文件会消耗更多上下文，可能降低遵从度。将详细说明放在 <code>.claude/rules/</code> 中。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 19: 记忆层级 -->
+    <div class="slide" data-slide="19">
+        <h1>记忆如何加载</h1>
+        <p>Claude Code 使用两种机制来查找 CLAUDE.md 文件：</p>
+        <div class="two-col">
+            <div class="col-card" style="border-left: 4px solid #2196f3;">
+                <h4>祖先加载（向上）</h4>
+                <p>启动时，Claude 从当前目录<strong>向上</strong>遍历，加载找到的每个 CLAUDE.md。</p>
+                <p style="margin-top: 12px;"><strong>始终立即加载。</strong></p>
+            </div>
+            <div class="col-card" style="border-left: 4px solid #ff9800;">
+                <h4>后代加载（向下）</h4>
+                <p>当前目录下方子目录中的 CLAUDE.md 是<strong>惰性</strong>加载的 &mdash; 只有当 Claude 读取这些文件夹中的文件时才会加载。</p>
+                <p style="margin-top: 12px;"><strong>按需加载。</strong></p>
+            </div>
+        </div>
+        <div class="code-block"><span class="comment"># 示例：从 /myapp 运行 `claude`</span>
+/myapp/
+  <span class="claude-file">CLAUDE.md</span>          <span class="comment"># 启动时加载（当前目录）</span>
+  frontend/
+    <span class="key">CLAUDE.md</span>        <span class="comment"># 当你操作 frontend/ 文件时加载</span>
+  backend/
+    <span class="key">CLAUDE.md</span>        <span class="comment"># 当你操作 backend/ 文件时加载</span></div>
+        <div class="info-box">
+            <h4>规则目录</h4>
+            <p>对于特定主题的说明，使用 <code>.claude/rules/*.md</code>。每个规则文件可以使用顶部的 <code># Glob: pattern</code> 来定位特定文件模式 &mdash; 它们只在与匹配文件一起工作时才加载。</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第五层：构建技能和AGENT (幻灯片 20-26)              -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 20: 构建简介 -->
+    <div class="slide section-slide" data-slide="20" data-level="building">
+        <div class="section-number">第五层</div>
+        <h1>构建技能与 Agent</h1>
+        <p class="section-desc">现在 Claude 已经了解了你的项目，让我们赋予它专业能力。</p>
+    </div>
+
+    <!-- 幻灯片 21: 创建技能 -->
+    <div class="slide" data-slide="21">
+        <h1>创建你的第一个技能</h1>
+        <p>技能位于 <code>.claude/skills/&lt;name&gt;/SKILL.md</code>。这是一个带有 YAML 头部的 markdown 文件。</p>
+        <div class="code-block"><span class="comment"># 文件：.claude/skills/weather-fetcher/SKILL.md</span>
+<span class="string">---</span>
+<span class="key">name</span>: <span class="string">weather-fetcher</span>
+<span class="key">description</span>: <span class="string">从 Open-Meteo API 获取迪拜当前温度</span>
+<span class="key">user-invocable</span>: <span class="string">false</span>
+<span class="string">---</span>
+
+<span class="comment"># 天气获取器</span>
+
+获取迪拜当前温度：
+
+1. 调用 Open-Meteo API：
+   <span class="cmd">https://api.open-meteo.com/v1/forecast</span>
+   <span class="cmd">?latitude=25.2048&longitude=55.2708&current=temperature_2m</span>
+
+2. 从响应中提取 <span class="key">current.temperature_2m</span>
+
+3. 返回：<span class="string">"迪拜的温度是 {value}{unit}"</span></div>
+        <div class="trigger-box">
+            <h4>关键洞察</h4>
+            <p>技能包含<strong>指令</strong>，而不是代码。它告诉 Claude <em>如何</em>使用现有工具（如 WebFetch）做某事。把它想象成食谱，而不是程序。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 22: 技能头部字段 -->
+    <div class="slide" data-slide="22">
+        <h1>技能头部字段</h1>
+        <p>SKILL.md 顶部的 YAML 控制技能的行为：</p>
+        <div style="margin: 24px 0;">
+            <div class="field-row">
+                <span class="field-name">name</span>
+                <span class="field-desc">显示名称和 <code>/斜杠命令</code>。默认为目录名</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">description <span class="field-recommended">推荐</span></span>
+                <span class="field-desc">技能的作用 &mdash; 显示在自动完成中，用于自动发现</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">user-invocable</span>
+                <span class="field-desc">设为 <code>false</code> 可从 <code>/</code> 菜单隐藏 &mdash; 成为后台知识</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">allowed-tools</span>
+                <span class="field-desc">技能激活时允许使用而无需权限提示的工具</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">model</span>
+                <span class="field-desc">使用的模型：<code>haiku</code>、<code>sonnet</code> 或 <code>opus</code></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">context</span>
+                <span class="field-desc">设为 <code>fork</code> 可在隔离的 subagent 上下文中运行</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <h4>使用技能的两个方式</h4>
+            <p><strong>用户可调用</strong>：出现在 <code>/</code> 菜单中，用户直接运行。<strong>Agent 预加载</strong>：设置 <code>user-invocable: false</code>，然后在 agent 的 <code>skills:</code> 字段中列出 &mdash; 它成为注入到该 agent 的领域知识。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 23: 创建 Agent -->
+    <div class="slide" data-slide="23">
+        <h1>创建你的第一个 Agent</h1>
+        <p>Agent 位于 <code>.claude/agents/&lt;name&gt;.md</code>。同样的模式 &mdash; 带有 YAML 头部的 markdown。</p>
+        <div class="code-block"><span class="comment"># 文件：.claude/agents/weather-agent.md</span>
+<span class="string">---</span>
+<span class="key">name</span>: <span class="string">weather-agent</span>
+<span class="key">description</span>: <span class="string">PROACTIVELY 获取迪拜、阿联酋的天气数据</span>
+<span class="key">model</span>: <span class="string">sonnet</span>
+<span class="key">tools</span>: <span class="string">WebFetch, Read</span>
+<span class="key">skills</span>:
+  - <span class="string">weather-fetcher</span>
+<span class="key">color</span>: <span class="string">green</span>
+<span class="string">---</span>
+
+你是一位迪拜的天气数据专家。
+使用你预加载的 weather-fetcher 技能获取
+当前温度并简洁地返回。</div>
+        <div class="how-to-trigger">
+            <h4>发生了什么</h4>
+            <p>Agent 有：<strong>角色</strong>（天气专家）、<strong>受限工具</strong>（只有 WebFetch 和 Read）、<strong>预加载技能</strong>（weather-fetcher）、和<strong>特定模型</strong>（sonnet，节省成本）。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 24: Agent 头部字段 -->
+    <div class="slide" data-slide="24">
+        <h1>Agent 头部字段</h1>
+        <p>agent 文件顶部的 YAML 控制其身份和能力：</p>
+        <div style="margin: 24px 0;">
+            <div class="field-row">
+                <span class="field-name">name <span class="field-recommended">推荐</span></span>
+                <span class="field-desc">唯一标识符 &mdash; 如果省略则默认为文件名</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">description <span class="field-required">必需</span></span>
+                <span class="field-desc">何时调用。使用 <code>"PROACTIVELY"</code> 进行自动调用</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">model</span>
+                <span class="field-desc"><code>haiku</code>、<code>sonnet</code>、<code>opus</code> 或 <code>inherit</code>（默认）</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">tools</span>
+                <span class="field-desc">工具白名单。省略则继承所有工具</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">skills</span>
+                <span class="field-desc">启动时预加载到 agent 上下文的技能名称列表</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">maxTurns</span>
+                <span class="field-desc"> Agent 停止前的最大轮次</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">memory</span>
+                <span class="field-desc">持久化记忆：<code>user</code>、<code>project</code> 或 <code>local</code></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">color</span>
+                <span class="field-desc">任务列表中的视觉颜色：<code>red</code>、<code>blue</code>、<code>green</code> 等</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 幻灯片 25: Agent vs 技能 并排 -->
+    <div class="slide" data-slide="25">
+        <h1>Agent vs. 技能 &mdash; 存放位置</h1>
+        <div class="code-block"><span class="comment"># 你的项目结构</span>
+myproject/
+  <span class="claude-file">.claude/</span>
+    <span class="claude-file">agents/</span>                    <span class="claude-file comment"># Agent 定义</span>
+      <span class="claude-file">weather-agent.md</span>         <span class="claude-file comment"># 这个人（角色+行为）</span>
+      <span class="claude-file">code-reviewer.md</span>         <span class="claude-file comment"># 另一个 agent</span>
+    <span class="claude-file">skills/</span>                    <span class="claude-file comment"># 技能定义</span>
+      <span class="claude-file">weather-fetcher/</span>         <span class="claude-file comment"># 每个技能是一个文件夹</span>
+        <span class="claude-file">SKILL.md</span>               <span class="claude-file comment"># 培训内容（指令）</span>
+      <span class="claude-file">weather-svg-creator/</span>
+        <span class="claude-file">SKILL.md</span>
+    <span class="claude-file">commands/</span>                  <span class="claude-file comment"># 斜杠命令</span>
+    <span class="claude-file">rules/</span>                     <span class="claude-file comment"># 条件指令</span>
+    <span class="claude-file">settings.json</span>              <span class="claude-file comment"># 团队设置</span>
+  <span class="claude-file">CLAUDE.md</span>                    <span class="claude-file comment"># 项目记忆</span></div>
+        <table style="margin-top: 24px;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Agent</th>
+                    <th>技能</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>位置</strong></td>
+                    <td><code>.claude/agents/*.md</code></td>
+                    <td><code>.claude/skills/*/SKILL.md</code></td>
+                </tr>
+                <tr>
+                    <td><strong>是什么</strong></td>
+                    <td>带有行为的角色</td>
+                    <td>任务指令</td>
+                </tr>
+                <tr>
+                    <td><strong>运行于</strong></td>
+                    <td>自己独立的隔离上下文</td>
+                    <td>内联或分叉上下文</td>
+                </tr>
+                <tr>
+                    <td><strong>有工具？</strong></td>
+                    <td>是 &mdash; 自有工具白名单</td>
+                    <td>使用父级的工具</td>
+                </tr>
+                <tr>
+                    <td><strong>比喻</strong></td>
+                    <td>员工</td>
+                    <td>培训手册</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 幻灯片 26: 调用 Agent -->
+    <div class="slide" data-slide="26">
+        <h1>如何使用你的 Agent</h1>
+        <p>一旦你创建了 agent 文件，Claude 可以自动调用它（如果描述中有 <code>PROACTIVELY</code>），或者你可以让 Claude 使用它：</p>
+        <div class="code-block"><span class="comment"># 在 Claude Code 对话中：</span>
+<span class="cmd">使用 weather-agent 获取迪拜当前的温度</span></div>
+        <p>在幕后，Claude 调用 Agent 工具：</p>
+        <div class="code-block"><span class="comment"># Claude 内部所做的</span>
+<span class="cmd">Agent</span>(
+  <span class="key">subagent_type</span> = <span class="string">"weather-agent"</span>,
+  <span class="key">description</span>   = <span class="string">"获取迪拜温度"</span>,
+  <span class="key">prompt</span>        = <span class="string">"获取摄尔修斯温度"</span>
+)</div>
+        <div class="analogy-box">
+            <h4>这样理解</h4>
+            <p>你是经理。你说"给我天气。"Claude 派遣 weather-agent（专家）到他们自己的工作空间。Agent 使用他们的培训（weather-fetcher 技能）来完成工作。他们带着答案回来。</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第六层：命令和编排 (幻灯片 27-31)              -->
+    <!-- ============================================================ -->
+
+    <!-- 幻灯片 27: 编排简介 -->
+    <div class="slide section-slide" data-slide="27" data-level="orchestration">
+        <div class="section-number">第六层</div>
+        <h1>命令与编排</h1>
+        <p class="section-desc">命令是将 Agent 和技能绑定到完整工作流的入口点。</p>
+    </div>
+
+    <!-- 幻灯片 28: 命令是什么 -->
+    <div class="slide" data-slide="28">
+        <h1>命令 &mdash; 入口点</h1>
+        <div class="analogy-box">
+            <h4>这样理解</h4>
+            <p>如果 Agent 是员工，技能是他们的培训，那么<strong>命令</strong>就是经理手册 &mdash; "当有人要求天气报告时，首先问他们用摄氏度还是华氏度，然后派遣天气团队，然后创建可视化。"</p>
+        </div>
+        <p>命令位于 <code>.claude/commands/&lt;name&gt;.md</code>：</p>
+        <div class="code-block"><span class="comment"># 文件：.claude/commands/weather-orchestrator.md</span>
+<span class="string">---</span>
+<span class="key">description</span>: <span class="string">获取天气并创建 SVG 卡片</span>
+<span class="key">model</span>: <span class="string">haiku</span>
+<span class="string">---</span>
+
+1. 问用户：摄氏度还是华氏度？
+2. 使用 <span class="key">weather-agent</span> 获取迪拜的温度
+3. 使用 <span class="key">weather-svg-creator</span> 技能创建 SVG 卡片
+4. 向用户展示结果</div>
+        <div class="how-to-trigger">
+            <h4>如何运行</h4>
+            <p>在 Claude Code 中输入 <code>/weather-orchestrator</code>。命令编排整个工作流。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 29: 完整架构 -->
+    <div class="slide" data-slide="29">
+        <h1>命令 &rarr; Agent &rarr; 技能</h1>
+        <p>这是 Claude Code 工作流的<strong>核心架构模式</strong>：</p>
+        <div class="code-block"><span class="comment">编排流程</span>
+
+  <span class="key">/weather-orchestrator</span>          <span class="comment">命令（入口点）</span>
+         |
+    步骤 1：问用户 C/F？
+         |
+    步骤 2：<span class="cmd">Agent 工具</span>
+         |
+         v
+  <span class="key">weather-agent</span>                   <span class="comment">Agent（专家）</span>
+    skill: <span class="string">weather-fetcher</span>       <span class="comment">技能（预加载培训）</span>
+    tools: WebFetch, Read
+         |
+    返回：温度 + 单位
+         |
+    步骤 3：<span class="cmd">Skill 工具</span>
+         |
+         v
+  <span class="key">weather-svg-creator</span>             <span class="comment">技能（直接调用）</span>
+         |
+    创建：weather.svg + output.md</div>
+    </div>
+
+    <!-- 幻灯片 30: 两种技能模式 -->
+    <div class="slide" data-slide="30">
+        <h1>使用技能的两种方式</h1>
+        <p>天气工作流展示了单一流程中的两种技能模式：</p>
+        <div class="two-col">
+            <div class="col-card" style="border-left: 4px solid #9c27b0;">
+                <h4>模式 1：Agent 技能（预加载）</h4>
+                <p><code>weather-fetcher</code> 列在 agent 的 <code>skills:</code> 字段中。</p>
+                <p style="margin-top: 12px;">它的完整内容在启动时<strong>注入到 agent 的上下文</strong>中。Agent 像参考手册一样阅读它。</p>
+                <div class="code-block" style="font-size: 0.8rem;"><span class="comment"># 在 weather-agent.md 中</span>
+<span class="key">skills</span>:
+  - <span class="string">weather-fetcher</span></div>
+            </div>
+            <div class="col-card" style="border-left: 4px solid #2196f3;">
+                <h4>模式 2：直接调用</h4>
+                <p><code>weather-svg-creator</code> 通过 Skill 工具由命令直接调用。</p>
+                <p style="margin-top: 12px;">它<strong>独立</strong>运行在命令的上下文中，而不是在任何 agent 内部。</p>
+                <div class="code-block" style="font-size: 0.8rem;"><span class="comment"># 在命令提示中</span>
+<span class="cmd">Skill</span>(<span class="key">skill</span>: <span class="string">"weather-svg-creator"</span>)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 幻灯片 31: 第二天总结 -->
+    <div class="slide" data-slide="31">
+        <h1>第二天总结</h1>
+        <p>今天你学习了如何构建各个部分并将它们连接在一起：</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>组件</th>
+                    <th>位置</th>
+                    <th>用途</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>CLAUDE.md</strong></td>
+                    <td>项目根目录</td>
+                    <td>项目记忆 &mdash; 告诉 Claude 关于你的代码库</td>
+                </tr>
+                <tr>
+                    <td><strong>规则</strong></td>
+                    <td><code>.claude/rules/*.md</code></td>
+                    <td>由文件模式触发的条件指令</td>
+                </tr>
+                <tr>
+                    <td><strong>技能</strong></td>
+                    <td><code>.claude/skills/*/SKILL.md</code></td>
+                    <td>可复用指令 &mdash; 培训手册</td>
+                </tr>
+                <tr>
+                    <td><strong>Agent</strong></td>
+                    <td><code>.claude/agents/*.md</code></td>
+                    <td>具有角色、工具和预加载技能的专业人员</td>
+                </tr>
+                <tr>
+                    <td><strong>命令</strong></td>
+                    <td><code>.claude/commands/*.md</code></td>
+                    <td>将 Agent 和技能编排成工作流的协调器</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="how-to-trigger">
+            <h4>架构</h4>
+            <p><strong>命令</strong>（入口点） &rarr; <strong>Agent</strong>（带技能的专家） &rarr; <strong>技能</strong>（可复用指令）。每一层都增加了结构和可预测性。</p>
+        </div>
+    </div>
+
+    <!-- 幻灯片 32: 结束 -->
+    <div class="slide title-slide" data-slide="32">
+        <h1>到目前为止的旅程</h1>
+        <p class="subtitle">第一天：理解 &mdash; 第二天：构建</p>
+        <p style="margin-top: 20px; font-size: 1.1rem; color: #666; max-width: 600px;">你已经从向 Claude 提问发展到构建一个具有 Agent、技能和命令的完整编排工作流。</p>
+        <p style="margin-top: 40px; font-size: 1rem; color: #888;">学习之旅继续 &mdash; Hook、MCP 服务器、设置等。</p>
+        <p style="margin-top: 40px; font-size: 0.95rem; color: #aaa;">github.com/shanraisshan/claude-code-best-practice</p>
+    </div>
+
+    <!-- Header Logo -->
+    <div class="header-logo">
+        <img src="../../!/claude-jumping.svg" alt="Claude Code 吉祥物" />
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">&#8592;</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">&#8594;</button>
+    </div>
+    <div class="slide-counter" id="slideCounter">1 / --</div>
+    <div class="keyboard-hint"><kbd>&#8592;</kbd> <kbd>&#8594;</kbd> 或 <kbd>空格</kbd> 导航</div>
+
+    <script>
+        let currentSlide = 1;
+        const slides = document.querySelectorAll('[data-slide]');
+        const totalSlides = slides.length;
+
+        // Level definitions (6 levels across 2 days)
+        const LEVELS = {
+            'prompting':     { order: 1, color: 'hsl(210, 70%, 50%)', height: '17%',  label: '提示词',     day: 1 },
+            'agents':        { order: 2, color: 'hsl(35, 80%, 50%)',  height: '33%',  label: 'Agent',        day: 1 },
+            'skills':        { order: 3, color: 'hsl(120, 60%, 40%)', height: '50%',  label: '技能',        day: 1 },
+            'memory':        { order: 4, color: 'hsl(270, 60%, 50%)', height: '67%',  label: '记忆',        day: 2 },
+            'building':      { order: 5, color: 'hsl(180, 60%, 40%)', height: '83%',  label: '构建',      day: 2 },
+            'orchestration': { order: 6, color: 'hsl(45, 90%, 45%)',  height: '100%', label: '编排', day: 2 }
+        };
+
+        // Build slide-to-level map
+        const SLIDE_LEVELS = {};
+        let lastLevel = null;
+        slides.forEach((s) => {
+            const num = parseInt(s.dataset.slide);
+            if (s.dataset.level) { lastLevel = s.dataset.level; }
+            SLIDE_LEVELS[num] = lastLevel;
+        });
+
+        let prevDisplayedLevel = null;
+
+        function updateJourneyBar(slideNum) {
+            const bar = document.getElementById('journeyBar');
+            const fill = document.getElementById('journeyFill');
+            const labelEl = document.getElementById('journeyLevelLabel');
+            if (slideNum <= 1) { bar.classList.add('hidden'); prevDisplayedLevel = null; return; }
+            bar.classList.remove('hidden');
+            const levelKey = SLIDE_LEVELS[slideNum];
+            if (!levelKey || !LEVELS[levelKey]) {
+                fill.style.height = '0%';
+                if (labelEl) { labelEl.innerHTML = ''; }
+                return;
+            }
+            const lvl = LEVELS[levelKey];
+            fill.style.height = lvl.height;
+            fill.style.backgroundColor = lvl.color;
+            if (labelEl) { labelEl.innerHTML = '第' + lvl.day + '天 &mdash; <strong style="color:' + lvl.color + '">' + lvl.label + '</strong>'; }
+
+            // Show level badge when level changes
+            document.querySelectorAll('.level-badge').forEach(b => b.remove());
+            const slideEl = document.querySelector(`[data-slide="${slideNum}"]`);
+            if (slideEl && slideEl.dataset.level && slideEl.dataset.level !== prevDisplayedLevel) {
+                const h1 = slideEl.querySelector('h1');
+                if (h1) {
+                    const badge = document.createElement('span');
+                    badge.className = 'level-badge';
+                    badge.textContent = '\u2192 ' + lvl.label;
+                    h1.appendChild(badge);
+                }
+            }
+            prevDisplayedLevel = levelKey;
+        }
+
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            document.querySelector(`[data-slide="${currentSlide}"]`).classList.add('active');
+            document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+            document.getElementById('progress').style.width = `${(currentSlide / totalSlides) * 100}%`;
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            updateJourneyBar(currentSlide);
+        }
+        function nextSlide() { currentSlide++; showSlide(currentSlide); }
+        function prevSlide() { currentSlide--; showSlide(currentSlide); }
+        function goToSlide(n) { currentSlide = n; showSlide(currentSlide); }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        });
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { if (diff > 0) nextSlide(); else prevSlide(); }
+        });
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

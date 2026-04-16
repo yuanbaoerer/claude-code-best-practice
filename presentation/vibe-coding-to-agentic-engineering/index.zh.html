@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="../!/claude-jumping.svg">
+    <link rel="icon" type="image/svg+xml" href="../../!/claude-jumping.svg">
     <title>Claude Code — 从 Vibe Coding 到 Agentic Engineering</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,15 +74,19 @@
         .header-logo img { width: 100%; height: 100%; }
         .title-logo { width: 200px; height: 130px; margin-bottom: 40px; }
         .title-logo img { width: 100%; height: 100%; }
+        /* Journey Bar — vertical, right side below mascot */
         .journey-bar { position: fixed; top: 95px; right: 62px; display: flex; flex-direction: column; align-items: center; z-index: 99; gap: 6px; }
         .journey-bar.hidden { display: none; }
         .journey-track-wrap { position: relative; display: flex; align-items: stretch; gap: 4px; }
         .journey-track { width: 20px; height: 280px; background: #e5e5e5; border-radius: 10px; overflow: hidden; position: relative; flex-shrink: 0; }
         .journey-fill { position: absolute; bottom: 0; width: 100%; border-radius: 10px; transition: height 0.4s ease, background-color 0.4s ease; height: 0%; }
         .journey-level-label { font-size: 0.65rem; color: #777; font-weight: 400; }
+        /* Level tick marks beside the journey track */
         .journey-ticks { display: flex; flex-direction: column; justify-content: space-between; height: 280px; padding: 2px 0; }
         .journey-tick { font-size: 0.45rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: #999; white-space: nowrap; line-height: 1; }
+        /* Level badge shown on level-transition slides */
         .level-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; margin-left: 12px; vertical-align: middle; }
+        /* Celebration slide */
         .celebration { font-size: 4rem; margin-bottom: 24px; }
     </style>
 </head>
@@ -92,27 +96,27 @@
         <div class="journey-track-wrap">
             <div class="journey-track"><div class="journey-fill" id="journeyFill"></div></div>
             <div class="journey-ticks">
-                <span class="journey-tick">Pro</span>
-                <span class="journey-tick">High</span>
-                <span class="journey-tick">Med</span>
-                <span class="journey-tick">Low</span>
+                <span class="journey-tick">专家</span>
+                <span class="journey-tick">高级</span>
+                <span class="journey-tick">中级</span>
+                <span class="journey-tick">初级</span>
             </div>
         </div>
-        <span class="journey-level-label" id="journeyLevelLabel">当前 = <strong>Low</strong></span>
+        <span class="journey-level-label" id="journeyLevelLabel">当前 = <strong>初级</strong></span>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 0 部分: 介绍 (幻灯片 1-4, 无权重)                          -->
+    <!-- 第0部分：介绍 (幻灯片 1-4，无权重)                 -->
     <!-- ============================================================ -->
 
     <!-- 幻灯片 1: 标题 -->
     <div class="slide active title-slide" data-slide="1">
         <div class="title-logo">
-            <img src="../!/claude-jumping.svg" alt="Claude Code 吉祥物" />
+            <img src="../../!/claude-jumping.svg" alt="Claude Code 吉祥物跳跃" />
         </div>
         <h1>Claude Code</h1>
         <p class="subtitle">从 Vibe Coding 到 Agentic Engineering</p>
-        <p style="margin-top: 60px; font-size: 0.95rem; color: #888;">通过一个真实项目，贯穿所有最佳实践的旅程。</p>
+        <p style="margin-top: 60px; font-size: 0.95rem; color: #888;">通过一个真实项目实践每一个最佳实践的旅程。</p>
     </div>
 
     <!-- 幻灯片 2: 示例项目 -->
@@ -120,12 +124,12 @@
         <h1>示例项目：TodoApp</h1>
         <div class="trigger-box">
             <h4>运行示例</h4>
-            <p>本演示中的每一种技术都在 <strong>TodoApp monorepo</strong> 上演示 — 展示从普通项目到完整 Claude Code 配置的转变。</p>
+            <p>本演示中的每项技术都在<strong>TodoApp monorepo</strong>上演示 &mdash; 展示从普通项目到完整 Claude Code 配置的转变。</p>
         </div>
         <div class="two-col">
             <div>
                 <h3 style="text-align: center; color: #c62828; margin-bottom: 16px;">之前（Vibe Coding）</h3>
-                <div class="code-block"><span class="comment"># 普通的 TodoApp</span>
+                <div class="code-block"><span class="comment"># 普通 TodoApp</span>
 todoapp/
   <span class="key">backend/</span>
     main.py
@@ -149,10 +153,10 @@ todoapp/
             </div>
             <div>
                 <h3 style="text-align: center; color: #2e7d32; margin-bottom: 16px;">之后（Agentic Engineering）</h3>
-                <div class="code-block"><span class="comment"># Claude Code 最佳实践配置</span>
+                <div class="code-block"><span class="comment"># 带有 Claude Code 最佳实践</span>
 todoapp/
   <span class="claude-file">.claude/</span>                  <span class="claude-file comment"># Claude Code 配置</span>
-    <span class="claude-file">agents/</span>               <span class="claude-file comment"># 自定义子代理</span>
+    <span class="claude-file">agents/</span>               <span class="claude-file comment"># 自定义 agent</span>
     <span class="claude-file">skills/</span>               <span class="claude-file comment"># 领域知识</span>
     <span class="claude-file">commands/</span>             <span class="claude-file comment"># 斜杠命令</span>
     <span class="claude-file">hooks/</span>                <span class="claude-file comment"># 生命周期脚本</span>
@@ -189,46 +193,46 @@ todoapp/
     <!-- 幻灯片 3: 什么是 Vibe Coding？ -->
     <div class="slide" data-slide="3">
         <h1>什么是 Vibe Coding？</h1>
-        <p>每个人都是从这里开始的。问题是：你能多快超越它？</p>
+        <p>这是每个人开始的地方。问题是：你有多快能超越它？</p>
         <div class="two-col">
             <div class="col-card bad">
-                <h4>实际发生（Low 级别）</h4>
+                <h4>发生了什么（初级）</h4>
                 <p><code>&gt; add a notes feature</code></p>
-                <p>Claude 创建了一个随机 schema 的 <code>/api/notes</code></p>
+                <p>Claude 创建了带随机模式的 <code>/api/notes</code></p>
                 <p>前端得到一个没有侧边栏导航的独立页面</p>
                 <p>测试？没有。模式？被忽略。</p>
-                <p style="margin-top: 16px; color: #c62828;">每个新功能都是一次掷硬币。代码熵随着每次提示增加。</p>
+                <p style="margin-top: 16px; color: #c62828;">每次新功能都是抛硬币。代码熵随每次提示增加。</p>
             </div>
             <div class="col-card good">
-                <h4>我们想要的（High 级别）</h4>
+                <h4>我们想要的（高级）</h4>
                 <p>Claude 了解 TodoApp 架构</p>
                 <p>新路由遵循 <code>routes/todos.py</code> 中的现有模式</p>
-                <p>前端使用 <code>Sidebar.tsx</code> 导航和 Tailwind token</p>
+                <p>前端使用 <code>Sidebar.tsx</code> 导航和 Tailwind 令牌</p>
                 <p>自动编写匹配 <code>test_todos.py</code> 风格的测试</p>
-                <p style="margin-top: 16px; color: #2e7d32;">每次都是一致的、经过测试的、生产级质量的代码。</p>
+                <p style="margin-top: 16px; color: #2e7d32;">每次都是一致、测试过的、生产质量的代码。</p>
             </div>
         </div>
     </div>
 
     <!-- 幻灯片 4: 旅程地图 -->
     <div class="slide" data-slide="4">
-        <h1>学习路径</h1>
+        <h1>旅程</h1>
         <div class="trigger-box">
-            <h4>从 Low 到 High</h4>
-            <p>每个部分都添加了技术，将你从 vibe coding 推向完整的 agentic engineering。</p>
+            <h4>从初级到高级</h4>
+            <p>每个部分都添加了将你从 vibe coding 引向完全 agentic engineering 的技术。</p>
         </div>
         <div class="toc-list" style="margin-top: 24px;">
             <div class="toc-item" onclick="goToSlide(5)"><span class="toc-number">1</span><span class="toc-name">前置准备</span></div>
-            <div class="toc-item" onclick="goToSlide(10)"><span class="toc-number">2</span><span class="toc-name">更好的提示词 — Low</span></div>
-            <div class="toc-item" onclick="goToSlide(18)"><span class="toc-number">3</span><span class="toc-name">项目记忆 — Medium</span></div>
-            <div class="toc-item" onclick="goToSlide(25)"><span class="toc-number">4</span><span class="toc-name">结构化工作流 — Medium</span></div>
-            <div class="toc-item" onclick="goToSlide(29)"><span class="toc-number">5</span><span class="toc-name">领域知识 — High</span></div>
-            <div class="toc-item" onclick="goToSlide(34)"><span class="toc-number">6</span><span class="toc-name">Agentic Engineering — High</span></div>
+            <div class="toc-item" onclick="goToSlide(10)"><span class="toc-number">2</span><span class="toc-name">更好的提示词 &mdash; 初级</span></div>
+            <div class="toc-item" onclick="goToSlide(18)"><span class="toc-number">3</span><span class="toc-name">项目记忆 &mdash; 中级</span></div>
+            <div class="toc-item" onclick="goToSlide(25)"><span class="toc-number">4</span><span class="toc-name">结构化工作流 &mdash; 中级</span></div>
+            <div class="toc-item" onclick="goToSlide(29)"><span class="toc-number">5</span><span class="toc-name">领域知识 &mdash; 高级</span></div>
+            <div class="toc-item" onclick="goToSlide(34)"><span class="toc-number">6</span><span class="toc-name">Agentic Engineering &mdash; 高级</span></div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 1 部分: 前置准备 (幻灯片 5-9, 无权重)                       -->
+    <!-- 第1部分：前置准备 (幻灯片 5-9，无权重)                -->
     <!-- ============================================================ -->
 
     <!-- 幻灯片 5: 安装 -->
@@ -236,18 +240,18 @@ todoapp/
         <h1>安装 Claude Code</h1>
         <div class="trigger-box">
             <h4>前提条件</h4>
-            <p>你的 Mac 上必须安装 Homebrew。</p>
+            <p>Homebrew 必须已安装在你的 Mac 上。</p>
         </div>
         <div class="how-to-trigger">
             <h4>通过 Homebrew 安装</h4>
-            <p>在终端运行：</p>
+            <p>在终端中运行：</p>
             <div class="code-block">brew install claude-code</div>
         </div>
         <h3>验证安装</h3>
         <div class="code-block">claude --version</div>
         <h3>后续更新</h3>
         <div class="code-block">brew upgrade claude-code</div>
-        <p style="margin-top: 24px; color: #666;">随时运行 <code>/doctor</code> 检查安装健康状态。</p>
+        <p style="margin-top: 24px; color: #666;">随时运行 <code>/doctor</code> 检查安装健康状况。</p>
     </div>
 
     <!-- 幻灯片 6: 登录 — 订阅 -->
@@ -255,15 +259,15 @@ todoapp/
         <h1>登录方式 A：订阅</h1>
         <p>通过 OAuth 登录使用 Claude Pro 或 Max 订阅：</p>
         <div class="code-block"><span class="cmd">claude</span>
-<span class="comment"># 在登录提示时选择 "Claude.ai"</span>
+<span class="comment"># 在登录提示处选择 "Claude.ai"</span>
 <span class="comment"># 打开浏览器进行 OAuth</span></div>
-        <h3>订阅套餐</h3>
+        <h3>订阅层级</h3>
         <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px;">
             <thead>
                 <tr style="border-bottom: 2px solid #ddd; text-align: left;">
-                    <th style="padding: 8px 12px;">套餐</th>
+                    <th style="padding: 8px 12px;">计划</th>
                     <th style="padding: 8px 12px;">价格</th>
-                    <th style="padding: 8px 12px;">每周限额</th>
+                    <th style="padding: 8px 12px;">每周限制</th>
                     <th style="padding: 8px 12px;">Sonnet 4.5</th>
                     <th style="padding: 8px 12px;">Opus 4.6</th>
                 </tr>
@@ -272,33 +276,33 @@ todoapp/
                 <tr style="border-bottom: 1px solid #eee;">
                     <td style="padding: 8px 12px;"><strong>Pro</strong></td>
                     <td style="padding: 8px 12px;">$20/月</td>
-                    <td style="padding: 8px 12px;">基础限额</td>
+                    <td style="padding: 8px 12px;">基础限制</td>
                     <td style="padding: 8px 12px; color: green;">&#10003;</td>
                     <td style="padding: 8px 12px; color: #c00;">&#10007;</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #eee;">
                     <td style="padding: 8px 12px;"><strong>Max 5x</strong></td>
                     <td style="padding: 8px 12px;">$100/月</td>
-                    <td style="padding: 8px 12px;">5倍 Pro 限额</td>
+                    <td style="padding: 8px 12px;">5&times; Pro 限制</td>
                     <td style="padding: 8px 12px; color: green;">&#10003;</td>
                     <td style="padding: 8px 12px; color: green;">&#10003;</td>
                 </tr>
                 <tr>
                     <td style="padding: 8px 12px;"><strong>Max 20x</strong></td>
                     <td style="padding: 8px 12px;">$200/月</td>
-                    <td style="padding: 8px 12px;">20倍 Pro 限额</td>
+                    <td style="padding: 8px 12px;">20&times; Pro 限制</td>
                     <td style="padding: 8px 12px; color: green;">&#10003;</td>
                     <td style="padding: 8px 12px; color: green;">&#10003;</td>
                 </tr>
             </tbody>
         </table>
-        <p style="margin-top: 14px; color: #666; font-size: 0.85rem;">每周限额每 7 天重置。用量在 Claude web、桌面版和 Claude Code 之间共享。Opus 4.6 需要 Max 套餐。</p>
+        <p style="margin-top: 14px; color: #666; font-size: 0.85rem;">每周限制每7天重置。使用量在 Claude 网页、桌面和 Claude Code 之间共享。Opus 4.6 需要 Max 计划。</p>
     </div>
 
-    <!-- 幻灯片 7: 登录 — API Key -->
+    <!-- 幻灯片 7: 登录 — API 密钥 -->
     <div class="slide" data-slide="7">
-        <h1>登录方式 B：API Key</h1>
-        <p>使用 Anthropic API key 按 token 付费 — 没有每周上限：</p>
+        <h1>登录方式 B：API 密钥</h1>
+        <p>使用 Anthropic API 密钥按 token 付费 &mdash; 没有每周上限：</p>
         <h3>Token 定价 <span style="font-weight: 400; font-size: 0.8rem; color: #888;">（每百万 token）</span></h3>
         <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 8px;">
             <thead>
@@ -335,7 +339,7 @@ todoapp/
             <div class="code-block"><span class="cmd">export</span> ANTHROPIC_API_KEY=sk-ant-...
 <span class="cmd">claude</span></div>
         </div>
-        <p><strong>最适合：</strong>重度使用、CI/CD 流水线、需要可预测账单的团队</p>
+        <p><strong>适用于：</strong>重度使用、CI/CD 管道、需要可预测计费的团队</p>
     </div>
 
     <!-- 幻灯片 8: 第一次会话（这确实是 vibe coding） -->
@@ -349,10 +353,10 @@ todoapp/
         </div>
         <div class="trigger-box">
             <h4>发生了什么</h4>
-            <p>Claude Code 扫描你的项目结构，读取 CLAUDE.md（如果存在），然后打开一个交互式 REPL，你可以在其中输入提示。</p>
+            <p>Claude Code 扫描你的项目结构，读取 CLAUDE.md（如果存在），并打开一个交互式 REPL，你可以在其中输入提示。</p>
         </div>
         <h3>这确实是 Vibe Coding</h3>
-        <p>现在，没有 CLAUDE.md，没有 skills，没有 agents — 你处于 <strong>Low</strong> 级别。Claude 只能猜测一切。没关系，我们会一步一步修复它。</p>
+        <p>现在，没有 CLAUDE.md、没有技能、没有 Agent &mdash; 你处于<strong>初级</strong>水平。Claude 会猜测一切。没关系。我们会一步一步修复它。</p>
     </div>
 
     <!-- 幻灯片 9: 界面 -->
@@ -365,24 +369,24 @@ todoapp/
 <span class="comment">+-----------------------------------------+</span>
 
 <span class="cmd">&gt;</span> 在这里输入你的提示...</div>
-        <h3>快捷参考</h3>
+        <h3>快速参考</h3>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#9000;</span><div class="use-case-text"><strong>Enter</strong><span>提交你的提示</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#8629;</span><div class="use-case-text"><strong>Shift+Enter 或 \</strong><span>换行（多行输入）</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#9000;</span><div class="use-case-text"><strong>回车</strong><span>提交你的提示</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#8629;</span><div class="use-case-text"><strong>Shift+回车 或 \</strong><span>换行（多行输入）</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#9632;</span><div class="use-case-text"><strong>Ctrl+C</strong><span>取消当前生成</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#9654;</span><div class="use-case-text"><strong>Ctrl+D 或 /exit</strong><span>退出 Claude Code</span></div></div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 2 部分: 更好的提示词 (幻灯片 10-17, 0% -> 20%)             -->
+    <!-- 第2部分：更好的提示词 (幻灯片 10-17，0% -> 20%)          -->
     <!-- ============================================================ -->
 
-    <!-- 幻灯片 10: 章节分隔 - 更好的提示词 -->
+    <!-- 幻灯片 10: 部分分隔符 - 更好的提示词 -->
     <div class="slide section-slide" data-slide="10" data-level="low">
         <p class="section-number">第二部分</p>
         <h1>更好的提示词</h1>
-        <p class="section-desc">级别：Low — 有效的提示词，产生真正的、生产级的结果。</p>
+        <p class="section-desc">级别：初级 &mdash; 有效的提示词，产生真正的、生产质量的结果。</p>
     </div>
 
     <!-- 幻灯片 11: 你的第一个提示 -->
@@ -390,31 +394,31 @@ todoapp/
         <h1>你的第一个提示</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
-            <p>从简单的开始 — 让 Claude 了解你的项目：</p>
-            <div class="code-block"><span class="cmd">&gt;</span> Read the README.md and give me a summary of this project</div>
+            <p>简单开始 &mdash; 让 Claude 理解你的项目：</p>
+            <div class="code-block"><span class="cmd">&gt;</span> 读取 README.md 并给我一个这个项目的总结</div>
         </div>
-        <p>Claude 会使用 <strong>Read</strong> 工具打开文件，然后总结它。你会在输出中看到工具调用。</p>
+        <p>Claude 会使用<strong>Read</strong>工具打开文件，然后总结它。你会在输出中看到工具调用。</p>
         <h3>刚才发生了什么？</h3>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>Claude 读取了你的提示</strong><span>理解你想要一个摘要</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>Claude 读取了你的提示</strong><span>理解你想要一个总结</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>使用了 Read 工具</strong><span>从你的项目中打开了 README.md</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>用摘要回应</strong><span>基于实际文件内容，不是猜测</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>用总结回应</strong><span>基于实际文件内容，不是猜测</span></div></div>
         </div>
     </div>
 
     <!-- 幻灯片 12: 好提示 vs 坏提示 -->
     <div class="slide" data-slide="12">
         <h1>好提示 vs 坏提示</h1>
-        <p>专业使用与 vibe coding 的区别 — 在 TodoApp 上展示：</p>
+        <p>vibe coding 和专业使用之间的区别 &mdash; 用我们的 TodoApp 展示：</p>
         <div class="two-col">
             <div class="col-card bad">
                 <h4>Vibe Coding</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> add a notes feature</div>
-                <p style="margin-top: 12px;">Claude 创建了一个与 <code>models/todo.py</code> 不匹配的新 schema 的随机 <code>/api/notes</code> 端点。前端页面没有侧边栏导航。</p>
+                <p style="margin-top: 12px;">Claude 创建了一个随机模式的 <code>/api/notes</code> 端点，模式与 <code>models/todo.py</code> 不匹配。前端页面没有侧边栏导航。</p>
                 <p style="color: #c62828;">模糊，没有上下文，没有约束。</p>
             </div>
             <div class="col-card good">
-                <h4>专业方式</h4>
+                <h4>专业</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> In backend/routes/todos.py, add a
    PUT /api/todos/{id}/complete endpoint.
    Follow the existing route pattern and
@@ -430,7 +434,7 @@ todoapp/
         <h1>提供上下文</h1>
         <div class="trigger-box">
             <h4>关键规则</h4>
-            <p>你给的上下文越多，Claude 表现越好。使用 <code>@</code> 在提示中直接引用文件。</p>
+            <p>你给的上下文越多，Claude 表现越好。使用 <code>@</code> 直接在提示中引用文件。</p>
         </div>
         <div class="how-to-trigger">
             <h4>TodoApp 示例</h4>
@@ -440,42 +444,43 @@ todoapp/
         </div>
         <h3>上下文技巧</h3>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128196;</span><div class="use-case-text"><strong>@file/path</strong><span>引用 Claude 要读取的特定文件</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128248;</span><div class="use-case-text"><strong>粘贴截图</strong><span>Ctrl+V 粘贴错误或 UI 的图片</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128196;</span><div class="use-case-text"><strong>@文件路径</strong><span>引用 Claude 要读取的特定文件</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128248;</span><div class="use-case-text"><strong>粘贴截图</strong><span>Ctrl+V 粘贴错误或 UI 图片</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128203;</span><div class="use-case-text"><strong>粘贴错误日志</strong><span>将完整错误信息复制到提示中</span></div></div>
         </div>
     </div>
 
-    <!-- 幻灯片 14: 上下文窗口 & /compact -->
+    <!-- 幻灯片 14: 上下文窗口和 /compact -->
     <div class="slide" data-slide="14">
-        <h1>上下文窗口 &amp; /compact</h1>
+        <h1>上下文窗口与 /compact</h1>
         <div class="trigger-box">
             <h4>关键概念</h4>
-            <p>Claude 有一个 <strong>上下文窗口</strong> — 即它能记住多少对话的限制。每个提示、读取的文件和响应都会填满它。</p>
+            <p>Claude 有一个<strong>上下文窗口</strong> &mdash; 它能记住多少对话的限制。每个提示、读取的文件和响应都会填满它。</p>
         </div>
+        <img src="../assets/context-window.jpeg" alt="上下文窗口图示，显示100万token限制如何分配" style="width: 100%; max-width: 800px; margin: 24px auto; display: block; border-radius: 8px;" />
         <div class="info-grid">
             <div class="info-card">
-                <h4>什么会填满上下文</h4>
+                <h4>什么填满上下文</h4>
                 <p>你的提示和消息</p>
                 <p>Claude 读取的每个文件</p>
                 <p>Bash 命令输出</p>
                 <p>Claude 自己的响应</p>
             </div>
             <div class="info-card">
-                <h4>/compact — 解决方法</h4>
+                <h4>/compact &mdash; 解决方法</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /compact</div>
-                <p>将对话历史压缩成摘要。Claude 从该摘要继续。</p>
+                <p>将对话历史压缩为摘要。Claude 从该摘要继续。</p>
             </div>
         </div>
         <div class="warning-box">
             <h4>最佳实践</h4>
-            <p>在上下文使用率达到 <strong>~50%</strong> 时手动运行 <code>/compact</code>。不要等待自动压缩 — 你会失去对保留内容的控制。</p>
+            <p>在上下文使用约<strong>50%</strong>时手动运行 <code>/compact</code>。不要等到自动压缩 &mdash; 你会失去对保留内容的控制。</p>
         </div>
     </div>
 
-    <!-- 幻灯片 15: /plan mode -->
+    <!-- 幻灯片 15: /plan 模式 -->
     <div class="slide" data-slide="15">
-        <h1>/plan — 编码前先规划</h1>
+        <h1>/plan &mdash; 编码前先计划</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /plan
@@ -485,42 +490,42 @@ todoapp/
             <div class="col-card bad">
                 <h4>没有 /plan</h4>
                 <p>Claude 立即写代码</p>
-                <p>方法错误 — 重做一切</p>
-                <p>在真正开始工作前 50% 上下文就没了</p>
+                <p>方法错误 &mdash; 重做一切</p>
+                <p>在真正工作开始前 50% 上下文就没了</p>
             </div>
             <div class="col-card good">
                 <h4>有 /plan</h4>
-                <p>Claude 以只读方式探索代码库</p>
-                <p>提出方案供你审批</p>
+                <p>Claude 只读探索代码库</p>
+                <p>提出方法供你审批</p>
                 <p>从一开始就正确的方法</p>
             </div>
         </div>
         <div class="trigger-box">
             <h4>经验法则</h4>
-            <p>对于涉及超过 2-3 个文件或需要架构决策的任务，始终从 plan mode 开始。</p>
+            <p>对于涉及超过 2-3 个文件或涉及架构决策的任何任务，始终从计划模式开始。</p>
         </div>
     </div>
 
-    <!-- 幻灯片 16: Plan Mode 实践 -->
+    <!-- 幻灯片 16: 计划模式实战 -->
     <div class="slide" data-slide="16">
-        <h1>Plan Mode 实践</h1>
+        <h1>计划模式实战</h1>
         <div class="how-to-trigger">
             <h4>分步进行</h4>
-            <div class="code-block"><span class="comment"># 第 1 步：进入 plan 模式</span>
+            <div class="code-block"><span class="comment"># 步骤 1：进入计划模式</span>
 <span class="cmd">&gt;</span> /plan
 
-<span class="comment"># 第 2 步：描述你想要什么</span>
+<span class="comment"># 步骤 2：描述你想要什么</span>
 <span class="cmd">&gt;</span> Add pagination to the /api/todos endpoint
 
-<span class="comment"># 第 3 步：Claude 探索并写出计划</span>
-<span class="comment">#（读取 routes/todos.py，检查 models，提出方案）</span>
+<span class="comment"># 步骤 3：Claude 探索并写出计划</span>
+<span class="comment">#（读取 routes/todos.py，检查模型，提出方法）</span>
 
-<span class="comment"># 第 4 步：审查计划并批准</span>
+<span class="comment"># 步骤 4：审查计划并批准</span>
 <span class="comment"># Claude 然后执行批准的计划</span></div>
         </div>
         <div class="trigger-box">
             <h4>TodoApp 优势</h4>
-            <p>在 plan 模式中，Claude 在写一行代码之前就发现了你现有的 SQLAlchemy 分页模式 — 不需要重复造轮子。</p>
+            <p>在计划模式中，Claude 在写第一行代码之前发现你现有的 SQLAlchemy 分页模式 &mdash; 不必重新发明轮子。</p>
         </div>
     </div>
 
@@ -528,32 +533,32 @@ todoapp/
     <div class="slide" data-slide="17">
         <h1>提示词最佳实践</h1>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#127919;</span><div class="use-case-text"><strong>文件要具体</strong><span>"In backend/routes/todos.py" 而不是 "in the backend code"</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128270;</span><div class="use-case-text"><strong>描述问题，不只是修复</strong><span>"The API returns 500 when..." 而不是 "make it work"</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128208;</span><div class="use-case-text"><strong>引用现有模式</strong><span>"Follow the pattern in routes/todos.py" 给 Claude 一个模板</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#129513;</span><div class="use-case-text"><strong>一次只做一件事</strong><span>小而集中的请求比大提示得到更好的结果</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#9989;</span><div class="use-case-text"><strong>让 Claude 验证</strong><span>"Run pytest after making changes" 及早发现错误</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128248;</span><div class="use-case-text"><strong>为 UI 问题提供截图</strong><span>一张图片胜过千言万语</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#127919;</span><div class="use-case-text"><strong>关于文件要具体</strong><span>"在 backend/routes/todos.py 中"而不是"在后端代码中"</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128270;</span><div class="use-case-text"><strong>描述问题，而不仅仅是修复</strong><span>"API 返回 500 当..." 而不是 "让它工作"</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128208;</span><div class="use-case-text"><strong>参考现有模式</strong><span>"遵循 routes/todos.py 中的模式"给 Claude 一个模板</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#129513;</span><div class="use-case-text"><strong>一次做一件事</strong><span>小而集中的请求比 mega-prompts 效果更好</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#9989;</span><div class="use-case-text"><strong>让 Claude 验证</strong><span>"更改后运行 pytest"及早发现错误</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128248;</span><div class="use-case-text"><strong>为 UI 问题提供截图</strong><span>一张图片胜过千言万语的描述</span></div></div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 3 部分: 项目记忆 (幻灯片 18-24, 20% -> 40%)                -->
+    <!-- 第3部分：项目记忆 (幻灯片 18-24，20% -> 40%)           -->
     <!-- ============================================================ -->
 
-    <!-- 幻灯片 18: 章节分隔 - 项目记忆 -->
+    <!-- 幻灯片 18: 部分分隔符 - 项目记忆 -->
     <div class="slide section-slide" data-slide="18" data-level="medium">
         <p class="section-number">第三部分</p>
         <h1>项目记忆</h1>
-        <p class="section-desc">级别：Medium — 让 Claude 记住你的项目、约定和偏好。</p>
+        <p class="section-desc">级别：中级 &mdash; 让 Claude 记住你的项目、约定和偏好。</p>
     </div>
 
-    <!-- 幻灯片 19: CLAUDE.md & /init -->
+    <!-- 幻灯片 19: CLAUDE.md 和 /init -->
     <div class="slide" data-slide="19">
-        <h1>CLAUDE.md &amp; /init</h1>
+        <h1>CLAUDE.md 与 /init</h1>
         <div class="trigger-box">
             <h4>关键概念</h4>
-            <p>CLAUDE.md 是一个在 <strong>每个会话开始时</strong> Claude 读取的 markdown 文件。它是你项目的 Claude 使用手册。</p>
+            <p>CLAUDE.md 是一个 markdown 文件，Claude 在<strong>每个会话开始</strong>时读取它。这是你的项目给 Claude 的操作手册。</p>
         </div>
         <div class="how-to-trigger">
             <h4>创建它</h4>
@@ -563,7 +568,7 @@ todoapp/
         <div class="code-block"><span class="comment"># CLAUDE.md</span>
 
 <span class="key">## 项目</span>
-TodoApp monorepo：FastAPI 后端 + Next.js 前端。
+TodoApp monorepo: FastAPI 后端 + Next.js 前端。
 
 <span class="key">## 结构</span>
 - backend/routes/ &mdash; FastAPI 路由处理器
@@ -572,13 +577,13 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
 - frontend/lib/api.ts &mdash; API 客户端
 
 <span class="key">## 命令</span>
-- cd backend &amp;&amp; uvicorn main:app --reload
-- cd frontend &amp;&amp; npm run dev
-- cd backend &amp;&amp; pytest
+- cd backend && uvicorn main:app --reload
+- cd frontend && npm run dev
+- cd backend && pytest
 
 <span class="key">## 约定</span>
 - 后端：遵循 routes/todos.py 中的路由模式
-- 前端：使用 Tailwind，将导航添加到 Sidebar.tsx
+- 前端：使用 Tailwind，添加到 Sidebar.tsx 导航
 - 始终为新端点添加测试</div>
     </div>
 
@@ -587,41 +592,41 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
         <h1>CLAUDE.md 应包含什么</h1>
         <div class="two-col">
             <div class="col-card good">
-                <h4>应该包含</h4>
+                <h4>应包含</h4>
                 <p>项目架构概览</p>
                 <p>构建和测试命令</p>
                 <p>关键文件位置</p>
                 <p>编码约定</p>
-                <p>遵循的常见模式</p>
+                <p>要遵循的常见模式</p>
                 <p>关键的注意事项</p>
             </div>
             <div class="col-card bad">
-                <h4>避免包含</h4>
-                <p>完整的 API 文档</p>
+                <h4>应避免</h4>
+                <p>整个 API 文档</p>
                 <p>长代码示例</p>
-                <p>密钥或 API key</p>
-                <p>经常变化的信息</p>
+                <p>密钥或 API 密钥</p>
+                <p>经常更改的信息</p>
                 <p>超过 150 行的内容</p>
             </div>
         </div>
         <div class="warning-box">
             <h4>关键规则</h4>
-            <p>保持 CLAUDE.md <strong>150 行以内</strong>。更长的文件会稀释指令 — Claude 可能会忽略部分内容。使用 Rules 和 Skills 获取详细信息。</p>
+            <p>保持 CLAUDE.md 在<strong>150 行以内</strong>。更长的文件会稀释指令 &mdash; Claude 可能会忽略部分内容。使用 Rules 和 Skills 获取详情。</p>
         </div>
     </div>
 
     <!-- 幻灯片 21: 保持在 150 行以内 -->
     <div class="slide" data-slide="21">
         <h1>保持在 150 行以内</h1>
-        <h3>如果你需要更多空间</h3>
+        <h3>如果需要更多空间</h3>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128196;</span><div class="use-case-text"><strong>使用 Rules</strong><span>将特定主题的指令放在 <code>.claude/rules/*.md</code> 文件中</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128218;</span><div class="use-case-text"><strong>使用 Skills</strong><span>将领域知识放在 <code>.claude/skills/</code> — 按需加载</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128196;</span><div class="use-case-text"><strong>使用 Rules</strong><span>将特定主题的说明放在 <code>.claude/rules/*.md</code> 文件中</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128218;</span><div class="use-case-text"><strong>使用 Skills</strong><span>将领域知识放在 <code>.claude/skills/</code> &mdash; 按需加载</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128279;</span><div class="use-case-text"><strong>引用文件</strong><span>指向文档而不是内联内容</span></div></div>
         </div>
         <div class="trigger-box">
-            <h4>层次结构</h4>
-            <p><strong>CLAUDE.md</strong>（始终加载，&lt;150 行）&rarr; <strong>Rules</strong>（路径范围，自动加载）&rarr; <strong>Skills</strong>（按需加载，任意长度）。</p>
+            <h4>层级结构</h4>
+            <p><strong>CLAUDE.md</strong>（始终加载，&lt;150 行）&rarr; <strong>Rules</strong>（路径作用域，自动加载）&rarr; <strong>Skills</strong>（按需，任何长度）。</p>
         </div>
     </div>
 
@@ -630,40 +635,40 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
         <h1>Rules (.claude/rules/)</h1>
         <div class="trigger-box">
             <h4>什么是 Rules？</h4>
-            <p>模块化的、主题特定的指令在单独的 markdown 文件中。与 CLAUDE.md 不同，rules 可以 <strong>作用域到特定路径</strong>。</p>
+            <p>模块化、特定主题的说明，存放在单独的 markdown 文件中。与 CLAUDE.md 不同，rules 可以<strong>作用域到特定路径</strong>。</p>
         </div>
         <h3>TodoApp 后端测试 Rule</h3>
         <div class="code-block"><span class="comment"># .claude/rules/backend-testing.md</span>
 ---
 <span class="key">globs</span>: [<span class="string">"backend/tests/**"</span>]
 ---
-编写后端测试时：
+为后端编写测试时：
 - 使用 pytest 和现有的 conftest.py fixtures
 - 遵循 test_todos.py 中的模式：
   - 使用 FastAPI 的 TestClient
   - 使用工厂函数创建测试数据
   - 断言状态码和响应体
-  - 每个测试后清理测试数据库
+  - 每次测试后清理测试数据库
 - 命名测试：test_{action}_{entity}_{scenario}
 - 始终测试成功和错误情况</div>
-        <p>当 Claude 处理测试文件时此 rule 才会激活 — 保持其他任务的上下文干净。</p>
+        <p>此 rule 只在 Claude 处理测试文件时激活 &mdash; 为其他任务保持上下文清洁。</p>
     </div>
 
-    <!-- 幻灯片 23: /memory & 记忆层次 [合并] -->
+    <!-- 幻灯片 23: /memory 和记忆层级 [合并] -->
     <div class="slide" data-slide="23">
-        <h1>/memory &amp; 记忆层次</h1>
+        <h1>/memory 与记忆层级</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /memory</div>
         </div>
-        <p>在编辑器中打开你的 CLAUDE.md 记忆文件。在此处的更改在所有会话中持久化。</p>
+        <p>在编辑器中打开你的 CLAUDE.md 记忆文件。此处的更改在所有会话中持久化。</p>
         <h3>三个作用域（按顺序加载）</h3>
         <div class="code-block"><span class="comment"># 会话开始时全部合并：</span>
-~/.claude/CLAUDE.md           <span class="comment"># 全局 — 所有项目</span>
-.claude/CLAUDE.md             <span class="comment"># 项目 — 通过 git 与团队共享</span>
-.claude/CLAUDE.local.md       <span class="comment"># 本地 — 个人的，git 忽略</span></div>
+~/.claude/CLAUDE.md           <span class="comment"># 全局 &mdash; 所有项目</span>
+.claude/CLAUDE.md             <span class="comment"># 项目 &mdash; 通过 git 与团队共享</span>
+.claude/CLAUDE.local.md       <span class="comment"># 本地 &mdash; 个人，git-忽略</span></div>
         <div class="trigger-box">
-            <h4>TodoApp 技巧</h4>
+            <h4>TodoApp 提示</h4>
             <p>将你的 TodoApp CLAUDE.md 放在仓库根目录，以便整个团队共享。将个人偏好（编辑器、样式）放在 <code>CLAUDE.local.md</code> 中。</p>
         </div>
     </div>
@@ -672,58 +677,58 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
     <div class="slide" data-slide="24">
         <h1>记忆最佳实践</h1>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128207;</span><div class="use-case-text"><strong>CLAUDE.md 保持在 150 行以内</strong><span>简洁、聚焦、高信号的指令</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128194;</span><div class="use-case-text"><strong>使用 rules 处理细节</strong><span>.claude/rules/ 中的路径作用域 rules 提供针对性指导</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128207;</span><div class="use-case-text"><strong>CLAUDE.md 保持在 150 行以内</strong><span>简短、专注、高信号的说明</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128194;</span><div class="use-case-text"><strong>使用 rules 获取具体内容</strong><span>.claude/rules/ 中的路径作用域 rules 以获得针对性指导</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128101;</span><div class="use-case-text"><strong>提交项目 CLAUDE.md</strong><span>团队通过 git 共享项目约定</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128274;</span><div class="use-case-text"><strong>使用 .local.md 处理个人偏好</strong><span>Git 忽略，不会影响队友</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128260;</span><div class="use-case-text"><strong>定期审查和精简</strong><span>过时的指令会造成困惑</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128274;</span><div class="use-case-text"><strong>使用 .local.md 获取个人偏好</strong><span>git-忽略，不会影响团队成员</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128260;</span><div class="use-case-text"><strong>定期审查和精简</strong><span>过时的说明会造成混乱</span></div></div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 4 部分: 结构化工作流 (幻灯片 25-28, 40% -> 50%)             -->
+    <!-- 第4部分：结构化工作流 (幻灯片 25-28，40% -> 50%)     -->
     <!-- ============================================================ -->
 
-    <!-- 幻灯片 25: 章节分隔 - 结构化工作流 -->
+    <!-- 幻灯片 25: 部分分隔符 - 结构化工作流 -->
     <div class="slide section-slide" data-slide="25">
         <p class="section-number">第四部分</p>
         <h1>结构化工作流</h1>
-        <p class="section-desc">级别：Medium — 防止浪费时间的系统方法。</p>
+        <p class="section-desc">级别：中级 &mdash; 防止浪费努力的系统性方法。</p>
     </div>
 
     <!-- 幻灯片 26: 任务列表 -->
     <div class="slide" data-slide="26">
         <h1>任务列表</h1>
-        <p>对于复杂任务，Claude 创建一个 <strong>任务列表</strong> 来跟踪进度：</p>
+        <p>对于复杂任务，Claude 会创建<strong>任务列表</strong>来跟踪进度：</p>
         <div class="code-block"><span class="cmd">&gt;</span> Add user authentication to the TodoApp:
    - POST /api/register endpoint
    - POST /api/login endpoint
    - JWT auth middleware
    - Protect /api/todos endpoints
    - Tests for all auth endpoints</div>
-        <p>Claude 将其分解为单独的任务，并在完成每个任务时显示进度。</p>
+        <p>Claude 将其分解为单个任务，并在完成每个任务时显示进度。</p>
         <div class="trigger-box">
             <h4>最佳实践</h4>
-            <p>将子任务拆分得足够小，使每个都能在 <strong>50% 上下文</strong> 内完成。每个子任务后提交。</p>
+            <p>将子任务分解得足够小，以便每个都能在<strong>50% 上下文</strong>内完成。每个子任务完成后提交。</p>
         </div>
     </div>
 
     <!-- 幻灯片 27: /model 选择 -->
     <div class="slide" data-slide="27">
-        <h1>/model — 模型选择</h1>
+        <h1>/model &mdash; 模型选择</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /model</div>
         </div>
         <p>打开模型选择器。将模型与任务匹配：</p>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#129504;</span><div class="use-case-text"><strong>Opus 4.6（默认）</strong><span>复杂任务 — "Add auth to the TodoApp backend with JWT"</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#9889;</span><div class="use-case-text"><strong>Sonnet 4.5</strong><span>日常编码 — "Add a completed_at field to the Todo model"</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#127950;</span><div class="use-case-text"><strong>Haiku 4.5</strong><span>简单任务 — "Read backend/routes/todos.py and summarize the endpoints"</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#129504;</span><div class="use-case-text"><strong>Opus 4.6（默认）</strong><span>复杂任务 &mdash; "用 JWT 为 TodoApp 后端添加认证"</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#9889;</span><div class="use-case-text"><strong>Sonnet 4.5</strong><span>日常编码 &mdash; "为 Todo 模型添加 completed_at 字段"</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#127950;</span><div class="use-case-text"><strong>Haiku 4.5</strong><span>简单任务 &mdash; "读取 backend/routes/todos.py 并总结端点"</span></div></div>
         </div>
         <div class="trigger-box">
-            <h4>专业技巧</h4>
-            <p>使用 <code>Option+P</code>（Mac）或 <code>Alt+P</code> 快速切换模型。在非复杂任务上使用 <code>/fast</code> 获得更快的 Opus 输出。</p>
+            <h4>专业提示</h4>
+            <p>使用 <code>Option+P</code>（Mac）或 <code>Alt+P</code> 快速切换模型。对于非复杂任务使用 <code>/fast</code> 以获得更快的 Opus 输出。</p>
         </div>
     </div>
 
@@ -731,23 +736,23 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
     <div class="slide" data-slide="28">
         <h1>工作流最佳实践</h1>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128506;</span><div class="use-case-text"><strong>始终从 plan mode 开始</strong><span>对于任何非平凡的任务</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128506;</span><div class="use-case-text"><strong>始终从计划模式开始</strong><span>对于任何非平凡任务</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#129513;</span><div class="use-case-text"><strong>将任务分解成小块</strong><span>每个子任务应在 50% 上下文内完成</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128190;</span><div class="use-case-text"><strong>每个子任务后提交</strong><span>干净的回滚点，而不是一个 mega-commit</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128230;</span><div class="use-case-text"><strong>在 ~50% 时手动 /compact</strong><span>不要等待自动压缩</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#129302;</span><div class="use-case-text"><strong>简单任务用 Vanilla Claude Code</strong><span>简单任务不需要复杂的工作流</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128230;</span><div class="use-case-text"><strong>在约 50% 时手动 /compact</strong><span>不要等待自动压缩</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#129302;</span><div class="use-case-text"><strong>小任务用普通 Claude Code</strong><span>简单任务不需要复杂的工作流</span></div></div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 5 部分: 领域知识 (幻灯片 29-33, 50% -> 65%)                -->
+    <!-- 第5部分：领域知识 (幻灯片 29-33，50% -> 65%)         -->
     <!-- ============================================================ -->
 
-    <!-- 幻灯片 29: 章节分隔 - 领域知识 -->
+    <!-- 幻灯片 29: 部分分隔符 - 领域知识 -->
     <div class="slide section-slide" data-slide="29" data-level="high">
         <p class="section-number">第五部分</p>
         <h1>领域知识</h1>
-        <p class="section-desc">级别：High — 可重用的知识，Claude 按需加载。</p>
+        <p class="section-desc">级别：高级 &mdash; Claude 可按需加载的可复用知识。</p>
     </div>
 
     <!-- 幻灯片 30: 什么是 Skills -->
@@ -755,17 +760,17 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
         <h1>什么是 Skills？</h1>
         <div class="trigger-box">
             <h4>关键概念</h4>
-            <p>Skills 是包含 <strong>领域知识</strong> 的 markdown 文件 — 指令、模式或工作流，Claude 需要时可以加载。把它们想象成微手册。</p>
+            <p>Skills 是包含<strong>领域知识</strong>的 markdown 文件 &mdash; Claude 需要时可以加载的说明、模式或工作流。把它们想象成微型手册。</p>
         </div>
-        <h3>为什么使用 Skills？</h3>
+        <h3>为什么用 Skills？</h3>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128218;</span><div class="use-case-text"><strong>渐进式披露</strong><span>知识只在相关时加载 — 不会膨胀每个会话</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#9851;</span><div class="use-case-text"><strong>可重用</strong><span>相同的 skill 可以跨 agents 和工作流使用</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128101;</span><div class="use-case-text"><strong>可分享</strong><span>提交到 git — 你的整个团队都受益</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128218;</span><div class="use-case-text"><strong>渐进式披露</strong><span>知识只在相关时加载 &mdash; 不会膨胀每个会话</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#9851;</span><div class="use-case-text"><strong>可复用</strong><span>相同的 skill 跨 agent 和工作流工作</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128101;</span><div class="use-case-text"><strong>可分享</strong><span>提交到 git &mdash; 整个团队受益</span></div></div>
         </div>
         <div class="trigger-box">
             <h4>Skills vs CLAUDE.md</h4>
-            <p><strong>CLAUDE.md</strong> = 始终加载，每个会话。<strong>Skills</strong> = 按需加载，相关时加载。对于仅在某些时候需要的知识使用 skills。</p>
+            <p><strong>CLAUDE.md</strong> = 每个会话始终加载。<strong>Skills</strong> = 按需加载，相关时加载。对于有时才需要的知识使用 skills。</p>
         </div>
     </div>
 
@@ -776,53 +781,53 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
         <div class="code-block"><span class="comment"># .claude/skills/frontend-conventions/SKILL.md</span>
 ---
 <span class="key">name</span>: <span class="string">frontend-conventions</span>
-<span class="key">description</span>: <span class="string">TodoApp frontend patterns and conventions</span>
+<span class="key">description</span>: <span class="string">TodoApp 前端模式和约定</span>
 ---
 
-<span class="comment"># Frontend Conventions</span>
+<span class="comment"># 前端约定</span>
 
 创建或修改前端组件时：
 
-<span class="key">## Sidebar Navigation</span>
-- Add new page routes to frontend/components/Sidebar.tsx
-- Use the existing NavLink pattern with icon + label
-- Keep alphabetical order in the nav list
+<span class="key">## 侧边栏导航</span>
+- 将新页面路由添加到 frontend/components/Sidebar.tsx
+- 使用现有的带图标+标签的 NavLink 模式
+- 在导航列表中保持字母顺序
 
-<span class="key">## Component Patterns</span>
-- Use functional components with TypeScript
-- Import API functions from lib/api.ts
-- Follow TodoList.tsx as the reference component
-- Use Tailwind classes: bg-white, rounded-lg, shadow-sm
+<span class="key">## 组件模式</span>
+- 使用 TypeScript 函数组件
+- 从 lib/api.ts 导入 API 函数
+- 以 TodoList.tsx 作为参考组件
+- 使用 Tailwind 类：bg-white、rounded-lg、shadow-sm
 
-<span class="key">## API Integration</span>
-- All API calls go through lib/api.ts
-- Use the existing fetch wrapper with error handling
+<span class="key">## API 集成</span>
+- 所有 API 调用都通过 lib/api.ts
+- 使用带错误处理的现有 fetch wrapper
 - Base URL: process.env.NEXT_PUBLIC_API_URL</div>
     </div>
 
-    <!-- 幻灯片 32: Skill Frontmatter & 调用 -->
+    <!-- 幻灯片 32: Skill 头部和调用 -->
     <div class="slide" data-slide="32">
-        <h1>Skill Frontmatter &amp; 调用</h1>
-        <h3>Frontmatter 选项</h3>
+        <h1>Skill 头部与调用</h1>
+        <h3>头部选项</h3>
         <div class="use-cases">
             <div class="use-case-item"><span class="use-case-icon">&#128220;</span><div class="use-case-text"><strong>name</strong><span>Skill 标识符（如果省略则使用目录名）</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128221;</span><div class="use-case-text"><strong>description</strong><span>何时调用 — 帮助 Claude 自动发现 skill</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128221;</span><div class="use-case-text"><strong>description</strong><span>何时调用 &mdash; 帮助 Claude 自动发现 skill</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#129302;</span><div class="use-case-text"><strong>model</strong><span>覆盖运行 skill 的模型</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128295;</span><div class="use-case-text"><strong>allowed-tools</strong><span>限制 skill 可以使用的工具</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128257;</span><div class="use-case-text"><strong>context: fork</strong><span>在隔离的子代理上下文中运行 skill 以处理复杂工作流</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128257;</span><div class="use-case-text"><strong>context: fork</strong><span>在隔离的 subagent 上下文中运行复杂工作流</span></div></div>
         </div>
-        <h3>调用 &amp; 执行模式</h3>
+        <h3>调用和执行模式</h3>
         <div class="code-block"><span class="comment"># 1. 手动：斜杠命令</span>
 <span class="cmd">&gt;</span> /frontend-conventions
 
 <span class="comment"># 2. 自动：Claude 通过 description 字段发现</span>
 <span class="comment">#    （当任务匹配 description 时发生）</span>
 
-<span class="comment"># 3. 预加载：在 agent 的 frontmatter 中</span>
+<span class="comment"># 3. 预加载：在 agent 的头部中</span>
 <span class="key">skills</span>:
   - frontend-conventions
 
-<span class="comment"># 4. 可选隔离，用于重型工作流</span>
+<span class="comment"># 4. 可选隔离用于重工作流</span>
 <span class="key">context</span>: <span class="string">fork</span></div>
     </div>
 
@@ -854,14 +859,14 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
     </div>
 
     <!-- ============================================================ -->
-    <!-- 第 6 部分: AGENTIC ENGINEERING (幻灯片 34-46, 65% -> 75%)     -->
+    <!-- 第6部分：AGENTIC ENGINEERING (幻灯片 34-46，65% -> 75%)      -->
     <!-- ============================================================ -->
 
-    <!-- 幻灯片 34: 章节分隔 - Agentic Engineering -->
+    <!-- 幻灯片 34: 部分分隔符 - Agentic Engineering -->
     <div class="slide section-slide" data-slide="34" data-level="high">
         <p class="section-number">第六部分</p>
         <h1>Agentic Engineering</h1>
-        <p class="section-desc">级别：High — 了解你的代码库并遵循你的模式的定制 agents。</p>
+        <p class="section-desc">级别：高级 &mdash; 了解你的代码库并遵循你的模式的自定义 agent。</p>
     </div>
 
     <!-- 幻灯片 35: 什么是 Agents -->
@@ -869,17 +874,17 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
         <h1>什么是 Agents？</h1>
         <div class="trigger-box">
             <h4>关键概念</h4>
-            <p>Agents 是 <code>.claude/agents/</code> 中的 markdown 文件，定义了一个 <strong>自定义 Claude 角色</strong>，具有自己的工具、模型、技能和行为。</p>
+            <p>Agents 是 <code>.claude/agents/</code> 中的 markdown 文件，定义了<strong>自定义 Claude 角色</strong>，具有自己的工具、模型、技能和行为。</p>
         </div>
         <h3>使用 Agents 的两种方式</h3>
         <div class="two-col">
             <div class="col-card">
                 <h4>作为主 Agent</h4>
-                <p>替换你对话的默认 Claude。</p>
+                <p>为你的对话替换默认的 Claude。</p>
                 <div class="code-block"><span class="cmd">$</span> claude --agent frontend-engineer</div>
             </div>
             <div class="col-card">
-                <h4>作为子代理</h4>
+                <h4>作为 Subagent</h4>
                 <p>通过 Agent 工具在隔离上下文中生成。</p>
                 <div class="code-block">Task(
   subagent_type=<span class="string">"frontend-engineer"</span>
@@ -896,18 +901,18 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
             <div class="col-card bad">
                 <h4>没有 Agent</h4>
                 <p><code>&gt; add a settings page</code></p>
-                <p>Claude 创建的 <code>pages/settings.tsx</code>：</p>
+                <p>Claude 创建了 <code>pages/settings.tsx</code>：</p>
                 <p>&bull; 内联 CSS（没有 Tailwind）</p>
                 <p>&bull; 直接 fetch 调用（忽略 api.ts）</p>
-                <p>&bull; 没有侧边栏导航入口</p>
-                <p style="color: #c62828;">与应用不契合的独立页面。</p>
+                <p>&bull; 没有侧边栏导航条目</p>
+                <p style="color: #c62828;">与应用不匹配的独立页面。</p>
             </div>
             <div class="col-card good">
                 <h4>有 Agent</h4>
                 <p>前端 agent 已经知道：</p>
-                <p>&bull; 使用设计系统中的 Tailwind token</p>
+                <p>&bull; 使用设计系统中的 Tailwind 令牌</p>
                 <p>&bull; 从 <code>lib/api.ts</code> 导入 API 函数</p>
-                <p>&bull; 将路由添加到 <code>Sidebar.tsx</code></p>
+                <p>&bull; 添加到 <code>Sidebar.tsx</code> 路由</p>
                 <p>&bull; 遵循 <code>TodoList.tsx</code> 组件模式</p>
                 <p style="color: #2e7d32;">与应用完美匹配的集成页面。</p>
             </div>
@@ -915,7 +920,7 @@ TodoApp monorepo：FastAPI 后端 + Next.js 前端。
         <div class="code-block"><span class="comment"># .claude/agents/frontend-engineer.md</span>
 ---
 <span class="key">name</span>: <span class="string">frontend-engineer</span>
-<span class="key">description</span>: <span class="string">Frontend development following TodoApp conventions</span>
+<span class="key">description</span>: <span class="string">遵循 TodoApp 约定的前端开发</span>
 <span class="key">tools</span>: <span class="string">Read, Write, Edit, Bash, Glob, Grep</span>
 <span class="key">model</span>: <span class="string">sonnet</span>
 <span class="key">skills</span>:
@@ -934,7 +939,7 @@ Follow TodoList.tsx as your reference component.</div>
             <div class="col-card bad">
                 <h4>没有 Agent</h4>
                 <p><code>&gt; add a tags feature</code></p>
-                <p>Claude 创建随机端点结构</p>
+                <p>Claude 创建了随机端点结构</p>
                 <p>与现有路由不同的错误处理</p>
                 <p>没有测试，没有模型验证</p>
             </div>
@@ -950,7 +955,7 @@ Follow TodoList.tsx as your reference component.</div>
         <div class="code-block"><span class="comment"># .claude/agents/backend-engineer.md</span>
 ---
 <span class="key">name</span>: <span class="string">backend-engineer</span>
-<span class="key">description</span>: <span class="string">Backend development following TodoApp patterns</span>
+<span class="key">description</span>: <span class="string">遵循 TodoApp 模式的后端开发</span>
 <span class="key">tools</span>: <span class="string">Read, Write, Edit, Bash, Glob, Grep</span>
 <span class="key">model</span>: <span class="string">sonnet</span>
 <span class="key">skills</span>:
@@ -963,9 +968,9 @@ Always add pytest tests for new endpoints.
 Use Pydantic schemas for request/response validation.</div>
     </div>
 
-    <!-- 幻灯片 38: Agent Frontmatter -->
+    <!-- 幻灯片 38: Agent 头部 -->
     <div class="slide" data-slide="38">
-        <h1>Agent Frontmatter</h1>
+        <h1>Agent 头部</h1>
         <div class="code-block"><span class="comment"># .claude/agents/code-reviewer.md</span>
 ---
 <span class="key">name</span>: <span class="string">code-reviewer</span>
@@ -983,17 +988,17 @@ performance problems, and suggest improvements.
 Review your memory for patterns you've seen before.</div>
         <h3>关键字段</h3>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128295;</span><div class="use-case-text"><strong>tools</strong><span>agent 可以做什么（Read, Write, Edit, Bash 等）</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128295;</span><div class="use-case-text"><strong>tools</strong><span>agent 可以做什么（Read、Write、Edit、Bash 等）</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128218;</span><div class="use-case-text"><strong>skills</strong><span>启动时预加载的知识</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#129504;</span><div class="use-case-text"><strong>memory</strong><span>跨会话的持久学习（user/project/local）</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#129504;</span><div class="use-case-text"><strong>memory</strong><span>跨会话的持久化学习（user/project/local）</span></div></div>
         </div>
     </div>
 
-    <!-- 幻灯片 39: Agent 工具 & Skills -->
+    <!-- 幻灯片 39: Agent 工具和 Skills -->
     <div class="slide" data-slide="39">
-        <h1>Agent 工具 &amp; Skills</h1>
+        <h1>Agent 工具和 Skills</h1>
         <h3>限制工具</h3>
-        <div class="code-block"><span class="comment"># 只读 agent — 不能修改任何内容</span>
+        <div class="code-block"><span class="comment"># 只读 agent &mdash; 不能修改任何内容</span>
 <span class="key">tools</span>: <span class="string">Read, Grep, Glob</span>
 
 <span class="comment"># 完全访问 agent</span>
@@ -1003,32 +1008,32 @@ Review your memory for patterns you've seen before.</div>
 <span class="key">tools</span>: <span class="string">Read, Grep, Glob, WebSearch, WebFetch</span></div>
         <div class="trigger-box">
             <h4>关键模式</h4>
-            <p>Skills 提供 <strong>静态知识</strong>（做什么）。Agents 提供 <strong>执行上下文</strong>（如何做，使用哪些工具）。它们结合在一起很强大。</p>
+            <p>Skills 提供<strong>静态知识</strong>（做什么）。Agents 提供<strong>执行上下文</strong>（如何做，用什么工具）。结合使用，它们很强大。</p>
         </div>
         <h3>选择模型</h3>
         <div class="use-cases">
             <div class="use-case-item"><span class="use-case-icon">&#129504;</span><div class="use-case-text"><strong>opus</strong><span>复杂推理、架构决策</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#9889;</span><div class="use-case-text"><strong>sonnet</strong><span>速度和能力的良好平衡</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#127950;</span><div class="use-case-text"><strong>haiku</strong><span>快速、便宜 — 非常适合简单、专注的任务</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#127950;</span><div class="use-case-text"><strong>haiku</strong><span>快速、便宜 &mdash; 适合简单、专注的任务</span></div></div>
         </div>
     </div>
 
-    <!-- 幻灯片 40: 子代理 -->
+    <!-- 幻灯片 40: Subagents -->
     <div class="slide" data-slide="40">
-        <h1>通过 Task 工具调用子代理</h1>
+        <h1>通过 Task 工具使用 Subagents</h1>
         <div class="trigger-box">
             <h4>关键概念</h4>
-            <p>子代理在 <strong>隔离的上下文</strong> 中运行 — 与主对话分开。它们完成工作，返回摘要，它们的上下文被丢弃。</p>
+            <p>Subagents 在<strong>隔离的上下文</strong>中运行 &mdash; 与主对话分开。它们完成工作，返回摘要，然后它们的上下文被丢弃。</p>
         </div>
-        <div class="code-block"><span class="comment"># Claude 自动生成子代理，或者你可以要求：</span>
+        <div class="code-block"><span class="comment"># Claude 自动或你可以要求生成一个 subagent：</span>
 <span class="cmd">&gt;</span> Use the frontend-engineer agent to add a settings page
 
-<span class="comment"># Claude 在内部使用 Agent 工具：</span>
+<span class="comment"># Claude 内部使用 Agent 工具：</span>
 Task(
   subagent_type=<span class="string">"frontend-engineer"</span>,
   prompt=<span class="string">"Add a user settings page to the TodoApp"</span>
 )</div>
-        <h3>内置子代理类型</h3>
+        <h3>内置 Subagent 类型</h3>
         <p>
             <span class="matcher-tag">Explore</span>
             <span class="matcher-tag">Plan</span>
@@ -1037,10 +1042,10 @@ Task(
         </p>
     </div>
 
-    <!-- 幻灯片 41: 命令 & 编排 -->
+    <!-- 幻灯片 41: 命令和编排 -->
     <div class="slide" data-slide="41">
-        <h1>命令 &amp; 编排</h1>
-        <p>命令是复杂工作流的入口点 — <strong>Command &rarr; Agent &rarr; Skills</strong> 模式：</p>
+        <h1>命令和编排</h1>
+        <p>命令是复杂工作流的入口点 &mdash; <strong>命令 &rarr; Agent &rarr; Skills</strong> 模式：</p>
         <div class="code-block"><span class="comment"># .claude/commands/add-feature.md</span>
 ---
 <span class="key">description</span>: <span class="string">Add a new feature to the TodoApp</span>
@@ -1049,26 +1054,26 @@ Task(
 
 <span class="comment"># Add Feature Command</span>
 
-1. Ask the user what feature to add (AskUserQuestion)
-2. Invoke the backend-engineer agent for API work:
+1. 问用户要添加什么功能（AskUserQuestion）
+2. 为 API 工作调用 backend-engineer agent：
    - Task(subagent_type="backend-engineer", ...)
-3. Invoke the frontend-engineer agent for UI work:
+3. 为 UI 工作调用 frontend-engineer agent：
    - Task(subagent_type="frontend-engineer", ...)
-4. Run tests to verify: pytest + npm test
-5. Summarize what was built</div>
+4. 运行测试验证：pytest + npm test
+5. 总结构建的内容</div>
         <div class="trigger-box">
             <h4>调用它</h4>
-            <p>命令位于 <code>.claude/commands/</code>。用户将它们作为斜杠命令调用：<code>&gt; /add-feature</code></p>
+            <p>命令位于 <code>.claude/commands/</code>。用户作为斜杠命令调用它们：<code>&gt; /add-feature</code></p>
         </div>
     </div>
 
     <!-- 幻灯片 42: Hooks + MCP -->
     <div class="slide" data-slide="42">
-        <h1>Hooks &amp; MCP 服务器</h1>
+        <h1>Hooks 和 MCP 服务器</h1>
         <div class="two-col">
             <div class="col-card">
                 <h4>Hooks</h4>
-                <p>在 Claude 生命周期的特定时刻执行的自定义脚本：</p>
+                <p>Claude 生命周期特定时刻的自定义脚本：</p>
                 <p><strong>PreToolUse</strong> &mdash; 验证命令</p>
                 <p><strong>PostToolUse</strong> &mdash; 自动格式化代码</p>
                 <p><strong>Stop</strong> &mdash; 检查任务完成</p>
@@ -1080,7 +1085,7 @@ Task(
                 <p>通过 Model Context Protocol 将 Claude 连接到外部工具：</p>
                 <p><strong>Playwright</strong> &mdash; 浏览器自动化</p>
                 <p><strong>Chrome DevTools</strong> &mdash; 控制台日志</p>
-                <p><strong>Databases</strong> &mdash; 直接查询数据</p>
+                <p><strong>数据库</strong> &mdash; 直接查询数据</p>
                 <div class="code-block"><span class="cmd">&gt;</span> /mcp</div>
             </div>
         </div>
@@ -1088,11 +1093,11 @@ Task(
 
     <!-- 幻灯片 43: 完整架构 -->
     <div class="slide" data-slide="43">
-        <h1>Command &rarr; Agent &rarr; Skills</h1>
+        <h1>命令 &rarr; Agent &rarr; Skills</h1>
         <p>复杂工作流的完整架构模式：</p>
         <div class="code-block"><span class="comment">+-----------------------------------------------+</span>
 <span class="comment">|</span>  <span class="key">/add-feature</span>  (Command)                     <span class="comment">|</span>
-<span class="comment">|</span>    Entry point &mdash; user invokes this             <span class="comment">|</span>
+<span class="comment">|</span>    入口点 &mdash; 用户调用这个                    <span class="comment">|</span>
 <span class="comment">|</span>                    |                              <span class="comment">|</span>
 <span class="comment">|</span>         +----------+----------+                  <span class="comment">|</span>
 <span class="comment">|</span>         v                     v                  <span class="comment">|</span>
@@ -1104,34 +1109,34 @@ Task(
 <span class="comment">+-----------------------------------------------+</span></div>
         <div class="trigger-box">
             <h4>为什么它有效</h4>
-            <p><strong>Commands</strong> = 入口。<strong>Agents</strong> = 编排。<strong>Skills</strong> = 领域知识。清晰分离，最大可重用性。</p>
+            <p><strong>命令</strong> = 入口点。<strong>Agents</strong> = 编排。<strong>Skills</strong> = 领域知识。清晰的分离，最大化的可复用性。</p>
         </div>
     </div>
 
-    <!-- 幻灯片 44: High Level 幻灯片 -->
+    <!-- 幻灯片 44: 高级幻灯片 -->
     <div class="slide section-slide" data-slide="44">
         <p class="celebration">&#127881;</p>
-        <h1>High &mdash; Agentic Engineering</h1>
+        <h1>高级 &mdash; Agentic Engineering</h1>
         <p class="section-desc">你的 TodoApp 现在有：用于项目上下文的 CLAUDE.md、用于路径作用域约定的 Rules、用于领域知识的 Skills、用于一致执行的 Agents、用于编排工作流的 Commands、用于生命周期自动化的 Hooks，以及用于外部工具的 MCP 服务器。</p>
     </div>
 
-    <!-- 幻灯片 45: Agent Memory -->
+    <!-- 幻灯片 45: Agent 记忆 -->
     <div class="slide" data-slide="45">
-        <h1>Agent Memory</h1>
+        <h1>Agent 记忆</h1>
         <div class="trigger-box">
-            <h4>关键特性</h4>
-            <p>Agents 可以 <strong>跨会话学习</strong>。在 frontmatter 中添加 <code>memory: user</code>，agent 就会建立自己的持久知识库。</p>
+            <h4>关键功能</h4>
+            <p>Agents 可以<strong>跨会话学习</strong>。在头部添加 <code>memory: user</code>，agent 就会建立自己的持久化知识库。</p>
         </div>
         <div class="code-block"><span class="comment"># Agent 记住它发现的模式</span>
 ~/.claude/agent-memory/code-reviewer/
   MEMORY.md                <span class="comment"># 前 200 行自动加载</span>
-  react-patterns.md        <span class="comment"># 主题特定的笔记</span>
-  security-checklist.md    <span class="comment"># 随着时间学习</span></div>
+  react-patterns.md        <span class="comment"># 特定主题笔记</span>
+  security-checklist.md    <span class="comment"># 随着时间学习的</span></div>
         <h3>记忆作用域</h3>
         <p>
             <span class="matcher-tag">user &mdash; 跨项目</span>
             <span class="matcher-tag">project &mdash; 团队共享</span>
-            <span class="matcher-tag">local &mdash; 个人的</span>
+            <span class="matcher-tag">local &mdash; 个人</span>
         </p>
     </div>
 
@@ -1141,36 +1146,36 @@ Task(
         <div class="info-grid">
             <div class="info-card">
                 <h4>创建 Agents</h4>
-                <p>在 <code>.claude/agents/</code> 中放入 <code>.md</code> 文件</p>
+                <p>在 <code>.claude/agents/</code> 放置 <code>.md</code> 文件</p>
                 <p>设置 name、tools、model、skills、memory</p>
                 <p>使用 <code>/agents</code> 交互式管理</p>
             </div>
             <div class="info-card">
                 <h4>使用 Agents</h4>
                 <p><strong>主 agent：</strong>在 settings.json 中设置 <code>"agent"</code></p>
-                <p><strong>子代理：</strong>Agent 工具生成它</p>
+                <p><strong>Subagent：</strong>Agent 工具生成它</p>
                 <p><strong>CLI：</strong><code>--agent name</code></p>
             </div>
             <div class="info-card">
                 <h4>最佳实践</h4>
-                <p>面向特性的 agents，而不是通用 ones</p>
+                <p>特定于功能的 agents，而不是通用 ones</p>
                 <p>预加载 skills 以获取领域知识</p>
-                <p>简单专注的任务使用 haiku 模型</p>
+                <p>对简单专注的任务使用 haiku 模型</p>
             </div>
             <div class="info-card">
                 <h4>架构</h4>
-                <p>Command &rarr; Agent &rarr; Skills</p>
+                <p>命令 &rarr; Agent &rarr; Skills</p>
                 <p>知识的渐进式披露</p>
-                <p>每个 agent 单个执行上下文</p>
+                <p>每个 agent 单一执行上下文</p>
             </div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- 附录: 参考 (幻灯片 47+, 无权重)                               -->
+    <!-- 附录：参考 (幻灯片 47+，无权重)                  -->
     <!-- ============================================================ -->
 
-    <!-- 幻灯片 47: 章节分隔 - 附录 -->
+    <!-- 幻灯片 47: 部分分隔符 - 附录 -->
     <div class="slide section-slide" data-slide="47">
         <p class="section-number">附录</p>
         <h1>参考</h1>
@@ -1180,7 +1185,7 @@ Task(
     <!-- 幻灯片 48: Claude 如何使用工具 -->
     <div class="slide" data-slide="48">
         <h1>Claude 如何使用工具</h1>
-        <p>Claude Code 不只是生成文本 — 它使用工具 <strong>执行操作</strong>：</p>
+        <p>Claude Code 不只是生成文本 &mdash; 它使用工具<strong>执行操作</strong>：</p>
         <div class="info-grid">
             <div class="info-card">
                 <h4>文件工具</h4>
@@ -1193,7 +1198,7 @@ Task(
             <div class="info-card">
                 <h4>操作工具</h4>
                 <p><strong>Bash</strong> &mdash; 运行 shell 命令</p>
-                <p><strong>Task</strong> &mdash; 生成子代理</p>
+                <p><strong>Task</strong> &mdash; 生成 subagents</p>
                 <p><strong>WebFetch</strong> &mdash; 获取 URL</p>
                 <p><strong>WebSearch</strong> &mdash; 搜索网络</p>
                 <p><strong>Skill</strong> &mdash; 调用 skills</p>
@@ -1201,7 +1206,7 @@ Task(
         </div>
         <div class="warning-box">
             <h4>重要</h4>
-            <p>Claude 在运行潜在危险的命令之前会请求许可。始终审查它将要做什么。</p>
+            <p>Claude 在运行潜在危险命令之前会请求许可。始终审查它要做什么。</p>
         </div>
     </div>
 
@@ -1209,20 +1214,20 @@ Task(
     <div class="slide" data-slide="49">
         <h1>文件操作</h1>
         <h3>读取文件</h3>
-        <div class="code-block"><span class="cmd">&gt;</span> Read the package.json file</div>
+        <div class="code-block"><span class="cmd">&gt;</span> 读取 package.json 文件</div>
         <h3>编辑文件</h3>
         <div class="code-block"><span class="cmd">&gt;</span> In src/utils/format.ts, change the date format from MM/DD to DD/MM</div>
         <h3>创建文件</h3>
-        <div class="code-block"><span class="cmd">&gt;</span> Create a new test file for the user service at tests/user.test.ts</div>
+        <div class="code-block"><span class="cmd">&gt;</span> 在 tests/user.test.ts 为用户服务创建一个新的测试文件</div>
         <div class="trigger-box">
-            <h4>专业技巧</h4>
-            <p>始终告诉 Claude <strong>要编辑哪个文件</strong>。不要说 "fix the bug" — 说 "fix the null check in <code>src/handlers/auth.ts</code> line 42"。</p>
+            <h4>专业提示</h4>
+            <p>始终告诉 Claude <strong>要编辑哪个文件</strong>。不要说"修复 bug" &mdash; 说"修复 <code>src/handlers/auth.ts</code> 第 42 行的空检查"。</p>
         </div>
     </div>
 
-    <!-- 幻灯片 50: Bash & 搜索 -->
+    <!-- 幻灯片 50: Bash 和搜索 -->
     <div class="slide" data-slide="50">
-        <h1>Bash 命令 &amp; 搜索</h1>
+        <h1>Bash 命令和搜索</h1>
         <h3>运行命令</h3>
         <div class="code-block"><span class="cmd">&gt;</span> Run the test suite: npm test
 <span class="cmd">&gt;</span> Check which port the server is using
@@ -1232,8 +1237,8 @@ Task(
 <span class="cmd">&gt;</span> Search for any TODO comments in the src directory
 <span class="cmd">&gt;</span> Find where the API_KEY environment variable is used</div>
         <div class="trigger-box">
-            <h4>专业技巧</h4>
-            <p>使用 <code>!</code> 前缀快速运行 bash 命令：<code>!git status</code> 运行命令并显示输出，Claude 不会分析它。</p>
+            <h4>专业提示</h4>
+            <p>使用 <code>!</code> 前缀快速运行 bash 命令：<code>!git status</code> 运行命令并显示输出，而不需要 Claude 分析它。</p>
         </div>
     </div>
 
@@ -1244,14 +1249,14 @@ Task(
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /help</div>
         </div>
-        <p>显示所有可用的斜杠命令。这是你忘记命令时的起点。</p>
+        <p>显示所有可用的斜杠命令。当你忘记命令时，这是你的起点。</p>
         <div class="info-grid">
             <div class="info-card">
                 <h4>日常使用</h4>
                 <p><code>/model</code> &mdash; 切换模型</p>
-                <p><code>/plan</code> &mdash; 编码前规划</p>
+                <p><code>/plan</code> &mdash; 编码前计划</p>
                 <p><code>/compact</code> &mdash; 释放上下文</p>
-                <p><code>/cost</code> &mdash; 检查支出</p>
+                <p><code>/cost</code> &mdash; 检查花费</p>
             </div>
             <div class="info-card">
                 <h4>项目设置</h4>
@@ -1265,92 +1270,92 @@ Task(
 
     <!-- 幻灯片 52: 努力级别 -->
     <div class="slide" data-slide="52">
-        <h1>/model — 努力级别</h1>
-        <p>选择 Opus 4.6 时，你可以调整 <strong>努力级别</strong>：</p>
+        <h1>/model &mdash; 努力级别</h1>
+        <p>选择 Opus 4.6 时，你可以调整<strong>努力级别</strong>：</p>
         <div class="how-to-trigger">
             <h4>如何设置</h4>
-            <p>运行 <code>/model</code>，选择 Opus，然后使用 <code>&larr; &rarr;</code> 箭头键更改努力级别。</p>
+            <p>运行 <code>/model</code>，选择 Opus，然后使用 <code>&larr; &rarr;</code> 方向键更改努力级别。</p>
         </div>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128293;</span><div class="use-case-text"><strong>High（默认）</strong><span>完整推理深度 — 复杂架构、棘手 bug、大型重构</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#9878;</span><div class="use-case-text"><strong>Medium</strong><span>平衡 — 日常编码任务</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128168;</span><div class="use-case-text"><strong>Low</strong><span>最小推理 — 速度重要的快速简单任务</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128293;</span><div class="use-case-text"><strong>高（默认）</strong><span>完全推理深度 &mdash; 复杂架构、棘手 bug、大型重构</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#9878;</span><div class="use-case-text"><strong>中</strong><span>平衡 &mdash; 日常编码任务</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128168;</span><div class="use-case-text"><strong>低</strong><span>最小推理 &mdash; 速度重要的快速简单任务</span></div></div>
         </div>
     </div>
 
     <!-- 幻灯片 53: /fast -->
     <div class="slide" data-slide="53">
-        <h1>/fast — 更快输出</h1>
+        <h1>/fast &mdash; 更快的输出</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /fast</div>
         </div>
         <div class="trigger-box">
             <h4>它做什么</h4>
-            <p>切换快速模式 — 相同的 Opus 4.6 模型，更快的 token 输出。它不会切换到不同的模型。</p>
+            <p>切换快速模式 &mdash; 相同的 Opus 4.6 模型但输出 token 更快。它不会切换到不同的模型。</p>
         </div>
     </div>
 
-    <!-- 幻灯片 54: /context & /cost -->
+    <!-- 幻灯片 54: /context 和 /cost -->
     <div class="slide" data-slide="54">
-        <h1>/context &amp; /cost</h1>
+        <h1>/context 和 /cost</h1>
         <div class="two-col">
             <div class="col-card">
-                <h4>/context — 可视化使用情况</h4>
+                <h4>/context &mdash; 可视化使用情况</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /context</div>
-                <p>显示上下文窗口的彩色网格 — 使用了多少，什么占用了空间。</p>
+                <p>显示你的上下文窗口的颜色网格 &mdash; 使用了多少，什么占用了空间。</p>
             </div>
             <div class="col-card">
-                <h4>/cost — 追踪支出</h4>
+                <h4>/cost &mdash; 跟踪支出</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /cost</div>
-                <p>显示当前会话的 token 使用情况和成本。</p>
+                <p>显示当前会话的 token 使用量和成本。</p>
             </div>
         </div>
     </div>
 
-    <!-- 幻灯片 55: /clear & /rewind -->
+    <!-- 幻灯片 55: /clear 和 /rewind -->
     <div class="slide" data-slide="55">
-        <h1>/clear &amp; /rewind</h1>
+        <h1>/clear 和 /rewind</h1>
         <div class="two-col">
             <div class="col-card">
-                <h4>/clear — 全新开始</h4>
+                <h4>/clear &mdash; 全新开始</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /clear</div>
                 <p>完全清除对话历史。切换任务时使用。</p>
             </div>
             <div class="col-card">
-                <h4>/rewind — 返回</h4>
+                <h4>/rewind &mdash; 返回</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /rewind</div>
-                <p>将对话和/或代码倒回到更早的时间点。</p>
+                <p>将对话和/或代码回滚到较早的时间点。</p>
             </div>
         </div>
         <div class="trigger-box">
             <h4>何时使用哪个</h4>
-            <p><strong>/clear</strong> = 新话题。<strong>/rewind</strong> = 同一话题，走错路。<strong>/compact</strong> = 同一话题，上下文不足。</p>
+            <p><strong>/clear</strong> = 新话题。<strong>/rewind</strong> = 同一话题，错误的方向。<strong>/compact</strong> = 同一话题，上下文不足。</p>
         </div>
     </div>
 
     <!-- 幻灯片 56: /resume -->
     <div class="slide" data-slide="56">
-        <h1>/resume — 恢复会话</h1>
+        <h1>/resume &mdash; 恢复会话</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="comment"># 恢复最近的会话</span>
 <span class="cmd">$</span> claude --resume
 
-<span class="comment"># 或在 Claude Code 内部：</span>
+<span class="comment"># 或从 Claude Code 内部：</span>
 <span class="cmd">&gt;</span> /resume</div>
         </div>
-        <p>打开会话选择器，显示你最近的对话。选择一个继续你离开的地方。</p>
+        <p>打开显示你最近对话的会话选择器。选择一个以继续你离开的地方。</p>
     </div>
 
     <!-- 幻灯片 57: /doctor -->
     <div class="slide" data-slide="57">
-        <h1>/doctor — 诊断</h1>
+        <h1>/doctor &mdash; 诊断</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /doctor</div>
         </div>
-        <p>检查 Claude Code 安装的健康状态：</p>
+        <p>检查你的 Claude Code 安装健康状况：</p>
         <div class="use-cases">
             <div class="use-case-item"><span class="use-case-icon">&#9989;</span><div class="use-case-text"><strong>身份验证</strong><span>验证你的登录是否有效</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#9989;</span><div class="use-case-text"><strong>配置</strong><span>检查 settings.json 是否有错误</span></div></div>
@@ -1361,7 +1366,7 @@ Task(
 
     <!-- 幻灯片 58: /config -->
     <div class="slide" data-slide="58">
-        <h1>/config — 配置</h1>
+        <h1>/config &mdash; 配置</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /config</div>
@@ -1377,12 +1382,12 @@ Task(
 
     <!-- 幻灯片 59: /permissions -->
     <div class="slide" data-slide="59">
-        <h1>/permissions — 工具访问控制</h1>
+        <h1>/permissions &mdash; 工具访问控制</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /permissions</div>
         </div>
-        <p>管理 Claude 可以在不询问的情况下做什么。支持 <strong>通配符语法</strong>：</p>
+        <p>管理 Claude 可以在不询问的情况下做什么。支持<strong>通配符语法</strong>：</p>
         <div class="code-block"><span class="comment">// 允许模式</span>
 Bash(npm run *)        <span class="comment">// 任何 npm 脚本</span>
 Bash(git *)            <span class="comment">// 所有 git 命令</span>
@@ -1390,19 +1395,19 @@ Edit(src/**)           <span class="comment">// 编辑 src/ 中的任何文件</
 
 <span class="comment">// 拒绝模式</span>
 Bash(rm -rf *)         <span class="comment">// 阻止破坏性命令</span>
-Read(.env)             <span class="comment">// 阻止读取 secrets</span></div>
+Read(.env)             <span class="comment">// 阻止读取密钥</span></div>
     </div>
 
     <!-- 幻灯片 60: /sandbox -->
     <div class="slide" data-slide="60">
-        <h1>/sandbox — 沙盒</h1>
+        <h1>/sandbox &mdash; 沙箱</h1>
         <div class="how-to-trigger">
             <h4>试试这个</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /sandbox</div>
         </div>
         <div class="trigger-box">
             <h4>它做什么</h4>
-            <p>为 bash 命令启用文件和网络隔离。更安全，更少的权限提示。</p>
+            <p>为 bash 命令启用文件和网络隔离。更安全，权限提示更少。</p>
         </div>
     </div>
 
@@ -1418,10 +1423,10 @@ Read(.env)             <span class="comment">// 阻止读取 secrets</span></div
                 <p><code>/rewind</code> &mdash; 撤销更改</p>
             </div>
             <div class="info-card">
-                <h4>模型 &amp; 模式</h4>
+                <h4>模型和模式</h4>
                 <p><code>/model</code> &mdash; 切换模型</p>
                 <p><code>/fast</code> &mdash; 切换速度</p>
-                <p><code>/plan</code> &mdash; 规划模式</p>
+                <p><code>/plan</code> &mdash; 计划模式</p>
                 <p><code>/config</code> &mdash; 设置</p>
             </div>
             <div class="info-card">
@@ -1429,11 +1434,11 @@ Read(.env)             <span class="comment">// 阻止读取 secrets</span></div
                 <p><code>/init</code> &mdash; 创建 CLAUDE.md</p>
                 <p><code>/memory</code> &mdash; 编辑记忆</p>
                 <p><code>/permissions</code> &mdash; 工具访问</p>
-                <p><code>/sandbox</code> &mdash; 沙盒</p>
+                <p><code>/sandbox</code> &mdash; 沙箱</p>
             </div>
             <div class="info-card">
-                <h4>信息 &amp; 调试</h4>
-                <p><code>/context</code> &mdash; 上下文使用情况</p>
+                <h4>信息和调试</h4>
+                <p><code>/context</code> &mdash; 上下文使用</p>
                 <p><code>/cost</code> &mdash; Token 支出</p>
                 <p><code>/doctor</code> &mdash; 健康检查</p>
                 <p><code>/help</code> &mdash; 所有命令</p>
@@ -1446,11 +1451,11 @@ Read(.env)             <span class="comment">// 阻止读取 secrets</span></div
         <h1>提交工作流</h1>
         <div class="how-to-trigger">
             <h4>让 Claude 提交</h4>
-            <div class="code-block"><span class="cmd">&gt;</span> Commit these changes with a descriptive message</div>
+            <div class="code-block"><span class="cmd">&gt;</span> 用描述性消息提交这些更改</div>
         </div>
         <p>Claude 会：</p>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>运行 git status &amp; diff</strong><span>审查所有暂存和未暂存的更改</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>运行 git status 和 diff</strong><span>审查所有已暂存和未暂存的更改</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>起草提交消息</strong><span>关注"为什么"而不是"是什么"，遵循你的仓库风格</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>暂存并提交</strong><span>添加特定文件（不是 git add -A）并创建提交</span></div></div>
         </div>
@@ -1461,17 +1466,17 @@ Read(.env)             <span class="comment">// 阻止读取 secrets</span></div
         <h1>PR 工作流</h1>
         <div class="how-to-trigger">
             <h4>让 Claude 创建 PR</h4>
-            <div class="code-block"><span class="cmd">&gt;</span> Create a pull request for these changes</div>
+            <div class="code-block"><span class="cmd">&gt;</span> 为这些更改创建一个 pull request</div>
         </div>
         <p>Claude 会：</p>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>审查分支上的所有提交</strong><span>分析来自基础分支的完整 diff</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>编写 PR 标题 &amp; 描述</strong><span>摘要、测试计划、更改概览</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>通过 gh CLI 推送并创建 PR</strong><span>使用 GitHub CLI 创建拉取请求</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>审查分支上的所有提交</strong><span>分析基础分支的完整 diff</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>编写 PR 标题和描述</strong><span>摘要、测试计划和更改概览</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>通过 gh CLI 推送并创建 PR</strong><span>使用 GitHub CLI 创建 pull request</span></div></div>
         </div>
     </div>
 
-    <!-- 幻灯片 64: 设置默认主 Agent -->
+    <!-- 幻灯片 64: 默认主 Agent -->
     <div class="slide" data-slide="64">
         <h1>设置默认 Agent</h1>
         <div class="how-to-trigger">
@@ -1481,12 +1486,12 @@ Read(.env)             <span class="comment">// 阻止读取 secrets</span></div
   <span class="key">"agent"</span>: <span class="string">"frontend-engineer"</span>
 }</div>
         </div>
-        <p>现在每次在这个项目中运行 <code>claude</code>，你都会与 <code>frontend-engineer</code> agent 对话，而不是默认的 Claude。</p>
-        <h3>每次会话覆盖</h3>
+        <p>现在每次你在项目中运行 <code>claude</code>，你都会与 <code>frontend-engineer</code> agent 交谈，而不是默认的 Claude。</p>
+        <h3>每个会话覆盖</h3>
         <div class="code-block"><span class="cmd">$</span> claude --agent backend-engineer</div>
         <div class="trigger-box">
             <h4>管理 Agents</h4>
-            <p>运行 <code>/agents</code> 交互式查看、创建、编辑或删除 agents。</p>
+            <p>运行 <code>/agents</code> 以交互方式查看、创建、编辑或删除 agents。</p>
         </div>
     </div>
 
@@ -1494,13 +1499,13 @@ Read(.env)             <span class="comment">// 阻止读取 secrets</span></div
     <div class="slide" data-slide="65">
         <h1>settings.json 概览</h1>
         <div class="trigger-box">
-            <h4>设置层次结构</h4>
+            <h4>设置层级</h4>
             <p>设置从最具体到最不具体级联。更高优先级获胜。</p>
         </div>
         <div class="code-block"><span class="comment"># 用户可写覆盖顺序（从高到低）：</span>
 1. 命令行标志              <span class="comment"># --model opus</span>
-2. .claude/settings.local.json     <span class="comment"># 个人的，git 忽略</span>
-3. .claude/settings.json           <span class="comment"># 团队共享，已提交</span>
+2. .claude/settings.local.json     <span class="comment"># 个人，git-忽略</span>
+3. .claude/settings.json           <span class="comment"># 团队共享，提交</span>
 4. ~/.claude/settings.local.json   <span class="comment"># 全局个人覆盖</span>
 5. ~/.claude/settings.json         <span class="comment"># 全局个人默认</span>
 
@@ -1511,17 +1516,17 @@ managed-settings.json              <span class="comment"># 组织策略（强制
     <!-- 幻灯片 66: Spinner Verbs -->
     <div class="slide" data-slide="66">
         <h1>Spinner Verbs</h1>
-        <p>自定义 Claude 思考时显示的加载消息：</p>
+        <p>自定义 Claude 思考时出现的加载消息：</p>
         <div class="code-block"><span class="comment">// .claude/settings.json</span>
 {
   <span class="key">"spinnerVerbs"</span>: {
     <span class="key">"mode"</span>: <span class="string">"replace"</span>,
     <span class="key">"verbs"</span>: [
-      <span class="string">"Cooking"</span>,
-      <span class="string">"Brewing"</span>,
-      <span class="string">"Crafting"</span>,
-      <span class="string">"Conjuring"</span>,
-      <span class="string">"Manifesting"</span>
+      <span class="string">"烹饪中"</span>,
+      <span class="string">"冲泡中"</span>,
+      <span class="string">"制作中"</span>,
+      <span class="string">"召唤中"</span>,
+      <span class="string">"显化中"</span>
     ]
   }
 }</div>
@@ -1550,18 +1555,18 @@ managed-settings.json              <span class="comment"># 组织策略（强制
         <div class="how-to-trigger">
             <h4>通过 /config 设置</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /config
-<span class="comment"># 导航到 Output Style</span></div>
+<span class="comment"># 导航到输出样式</span></div>
         </div>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#128214;</span><div class="use-case-text"><strong>Explanatory</strong><span>Claude 在工作时解释代码模式和技术</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#127891;</span><div class="use-case-text"><strong>Learning</strong><span>Claude 引导你完成更改</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#9999;</span><div class="use-case-text"><strong>Custom</strong><span>定义你自己的输出样式</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128214;</span><div class="use-case-text"><strong>解释性</strong><span>Claude 在工作时解释代码模式和框架</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#127891;</span><div class="use-case-text"><strong>学习</strong><span>Claude 引导你自己完成更改</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#9999;</span><div class="use-case-text"><strong>自定义</strong><span>定义你自己的输出样式</span></div></div>
         </div>
     </div>
 
-    <!-- 幻灯片 69: 快捷键 -->
+    <!-- 幻灯片 69: 键盘快捷键 -->
     <div class="slide" data-slide="69">
-        <h1>快捷键</h1>
+        <h1>键盘快捷键</h1>
         <div class="how-to-trigger">
             <h4>自定义按键</h4>
             <div class="code-block"><span class="cmd">&gt;</span> /keybindings</div>
@@ -1571,7 +1576,7 @@ managed-settings.json              <span class="comment"># 组织策略（强制
                 <h4>导航</h4>
                 <p><code>Option+P</code> &mdash; 切换模型</p>
                 <p><code>Ctrl+L</code> &mdash; 清除屏幕</p>
-                <p><code>Esc Esc</code> &mdash; 倒回</p>
+                <p><code>Esc Esc</code> &mdash; 回溯</p>
             </div>
             <div class="info-card">
                 <h4>编辑</h4>
@@ -1582,19 +1587,19 @@ managed-settings.json              <span class="comment"># 组织策略（强制
         </div>
     </div>
 
-    <!-- 幻灯片 70: 终端 & Vim -->
+    <!-- 幻灯片 70: 终端和 Vim -->
     <div class="slide" data-slide="70">
-        <h1>终端设置 &amp; Vim 模式</h1>
+        <h1>终端设置和 Vim 模式</h1>
         <div class="two-col">
             <div class="col-card">
                 <h4>/terminal-setup</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /terminal-setup</div>
-                <p>启用 <code>Shift+Enter</code> 在 IDE 终端中换行。</p>
+                <p>启用 <code>Shift+Enter</code> 用于 IDE 终端中的换行。</p>
             </div>
             <div class="col-card">
                 <h4>/vim</h4>
                 <div class="code-block"><span class="cmd">&gt;</span> /vim</div>
-                <p>在 Claude Code 提示中启用 vim 风格编辑模式。</p>
+                <p>在 Claude Code 提示中启用 vim 风格的编辑模式。</p>
             </div>
         </div>
     </div>
@@ -1604,17 +1609,17 @@ managed-settings.json              <span class="comment"># 组织策略（强制
         <h1>自定义总结</h1>
         <div class="info-grid">
             <div class="info-card">
-                <h4>快速收获</h4>
+                <h4>快速上手</h4>
                 <p><code>spinnerVerbs</code> &mdash; 有趣的加载消息</p>
                 <p><code>/statusline</code> &mdash; 信息栏</p>
                 <p><code>/config</code> &rarr; 输出样式</p>
                 <p><code>/keybindings</code> &mdash; 自定义按键</p>
             </div>
             <div class="info-card">
-                <h4>高级功能</h4>
+                <h4>强大功能</h4>
                 <p>Hooks &mdash; 自定义生命周期脚本</p>
                 <p>Plugins &mdash; 可安装包</p>
-                <p>MCP 服务器 &mdash; 外部工具</p>
+                <p>MCP Servers &mdash; 外部工具</p>
                 <p>Sandbox &mdash; 安全隔离</p>
             </div>
         </div>
@@ -1624,8 +1629,8 @@ managed-settings.json              <span class="comment"># 组织策略（强制
     <div class="slide" data-slide="72">
         <h1>调试技巧</h1>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">&#129658;</span><div class="use-case-text"><strong>运行 /doctor</strong><span>当出现问题时首先尝试的事情</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128421;</span><div class="use-case-text"><strong>后台任务查看日志</strong><span>让 Claude 将服务器作为后台任务运行，以便你可以在工作时查看日志</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#129658;</span><div class="use-case-text"><strong>运行 /doctor</strong><span>当某些东西不工作时的第一件事</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128421;</span><div class="use-case-text"><strong>后台任务查看日志</strong><span>让 Claude 将服务器作为后台任务运行，这样你可以在工作时看到日志</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#127760;</span><div class="use-case-text"><strong>浏览器 MCP 查看控制台日志</strong><span>使用 Playwright、Chrome DevTools 或 Chrome 中的 Claude 让 Claude 查看浏览器控制台</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128248;</span><div class="use-case-text"><strong>UI 问题的截图</strong><span>直接粘贴截图 &mdash; Ctrl+V。胜过千言万语。</span></div></div>
         </div>
@@ -1635,12 +1640,12 @@ managed-settings.json              <span class="comment"># 组织策略（强制
     <div class="slide" data-slide="73">
         <h1>黄金法则</h1>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>始终从 plan mode 开始</strong><span>对于任何非平凡的任务。在 Claude 写代码之前审查计划。</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>保持 CLAUDE.md 在 150 行以内</strong><span>更长的指令会被稀释。使用 skills 和 rules 获取细节。</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>在 ~50% 时手动 /compact</strong><span>不要等待自动压缩。保持对保留内容的控制。</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>始终从计划模式开始</strong><span>对于任何非平凡任务。在 Claude 写代码之前审查计划。</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>CLAUDE.md 保持在 150 行以内</strong><span>更长的说明会被稀释。使用 skills 和 rules 获取详情。</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>在约 50% 时手动 /compact</strong><span>不要等待自动压缩。保持对保留内容的控制。</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">4&#65039;&#8419;</span><div class="use-case-text"><strong>每个子任务后提交</strong><span>小而频繁的提交。干净的回滚点。</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">5&#65039;&#8419;</span><div class="use-case-text"><strong>一次只做一件事</strong><span>小而集中的请求比大提示得到更好的结果。</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">6&#65039;&#8419;</span><div class="use-case-text"><strong>文件要具体</strong><span>"Fix the null check in backend/routes/todos.py line 42" 而不是 "fix the bug"。</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">5&#65039;&#8419;</span><div class="use-case-text"><strong>一次做一件事</strong><span>小而集中的请求比 mega-prompts 效果更好。</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">6&#65039;&#8419;</span><div class="use-case-text"><strong>关于文件要具体</strong><span>"修复 backend/routes/todos.py 第 42 行的空检查"而不是"修复 bug"。</span></div></div>
         </div>
     </div>
 
@@ -1649,8 +1654,8 @@ managed-settings.json              <span class="comment"># 组织策略（强制
         <h1>资源</h1>
         <div class="use-cases">
             <div class="use-case-item"><span class="use-case-icon">&#128214;</span><div class="use-case-text"><strong>Claude Code 文档</strong><span>code.claude.com/docs/en</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#128161;</span><div class="use-case-text"><strong>Boris Cherny 的 12 条技巧</strong><span>tips/claude-boris-12-tips-12-feb-26.md</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">&#127959;</span><div class="use-case-text"><strong>本仓库</strong><span>skills、agents、hooks 和 Command &rarr; Agent &rarr; Skills 模式的工作示例</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#128161;</span><div class="use-case-text"><strong>Boris Cherny 的 12 个技巧</strong><span>tips/claude-boris-12-tips-12-feb-26.md</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">&#127959;</span><div class="use-case-text"><strong>本仓库</strong><span>skills、agents、hooks 以及 命令 &rarr; Agent &rarr; Skills 模式的工作示例</span></div></div>
             <div class="use-case-item"><span class="use-case-icon">&#128295;</span><div class="use-case-text"><strong>Claude Code Hooks</strong><span>github.com/shanraisshan/claude-code-hooks</span></div></div>
         </div>
     </div>
@@ -1659,18 +1664,18 @@ managed-settings.json              <span class="comment"># 组织策略（强制
     <div class="slide" data-slide="75">
         <h1>你的下一步</h1>
         <div class="use-cases">
-            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>安装 &amp; 登录</strong><span>今天就在你的机器上运行 Claude Code</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>在你的项目上运行 /init</strong><span>创建 CLAUDE.md &mdash; 给 Claude 关于你代码库的上下文</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>为你的第一个真实任务使用 plan mode</strong><span>选择一个 bug 或小功能，并通过规划完成它</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">4&#65039;&#8419;</span><div class="use-case-text"><strong>创建你的第一个 skill</strong><span>记录一个你的团队重复的工作流并将其作为 skill</span></div></div>
-            <div class="use-case-item"><span class="use-case-icon">5&#65039;&#8419;</span><div class="use-case-text"><strong>构建一个面向特性的 agent</strong><span>给 Claude 关于你代码库的领域知识</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">1&#65039;&#8419;</span><div class="use-case-text"><strong>安装和登录</strong><span>今天就在你的机器上运行 Claude Code</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">2&#65039;&#8419;</span><div class="use-case-text"><strong>对你的项目运行 /init</strong><span>创建 CLAUDE.md &mdash; 给 Claude 关于你代码库的上下文</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">3&#65039;&#8419;</span><div class="use-case-text"><strong>为你的第一个真实任务使用计划模式</strong><span>选择一个 bug 或小功能，并通过计划完成它</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">4&#65039;&#8419;</span><div class="use-case-text"><strong>创建你的第一个 skill</strong><span>记录你的团队重复的工作流并将其变成 skill</span></div></div>
+            <div class="use-case-item"><span class="use-case-icon">5&#65039;&#8419;</span><div class="use-case-text"><strong>构建一个特定于功能的 agent</strong><span>给 Claude 关于你代码库的领域知识</span></div></div>
         </div>
     </div>
 
     <!-- 幻灯片 76: 谢谢 -->
     <div class="slide title-slide" data-slide="76">
         <div class="title-logo">
-            <img src="../!/claude-jumping.svg" alt="Claude Code 吉祥物" />
+            <img src="../../!/claude-jumping.svg" alt="Claude Code 吉祥物跳跃" />
         </div>
         <h1>谢谢！</h1>
         <p class="subtitle">有问题吗？</p>
@@ -1679,7 +1684,7 @@ managed-settings.json              <span class="comment"># 组织策略（强制
 
     <!-- Header Logo -->
     <div class="header-logo">
-        <img src="../!/claude-jumping.svg" alt="Claude Code 吉祥物" />
+        <img src="../../!/claude-jumping.svg" alt="Claude Code 吉祥物" />
     </div>
 
     <div class="navigation">
@@ -1694,13 +1699,15 @@ managed-settings.json              <span class="comment"># 组织策略（强制
         const slides = document.querySelectorAll('[data-slide]');
         const totalSlides = slides.length;
 
+        // Level definitions (order 1=bottom, 4=top)
         const LEVELS = {
-            'low':    { order: 1, color: 'hsl(0, 70%, 45%)',   height: '25%',  label: 'Low' },
-            'medium': { order: 2, color: 'hsl(40, 70%, 45%)',  height: '50%',  label: 'Medium' },
-            'high':   { order: 3, color: 'hsl(80, 70%, 45%)',  height: '75%',  label: 'High' },
-            'pro':    { order: 4, color: 'hsl(120, 70%, 45%)', height: '100%', label: 'Pro' }
+            'low':    { order: 1, color: 'hsl(0, 70%, 45%)',   height: '25%',  label: '初级' },
+            'medium': { order: 2, color: 'hsl(40, 70%, 45%)',  height: '50%',  label: '中级' },
+            'high':   { order: 3, color: 'hsl(80, 70%, 45%)',  height: '75%',  label: '高级' },
+            'pro':    { order: 4, color: 'hsl(120, 70%, 45%)', height: '100%', label: '专家' }
         };
 
+        // Build slide-to-level map: inherit level from previous data-level slide
         const SLIDE_LEVELS = {};
         let lastLevel = null;
         slides.forEach((s) => {
@@ -1728,6 +1735,7 @@ managed-settings.json              <span class="comment"># 组织策略（强制
             fill.style.backgroundColor = lvl.color;
             if (labelEl) { labelEl.innerHTML = '当前 = <strong style="color:' + lvl.color + '">' + lvl.label + '</strong>'; }
 
+            // Show level badge when level changes
             document.querySelectorAll('.level-badge').forEach(b => b.remove());
             const slideEl = document.querySelector(`[data-slide="${slideNum}"]`);
             if (slideEl && slideEl.dataset.level && slideEl.dataset.level !== prevDisplayedLevel) {
