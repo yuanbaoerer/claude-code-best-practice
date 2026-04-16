@@ -5,7 +5,7 @@ Boris Cherny ([@bcherny](https://x.com/bcherny))，Claude Code 的创造者，�
 <table width="100%">
 <tr>
 <td><a href="../">← 返回 Claude Code 最佳实践</a></td>
-<td align="right"><img src="../!/claude-jumping.svg" alt="Claude" width="60" /></td>
+<td align="right"><img src="../../!/claude-jumping.svg" alt="Claude" width="60" /></td>
 </tr>
 </table>
 
@@ -15,7 +15,7 @@ Boris Cherny ([@bcherny](https://x.com/bcherny))，Claude Code 的创造者，�
 
 Boris 分享了直接来自 Claude Code 团队的使用 Claude Code 技巧。团队使用 Claude 的方式与 Boris 个人使用方式不同。记住：没有一种正确的使用 Claude Code 的方式 —— 每个人的设置都不同。你应该实验看看什么适合你！
 
-<a href="https://x.com/bcherny/status/2017742741636321619"><img src="assets/boris-1-feb-26/0.png" alt="Boris Cherny 介绍推文" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742741636321619"><img src="../assets/boris-1-feb-26/0.png" alt="Boris Cherny 介绍推文" width="50%" /></a>
 
 ---
 
@@ -27,7 +27,7 @@ Boris 分享了直接来自 Claude Code 团队的使用 Claude Code 技巧。团
 
 参见：[Worktrees 文档](https://code.claude.com/docs/en/common...)
 
-<a href="https://x.com/bcherny/status/2017742743125299476"><img src="assets/boris-1-feb-26/1.png" alt="更多地并行工作" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742743125299476"><img src="../assets/boris-1-feb-26/1.png" alt="更多地并行工作" width="50%" /></a>
 
 ---
 
@@ -39,7 +39,7 @@ Boris 分享了直接来自 Claude Code 团队的使用 Claude Code 技巧。团
 
 另一个人说一旦出现问题，他们就切换回计划模式并重新计划。不要继续推。他们还显式告诉 Claude 进入计划模式进行验证步骤，不只是构建。
 
-<a href="https://x.com/bcherny/status/2017742745365057733"><img src="assets/boris-1-feb-26/2.png" alt="每个复杂任务从计划模式开始" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742745365057733"><img src="../assets/boris-1-feb-26/2.png" alt="每个复杂任务从计划模式开始" width="50%" /></a>
 
 ---
 
@@ -51,7 +51,7 @@ Boris 分享了直接来自 Claude Code 团队的使用 Claude Code 技巧。团
 
 一位工程师告诉 Claude 为每个任务/项目维护一个笔记目录，每次 PR 后更新。他们然后将 `CLAUDE.md` 指向它。
 
-<a href="https://x.com/bcherny/status/2017742747067945390"><img src="assets/boris-1-feb-26/3.png" alt="投入你的 CLAUDE.md" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742747067945390"><img src="../assets/boris-1-feb-26/3.png" alt="投入你的 CLAUDE.md" width="50%" /></a>
 
 ---
 
@@ -66,7 +66,7 @@ Boris 分享了直接来自 Claude Code 团队的使用 Claude Code 技巧。团
 
 参见：[用技能扩展 Claude — Claude Code 文档](https://code.claude.com/docs/en/skills)
 
-<a href="https://x.com/bcherny/status/2017742748984742078"><img src="assets/boris-1-feb-26/4.png" alt="创建你自己的技能" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742748984742078"><img src="../assets/boris-1-feb-26/4.png" alt="创建你自己的技能" width="50%" /></a>
 
 ---
 
@@ -80,7 +80,7 @@ Boris 分享了直接来自 Claude Code 团队的使用 Claude Code 技巧。团
 
 将 Claude 指向 docker 日志来排查分布式系统 —— 它在这方面惊人地有能力。
 
-<a href="https://x.com/bcherny/status/2017742750473720121"><img src="assets/boris-1-feb-26/5.png" alt="Claude 自己修复大多数 Bug" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742750473720121"><img src="../assets/boris-1-feb-26/5.png" alt="Claude 自己修复大多数 Bug" width="50%" /></a>
 
 ---
 
@@ -92,7 +92,7 @@ b. **在一个平庸的修复后，** 说："知道你现在知道的一切，�
 
 c. **编写详细规格**并在移交工作前减少歧义。你越具体，输出越好。
 
-<a href="https://x.com/bcherny/status/2017742752566632544"><img src="assets/boris-1-feb-26/6.png" alt="提升你的提示能力" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742752566632544"><img src="../assets/boris-1-feb-26/6.png" alt="提升你的提示能力" width="50%" /></a>
 
 ---
 
@@ -106,7 +106,7 @@ c. **编写详细规格**并在移交工作前减少歧义。你越具体，输�
 
 参见：[终端设置文档](https://code.claude.com/docs/en/termin...)
 
-<a href="https://x.com/bcherny/status/2017742753971769626"><img src="assets/boris-1-feb-26/7.png" alt="终端和环境设置" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742753971769626"><img src="../assets/boris-1-feb-26/7.png" alt="终端和环境设置" width="50%" /></a>
 
 ---
 
@@ -118,7 +118,7 @@ b. 将单个任务交给子代理以保持你的主代理上下文窗口清洁�
 
 c. 通过钩子将权限请求路由到 Opus 4.5 — 让它扫描攻击并自动批准安全的那些。参见：[钩子文档](https://code.claude.com/docs/en/hooks#...)
 
-<a href="https://x.com/bcherny/status/2017742755737555434"><img src="assets/boris-1-feb-26/8.png" alt="使用子代理" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742755737555434"><img src="../assets/boris-1-feb-26/8.png" alt="使用子代理" width="50%" /></a>
 
 ---
 
@@ -128,7 +128,7 @@ c. 通过钩子将权限请求路由到 Opus 4.5 — 让它扫描攻击并自动
 
 这适用于任何有 CLI、MCP 或 API 的数据库。
 
-<a href="https://x.com/bcherny/status/2017742757666902374"><img src="assets/boris-1-feb-26/9.png" alt="使用 Claude 进行数据和分析" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742757666902374"><img src="../assets/boris-1-feb-26/9.png" alt="使用 Claude 进行数据和分析" width="50%" /></a>
 
 ---
 
@@ -144,7 +144,7 @@ c. 让 Claude 绘制新协议和代码库的 ASCII 图来帮助你理解它们�
 
 d. 构建间隔重复学习技能：你解释你的理解，Claude 提问后续来填补空白，存储结果。
 
-<a href="https://x.com/bcherny/status/2017742759218794768"><img src="assets/boris-1-feb-26/10.png" alt="与 Claude 学习" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2017742759218794768"><img src="../assets/boris-1-feb-26/10.png" alt="与 Claude 学习" width="50%" /></a>
 
 ---
 

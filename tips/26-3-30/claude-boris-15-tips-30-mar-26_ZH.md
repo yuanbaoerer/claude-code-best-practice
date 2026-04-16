@@ -5,7 +5,7 @@ Boris Cherny ([@bcherny](https://x.com/bcherny))，Claude Code 的创造者，�
 <table width="100%">
 <tr>
 <td><a href="../">← 返回 Claude Code 最佳实践</a></td>
-<td align="right"><img src="../!/claude-jumping.svg" alt="Claude" width="60" /></td>
+<td align="right"><img src="../../!/claude-jumping.svg" alt="Claude" width="60" /></td>
 </tr>
 </table>
 
@@ -15,7 +15,7 @@ Boris Cherny ([@bcherny](https://x.com/bcherny))，Claude Code 的创造者，�
 
 Boris 分享了他最喜欢的 Claude Code 中隐藏和未被充分利用的一系列功能，专注于他使用最多的那些。
 
-<a href="https://x.com/bcherny/status/2038454336355999749"><img src="assets/boris-30-mar-26/0.png" alt="Boris Cherny 介绍推文" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454336355999749"><img src="../assets/boris-30-mar-26/0.png" alt="Boris Cherny 介绍推文" width="50%" /></a>
 
 ---
 
@@ -27,7 +27,7 @@ Boris 分享了他最喜欢的 Claude Code 中隐藏和未被充分利用的一�
 - 导航到左侧的 **Code** 标签页
 - 你可以直接从手机审查更改、批准 PR 和编写代码
 
-<a href="https://x.com/bcherny/status/2038454337811386436"><img src="assets/boris-30-mar-26/1.png" alt="Claude Code 移动应用" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454337811386436"><img src="../assets/boris-30-mar-26/1.png" alt="Claude Code 移动应用" width="50%" /></a>
 
 ---
 
@@ -39,7 +39,7 @@ Boris 分享了他最喜欢的 Claude Code 中隐藏和未被充分利用的一�
 - **远程控制**：让你从任何设备控制本地会话
 - Boris 在他的 `/config` 中设置了 **"为所有会话启用远程控制"**
 
-<a href="https://x.com/bcherny/status/2038454339933548804"><img src="assets/boris-30-mar-26/2.png" alt="Teleport 和远程控制" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454339933548804"><img src="../assets/boris-30-mar-26/2.png" alt="Teleport 和远程控制" width="50%" /></a>
 
 ---
 
@@ -55,7 +55,7 @@ Boris 分享了他最喜欢的 Claude Code 中隐藏和未被充分利用的一�
 
 尝试将工作流程转换为技能 + 循环。这很强大。
 
-<a href="https://x.com/bcherny/status/2038454341884154269"><img src="assets/boris-30-mar-26/3.png" alt="/loop 和 /schedule" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454341884154269"><img src="../assets/boris-30-mar-26/3.png" alt="/loop 和 /schedule" width="50%" /></a>
 
 ---
 
@@ -68,7 +68,7 @@ Boris 分享了他最喜欢的 Claude Code 中隐藏和未被充分利用的一�
 - 将权限提示**路由到 WhatsApp** 让你批准/拒绝 (`PermissionRequest`)
 - 每当 Claude 停止时**提醒 Claude** 继续 (`Stop`)
 
-<a href="https://x.com/bcherny/status/2038454343519932844"><img src="assets/boris-30-mar-26/4.png" alt="使用钩子" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454343519932844"><img src="../assets/boris-30-mar-26/4.png" alt="使用钩子" width="50%" /></a>
 
 ---
 
@@ -80,7 +80,7 @@ Boris 每天使用 Dispatch 来跟进 Slack 和电子邮件、管理文件，并
 - 它可以使用你的 MCP、浏览器和计算机，经你许可
 - 把它看作从任何地方向 Claude 委派非编码任务的方式
 
-<a href="https://x.com/bcherny/status/2038454345419936040"><img src="assets/boris-30-mar-26/5.png" alt="Cowork Dispatch" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454345419936040"><img src="../assets/boris-30-mar-26/5.png" alt="Cowork Dispatch" width="50%" /></a>
 
 ---
 
@@ -92,7 +92,7 @@ Boris 每天使用 Dispatch 来跟进 Slack 和电子邮件、管理文件，并
 - 给 Claude 一个浏览器，它会编写代码并迭代直到看起来好看
 - Boris 每次在 web 代码上工作时都使用 Chrome 扩展 —— 它往往比其他类似 MCP 工作更可靠
 
-<a href="https://x.com/bcherny/status/2038454347156398333"><img src="assets/boris-30-mar-26/6.png" alt="前端 Chrome 扩展" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454347156398333"><img src="../assets/boris-30-mar-26/6.png" alt="前端 Chrome 扩展" width="50%" /></a>
 
 ---
 
@@ -103,7 +103,7 @@ Boris 每天使用 Dispatch 来跟进 Slack 和电子邮件、管理文件，并
 - 你可以在 CLI 或 VSCode 中使用 Chrome 扩展设置类似的东西
 - 或直接使用桌面应用获得集成体验
 
-<a href="https://x.com/bcherny/status/2038454348804714642"><img src="assets/boris-30-mar-26/7.png" alt="桌面应用 web 服务器测试" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454348804714642"><img src="../assets/boris-30-mar-26/7.png" alt="桌面应用 web 服务器测试" width="50%" /></a>
 
 ---
 
@@ -116,7 +116,7 @@ Boris 每天使用 Dispatch 来跟进 Slack 和电子邮件、管理文件，并
 
 `/branch` 创建一个分支对话 —— 你现在在分支中。要恢复原始会话，使用 `claude -r <original-session-id>`。
 
-<a href="https://x.com/bcherny/status/2038454350214041740"><img src="assets/boris-30-mar-26/8.png" alt="分叉你的会话" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454350214041740"><img src="../assets/boris-30-mar-26/8.png" alt="分叉你的会话" width="50%" /></a>
 
 ---
 
@@ -131,7 +131,7 @@ Boris 经常使用这个在代理工作时回答快速问题。`/btw` 让你提�
 ↑/↓ 滚动 · 空格、回车或 Escape 关闭
 ```
 
-<a href="https://x.com/bcherny/status/2038454351849787485"><img src="assets/boris-30-mar-26/9.png" alt="/btw 侧边查询" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454351849787485"><img src="../assets/boris-30-mar-26/9.png" alt="/btw 侧边查询" width="50%" /></a>
 
 ---
 
@@ -143,7 +143,7 @@ Claude Code 内置对 git worktrees 的深度支持。Worktrees 对于在同一�
 - 或在 Claude 桌面应用中点击 **"worktree" 复选框**
 - 对于非 git VCS 用户，使用 `WorktreeCreate` 钩子添加你自己的 worktree 创建逻辑
 
-<a href="https://x.com/bcherny/status/2038454353787519164"><img src="assets/boris-30-mar-26/10.png" alt="Git worktrees" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454353787519164"><img src="../assets/boris-30-mar-26/10.png" alt="Git worktrees" width="50%" /></a>
 
 ---
 
@@ -154,7 +154,7 @@ Claude Code 内置对 git worktrees 的深度支持。Worktrees 对于在同一�
 - 用于大型代码迁移和其他类型的可并行化工作
 - 每个 worktree 代理在自己的代码副本上独立工作
 
-<a href="https://x.com/bcherny/status/2038454355469484142"><img src="assets/boris-30-mar-26/11.png" alt="/batch 大型变更集" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454355469484142"><img src="../assets/boris-30-mar-26/11.png" alt="/batch 大型变更集" width="50%" /></a>
 
 ---
 
@@ -173,7 +173,7 @@ claude -p "总结这个代码库" \
     --bare
 ```
 
-<a href="https://x.com/bcherny/status/2038454357088457168"><img src="assets/boris-30-mar-26/12.png" alt="--bare SDK 启动标志" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454357088457168"><img src="../assets/boris-30-mar-26/12.png" alt="--bare SDK 启动标志" width="50%" /></a>
 
 ---
 
@@ -184,7 +184,7 @@ claude -p "总结这个代码库" \
 - 这不仅告诉 Claude 关于仓库，还**给它权限**在仓库中工作
 - 或，将 `"additionalDirectories"` 添加到你团队的 `settings.json` 以在启动 Claude Code 时始终加载额外文件夹
 
-<a href="https://x.com/bcherny/status/2038454359047156203"><img src="assets/boris-30-mar-26/13.png" alt="--add-dir 多仓库" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454359047156203"><img src="../assets/boris-30-mar-26/13.png" alt="--add-dir 多仓库" width="50%" /></a>
 
 ---
 
@@ -199,7 +199,7 @@ claude --agent=<你的代理名称>
 - 代理可以有受限工具、自定义描述和特定模型
 - 它们非常适合创建只读代理、专门审查代理或领域特定工具
 
-<a href="https://x.com/bcherny/status/2038454360418787764"><img src="assets/boris-30-mar-26/14.png" alt="--agent 自定义系统提示" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454360418787764"><img src="../assets/boris-30-mar-26/14.png" alt="--agent 自定义系统提示" width="50%" /></a>
 
 ---
 
@@ -211,7 +211,7 @@ claude --agent=<你的代理名称>
 - 在桌面应用中按语音按钮
 - 或在你的 iOS 设置中启用听写
 
-<a href="https://x.com/bcherny/status/2038454362226467112"><img src="assets/boris-30-mar-26/15.png" alt="/voice 语音输入" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2038454362226467112"><img src="../assets/boris-30-mar-26/15.png" alt="/voice 语音输入" width="50%" /></a>
 
 ---
 

@@ -5,7 +5,7 @@ Boris Cherny ([@bcherny](https://x.com/bcherny))，Claude Code 的创造者，�
 <table width="100%">
 <tr>
 <td><a href="../">← 返回 Claude Code 最佳实践</a></td>
-<td align="right"><img src="../!/claude-jumping.svg" alt="Claude" width="60" /></td>
+<td align="right"><img src="../../!/claude-jumping.svg" alt="Claude" width="60" /></td>
 </tr>
 </table>
 
@@ -15,7 +15,7 @@ Boris Cherny ([@bcherny](https://x.com/bcherny))，Claude Code 的创造者，�
 
 Boris Cherny 强调可定制性是工程师最喜欢 Claude Code 的特点之一 —— 钩子、插件、LSP、MCP、技能、effort、自定义代理、状态栏、输出风格等等。他分享了开发者和团队自定义设置的 12 种实用方式。
 
-<a href="https://x.com/bcherny/status/2021699851499798911"><img src="assets/boris-12-feb-26/0.webp" alt="Boris Cherny 介绍推文" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021699851499798911"><img src="../assets/boris-12-feb-26/0.webp" alt="Boris Cherny 介绍推文" width="50%" /></a>
 
 ---
 
@@ -28,7 +28,7 @@ Boris Cherny 强调可定制性是工程师最喜欢 Claude Code 的特点之一
 - **换行**：如果在 IDE 终端、Apple Terminal、Warp 或 Alacritty 中使用 Claude Code，运行 `/terminal-setup` 启用 shift+enter 换行（这样你不需要输入 `\`）
 - **Vim 模式**：运行 `/vim`
 
-<a href="https://x.com/bcherny/status/2021699859359883608"><img src="assets/boris-12-feb-26/1.webp" alt="配置你的终端" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021699859359883608"><img src="../assets/boris-12-feb-26/1.webp" alt="配置你的终端" width="50%" /></a>
 
 ---
 
@@ -42,7 +42,7 @@ Boris Cherny 强调可定制性是工程师最喜欢 Claude Code 的特点之一
 
 Boris 的偏好：所有事情都用高。
 
-<a href="https://x.com/bcherny/status/2021699860869902424"><img src="assets/boris-12-feb-26/2.webp" alt="调整 effort 等级" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021699860869902424"><img src="../assets/boris-12-feb-26/2.webp" alt="调整 effort 等级" width="50%" /></a>
 
 ---
 
@@ -54,7 +54,7 @@ Boris 的偏好：所有事情都用高。
 
 运行 `/plugin` 开始。
 
-<a href="https://x.com/bcherny/status/2021699862522364149"><img src="assets/boris-12-feb-26/3.webp" alt="安装插件、MCP 和技能" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021699862522364149"><img src="../assets/boris-12-feb-26/3.webp" alt="安装插件、MCP 和技能" width="50%" /></a>
 
 ---
 
@@ -66,7 +66,7 @@ Boris 的偏好：所有事情都用高。
 
 运行 `/agents` 开始。
 
-<a href="https://x.com/bcherny/status/2021700144039903699"><img src="assets/boris-12-feb-26/4.webp" alt="创建自定义代理" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021700144039903699"><img src="../assets/boris-12-feb-26/4.webp" alt="创建自定义代理" width="50%" /></a>
 
 ---
 
@@ -78,7 +78,7 @@ Claude Code 使用结合提示注入检测、静态分析、沙箱和人工监�
 
 支持完整通配符语法 —— 例如，`Bash(bun run *)` 或 `Edit(/docs/**)`。
 
-<a href="https://x.com/bcherny/status/2021700332292911228"><img src="assets/boris-12-feb-26/5.webp" alt="预批准常见权限" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021700332292911228"><img src="../assets/boris-12-feb-26/5.webp" alt="预批准常见权限" width="50%" /></a>
 
 ---
 
@@ -88,7 +88,7 @@ Claude Code 使用结合提示注入检测、静态分析、沙箱和人工监�
 
 运行 `/sandbox` 启用它。沙箱在你的机器上运行并支持文件和网络隔离。
 
-<a href="https://x.com/bcherny/status/2021700506465579443"><img src="assets/boris-12-feb-26/6.webp" alt="启用沙箱" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021700506465579443"><img src="../assets/boris-12-feb-26/6.webp" alt="启用沙箱" width="50%" /></a>
 
 ---
 
@@ -98,7 +98,7 @@ Claude Code 使用结合提示注入检测、静态分析、沙箱和人工监�
 
 每个团队成员可以有不同的状态栏。使用 `/statusline` 让 Claude 根据你的 `.bashrc`/`.zshrc` 生成一个。
 
-<a href="https://x.com/bcherny/status/2021700784019452195"><img src="assets/boris-12-feb-26/7.webp" alt="添加状态栏" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021700784019452195"><img src="../assets/boris-12-feb-26/7.webp" alt="添加状态栏" width="50%" /></a>
 
 ---
 
@@ -106,7 +106,7 @@ Claude Code 使用结合提示注入检测、静态分析、沙箱和人工监�
 
 Claude Code 中的每个键绑定都是可自定义的。运行 `/keybindings` 重新映射任何键。设置实时重新加载，所以你可以立即感受它。
 
-<a href="https://x.com/bcherny/status/2021700883873165435"><img src="assets/boris-12-feb-26/8.webp" alt="自定义你的键绑定" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021700883873165435"><img src="../assets/boris-12-feb-26/8.webp" alt="自定义你的键绑定" width="50%" /></a>
 
 ---
 
@@ -120,7 +120,7 @@ Claude Code 中的每个键绑定都是可自定义的。运行 `/keybindings` �
 
 让 Claude 添加钩子开始。
 
-<a href="https://x.com/bcherny/status/2021701059253874861"><img src="assets/boris-12-feb-26/9.webp" alt="设置钩子" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021701059253874861"><img src="../assets/boris-12-feb-26/9.webp" alt="设置钩子" width="50%" /></a>
 
 ---
 
@@ -128,7 +128,7 @@ Claude Code 中的每个键绑定都是可自定义的。运行 `/keybindings` �
 
 自定义你的加载动词以添加或替换默认列表为你自己的动词。将 `settings.json` 检入源代码控制以与你的团队共享动词。
 
-<a href="https://x.com/bcherny/status/2021701145023197516"><img src="assets/boris-12-feb-26/10.webp" alt="自定义你的加载动词" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021701145023197516"><img src="../assets/boris-12-feb-26/10.webp" alt="自定义你的加载动词" width="50%" /></a>
 
 ---
 
@@ -140,7 +140,7 @@ Claude Code 中的每个键绑定都是可自定义的。运行 `/keybindings` �
 - **学习** — 让 Claude 指导你进行代码更改
 - **自定义** — 创建自定义输出风格调整 Claude 的声音
 
-<a href="https://x.com/bcherny/status/2021701379409273093"><img src="assets/boris-12-feb-26/11.webp" alt="使用输出风格" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021701379409273093"><img src="../assets/boris-12-feb-26/11.webp" alt="使用输出风格" width="50%" /></a>
 
 ---
 
@@ -155,7 +155,7 @@ Claude Code 开箱即用效果很好，但当你自定义时，将你的 `settin
 
 有 37 个设置和 84 个环境变量（使用 `settings.json` 中的 `"env"` 字段避免包装脚本），你想要的任何行为很可能都是可配置的。
 
-<a href="https://x.com/bcherny/status/2021701636075458648"><img src="assets/boris-12-feb-26/12.webp" alt="自定义所有东西" width="50%" /></a>
+<a href="https://x.com/bcherny/status/2021701636075458648"><img src="../assets/boris-12-feb-26/12.webp" alt="自定义所有东西" width="50%" /></a>
 
 ---
 
