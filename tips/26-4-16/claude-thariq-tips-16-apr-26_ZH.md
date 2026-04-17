@@ -15,9 +15,9 @@
 
 借助 100 万 token 的上下文窗口，Claude Code 可以更可靠地处理更长的任务——但这也带来了上下文污染的风险，如果你不够谨慎的话。**会话管理**比以往任何时候都重要：何时开启新会话、何时压缩、何时回退、何时委托给子代理。
 
-<img src="../assets/thariq-16-apr-26/1.png" alt="Thariq intro tweet" width="50%" />
+<img src="../assets/thariq-26-4-16/1.png" alt="Thariq intro tweet" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/2.png" alt="会话管理介绍" width="50%" />
+<img src="../assets/thariq-26-4-16/2.png" alt="会话管理介绍" width="50%" />
 
 ---
 
@@ -29,9 +29,9 @@
 
 上下文窗口是硬性截止。当接近末尾时，你需要总结任务并在新的上下文窗口中继续——这就是**压缩（Compaction）**。你也可以主动触发压缩。
 
-<img src="../assets/thariq-16-apr-26/3.png" alt="上下文窗口示意图" width="50%" />
+<img src="../assets/thariq-26-4-16/3.png" alt="上下文窗口示意图" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/4.png" alt="上下文衰减解释" width="50%" />
+<img src="../assets/thariq-26-4-16/4.png" alt="上下文衰减解释" width="50%" />
 
 ---
 
@@ -47,9 +47,9 @@
 
 虽然最自然的选择是继续，但其他四个选项可以帮助你管理上下文。
 
-<img src="../assets/thariq-16-apr-26/5.png" alt="压缩和分支示意图" width="50%" />
+<img src="../assets/thariq-26-4-16/5.png" alt="压缩和分支示意图" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/6.png" alt="一轮后的五个选项" width="50%" />
+<img src="../assets/thariq-26-4-16/6.png" alt="一轮后的五个选项" width="50%" />
 
 每个选项携带不同数量的现有上下文：
 
@@ -58,7 +58,7 @@
 | 只有你的简要说明 | 有损摘要 | 全部 + 结果 | 保留前缀，截断尾部 | 保持一切 |
 | *什么都没有* | | | | *全部保留* |
 
-<img src="../assets/thariq-16-apr-26/7.png" alt="上下文携带量谱" width="50%" />
+<img src="../assets/thariq-26-4-16/7.png" alt="上下文携带量谱" width="50%" />
 
 ---
 
@@ -70,7 +70,7 @@
 
 一个灰色地带是当你可能需要执行相关任务，而其中一些上下文仍然是必要的，但不是全部。例如，为你刚刚实现的功能编写文档。虽然你可以开启新会话，但 Claude 需要重新读取文件，这会更慢且更昂贵。由于文档可能不是高度智能敏感的任务，额外的上下文可能值得效率提升。
 
-<img src="../assets/thariq-16-apr-26/8.png" alt="何时开启新会话" width="50%" />
+<img src="../assets/thariq-26-4-16/8.png" alt="何时开启新会话" width="50%" />
 
 ---
 
@@ -90,9 +90,9 @@
 
 你也可以使用**"summarize from here"**让 Claude 总结它的学习并创建一个交接消息，有点像是从未来的自己发给过去尝试过但失败的自己的信息。
 
-<img src="../assets/thariq-16-apr-26/9.png" alt="纠正 vs 回退示意图" width="50%" />
+<img src="../assets/thariq-26-4-16/9.png" alt="纠正 vs 回退示意图" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/10.png" alt="使用 summarize from here 进行回退" width="50%" />
+<img src="../assets/thariq-26-4-16/10.png" alt="使用 summarize from here 进行回退" width="50%" />
 
 ---
 
@@ -110,9 +110,9 @@
 - **高风险**下一步——在 10 万探索中找到的一个事实
 - 更多工作，更精确
 
-<img src="../assets/thariq-16-apr-26/11.png" alt="压缩 vs 新会话" width="50%" />
+<img src="../assets/thariq-26-4-16/11.png" alt="压缩 vs 新会话" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/12.png" alt="压缩 vs 新会话示意图" width="50%" />
+<img src="../assets/thariq-26-4-16/12.png" alt="压缩 vs 新会话示意图" width="50%" />
 
 ---
 
@@ -124,9 +124,9 @@
 
 这尤其困难，因为由于上下文衰减，模型在压缩时处于最低智能点。有了 100 万上下文，你有更多时间主动 `/compact` 并描述你想做什么。
 
-<img src="../assets/thariq-16-apr-26/13.png" alt="糟糕压缩示意图" width="50%" />
+<img src="../assets/thariq-26-4-16/13.png" alt="糟糕压缩示意图" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/14.png" alt="糟糕压缩解释" width="50%" />
+<img src="../assets/thariq-26-4-16/14.png" alt="糟糕压缩解释" width="50%" />
 
 ---
 
@@ -146,11 +146,11 @@
 - "派生一个子代理来阅读另一个代码库并总结它如何实现 auth 流程，然后你自己以相同方式实现"
 - "派生一个子代理根据我的 git 更改编写此功能的文档"
 
-<img src="../assets/thariq-16-apr-26/15.png" alt="子代理上下文示意图" width="50%" />
+<img src="../assets/thariq-26-4-16/15.png" alt="子代理上下文示意图" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/16.png" alt="子代理解释" width="50%" />
+<img src="../assets/thariq-26-4-16/16.png" alt="子代理解释" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/17.png" alt="何时使用子代理" width="50%" />
+<img src="../assets/thariq-26-4-16/17.png" alt="何时使用子代理" width="50%" />
 
 ---
 
@@ -166,9 +166,9 @@
 | 开始一个真正的新任务 | **/clear** | 零衰减；你精确控制什么向前携带 |
 | 下一步会产生大量输出，你只需要结论 | **子代理** | 中间工具噪音留在子上下文中；只有结果返回 |
 
-<img src="../assets/thariq-16-apr-26/18.png" alt="总结" width="50%" />
+<img src="../assets/thariq-26-4-16/18.png" alt="总结" width="50%" />
 
-<img src="../assets/thariq-16-apr-26/19.png" alt="决策表" width="50%" />
+<img src="../assets/thariq-26-4-16/19.png" alt="决策表" width="50%" />
 
 ---
 
