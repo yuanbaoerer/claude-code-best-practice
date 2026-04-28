@@ -13,8 +13,7 @@ Demonstrates Claude Code patterns through a working weather workflow and documen
 - See `orchestration-workflow/orchestration-workflow.md` for the full flow
 
 ### Presentation System
-
-See `.claude/rules/presentation.md` — presentation work is delegated per-presentation to `presentation-vibe-coding` (for `presentation/vibe-coding-to-agentic-engineering/`) or `presentation-learning-journey` (for `presentation/2026-04-25-gdg-kolachi-cli-claude-code-gemini/`).
+See `.claude/rules/presentation.md` — presentation work is delegated per-presentation to `presentation-vibe-coding` (for `presentation/vibe-coding-to-agentic-engineering/`) or `presentation-claude-gemini` (for `presentation/2026-04-25-gdg-kolachi-cli-claude-code-gemini/`).
 
 ## Key Patterns
 
