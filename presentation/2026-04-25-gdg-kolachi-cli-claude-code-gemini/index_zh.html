@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../../!/gemini-jumping.svg">
+    <title>Claude Code 与 Gemini CLI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.6; }
+        .slide { display: none; min-height: 100vh; padding: 60px 80px; max-width: 1200px; margin: 0 auto; }
+        .slide.active { display: block; }
+        h1 { font-size: 2.5rem; font-weight: 600; margin-bottom: 40px; color: #1a1a1a; border-bottom: 2px solid #e5e5e5; padding-bottom: 20px; }
+        h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 24px; color: #2a2a2a; }
+        h3 { font-size: 1.3rem; font-weight: 600; margin: 24px 0 12px 0; color: #333; }
+        p { font-size: 1.1rem; margin-bottom: 16px; color: #444; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.95rem; }
+        .slide.title-slide.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 40px; }
+        .title-slide h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; border-bottom: none; padding-bottom: 0; }
+        .title-slide .subtitle { font-size: 1.4rem; color: #555; margin-bottom: 50px; font-weight: 400; }
+        .slide.section-slide.active { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 40px; }
+        .section-slide h1 { font-size: 3rem; font-weight: 700; border-bottom: none; padding-bottom: 0; margin-bottom: 16px; }
+        .section-slide .section-number { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 3px; color: #999; margin-bottom: 20px; }
+        .section-slide .section-desc { font-size: 1.2rem; color: #666; max-width: 600px; }
+        .trigger-box { background: #f8f9fa; border-left: 4px solid #1a1a1a; padding: 20px 24px; margin: 24px 0; }
+        .trigger-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 8px; }
+        .trigger-box p { font-size: 1.05rem; color: #333; margin: 0; }
+        .analogy-box { background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 20px 24px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+        .analogy-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #7b1fa2; margin-bottom: 8px; }
+        .analogy-box p { font-size: 1.05rem; color: #4a148c; margin: 0; }
+        .how-to-trigger { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px 24px; margin: 16px 0 24px 0; }
+        .how-to-trigger h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #2e7d32; margin-bottom: 8px; }
+        .how-to-trigger p { font-size: 1.05rem; color: #1b5e20; margin: 0; }
+        .how-to-trigger code { background: rgba(0,0,0,0.08); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.95rem; }
+        .warning-box { background: #fff3e0; border-left: 4px solid #ff9800; padding: 20px 24px; margin: 16px 0 24px 0; }
+        .warning-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #e65100; margin-bottom: 8px; }
+        .warning-box p { font-size: 1.05rem; color: #bf360c; margin: 0; }
+        .info-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px 24px; margin: 16px 0 24px 0; }
+        .info-box h4 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: #1565c0; margin-bottom: 8px; }
+        .info-box p { font-size: 1.05rem; color: #0d47a1; margin: 0; }
+        .code-block { background: #1a1a1a; color: #e5e5e5; padding: 20px 24px; border-radius: 8px; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; margin: 20px 0; white-space: pre; line-height: 1.7; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .key { color: #9cdcfe; }
+        .code-block .string { color: #ce9178; }
+        .code-block .cmd { color: #dcdcaa; }
+        .code-block .claude-file { color: #ff5252; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+        .col-card { background: #f8f9fa; padding: 24px; border-radius: 8px; }
+        .col-card h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 12px; }
+        .col-card.good { border-left: 4px solid #4caf50; }
+        .col-card.bad { border-left: 4px solid #f44336; }
+        .use-cases { margin: 24px 0; }
+        .use-case-item { display: flex; align-items: flex-start; margin-bottom: 12px; padding: 14px 20px; background: #fafafa; border-radius: 8px; }
+        .use-case-icon { font-size: 1.5rem; margin-right: 16px; min-width: 32px; }
+        .use-case-text { flex: 1; }
+        .use-case-text strong { display: block; font-size: 1.05rem; color: #1a1a1a; margin-bottom: 4px; }
+        .use-case-text span { font-size: 0.95rem; color: #666; }
+        .toc-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 32px; }
+        .toc-item { display: flex; align-items: center; padding: 16px 20px; background: #f8f9fa; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .toc-item:hover { background: #eee; }
+        .toc-number { width: 28px; height: 28px; background: #1a1a1a; color: #fff; border-radius: 50%; text-align: center; line-height: 28px; font-size: 0.85rem; margin-right: 12px; font-weight: 600; flex-shrink: 0; }
+        .toc-name { font-size: 1rem; color: #1a1a1a; }
+        .feature-list { list-style: none; margin: 24px 0; }
+        .feature-list li { padding: 12px 0; border-bottom: 1px solid #eee; font-size: 1.05rem; }
+        .feature-list li:last-child { border-bottom: none; }
+        table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+        th { background: #f8f9fa; padding: 14px 20px; text-align: left; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #666; border-bottom: 2px solid #e5e5e5; }
+        td { padding: 14px 20px; border-bottom: 1px solid #eee; font-size: 1rem; color: #444; }
+        tr:last-child td { border-bottom: none; }
+        .navigation { position: fixed; bottom: 30px; right: 30px; display: flex; gap: 12px; z-index: 100; }
+        .nav-btn { width: 50px; height: 50px; border: 2px solid #1a1a1a; background: #fff; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .nav-btn:hover { background: #1a1a1a; color: #fff; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .progress { position: fixed; top: 0; left: 0; height: 4px; background: #1a1a1a; transition: width 0.3s; z-index: 100; }
+        .slide-counter { position: fixed; bottom: 40px; left: 40px; font-size: 0.9rem; color: #999; }
+        .keyboard-hint { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; color: #999; }
+        .keyboard-hint kbd { background: #f0f0f0; padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd; font-family: inherit; }
+        .header-logo { position: fixed; top: 20px; left: 40px; width: 100px; height: 65px; z-index: 50; }
+        .header-logo.right { left: auto; right: 40px; }
+        .header-logo img { width: 100%; height: 100%; }
+        .slide[data-slide="1"].active ~ .header-logo { display: none; }
+        .title-logo { width: 200px; height: 130px; margin-bottom: 40px; }
+        .title-logo img { width: 100%; height: 100%; }
+        .level-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; margin-left: 12px; vertical-align: middle; }
+        /* Hiring analogy steps */
+        .hiring-steps { margin: 32px 0; }
+        .hiring-step { display: flex; align-items: flex-start; margin-bottom: 20px; padding: 20px 24px; background: #fafafa; border-radius: 8px; border-left: 4px solid #e5e5e5; }
+        .hiring-step.level-1 { border-left-color: #2196f3; }
+        .hiring-step.level-2 { border-left-color: #ff9800; }
+        .hiring-step.level-3 { border-left-color: #4caf50; }
+        .hiring-step-number { font-size: 1.8rem; font-weight: 700; margin-right: 20px; min-width: 40px; color: #1a1a1a; }
+        .hiring-step-content { flex: 1; }
+        .hiring-step-content strong { display: block; font-size: 1.15rem; color: #1a1a1a; margin-bottom: 4px; }
+        .hiring-step-content span { font-size: 0.95rem; color: #666; }
+        /* Frontmatter field rows */
+        .field-row { display: flex; align-items: baseline; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .field-row:last-child { border-bottom: none; }
+        .field-name { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.9rem; color: #9cdcfe; min-width: 180px; font-weight: 600; }
+        .field-desc { font-size: 0.95rem; color: #555; flex: 1; }
+        .field-required { font-size: 0.7rem; background: #ffcdd2; color: #c62828; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 600; text-transform: uppercase; }
+        .field-recommended { font-size: 0.7rem; background: #fff9c4; color: #f57f17; padding: 1px 6px; border-radius: 3px; margin-left: 8px; font-weight: 600; text-transform: uppercase; }
+        .field-enforced { min-width: 110px; text-align: right; }
+        .field-enforced .pill-harness { display: inline-block; background: #2e7d32; color: #fff; padding: 2px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px; }
+        .field-enforced .pill-prompt { display: inline-block; background: #e0e0e0; color: #555; padding: 2px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px; }
+        /* TOC vertical list for Meet the Person */
+        .toc-vertical { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; max-width: 700px; }
+        .toc-vertical .toc-item { display: flex; align-items: flex-start; padding: 18px 24px; background: #f8f9fa; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .toc-vertical .toc-item:hover { background: #eee; }
+        .toc-vertical .toc-badge { font-size: 0.7rem; font-weight: 700; background: #e5e5e5; color: #777; border-radius: 10px; padding: 2px 8px; margin-left: 10px; white-space: nowrap; }
+        .toc-vertical .toc-name { font-size: 1rem; font-weight: 600; color: #1a1a1a; margin-bottom: 2px; }
+        .toc-vertical .toc-sub { font-size: 0.9rem; color: #666; }
+        /* File tree */
+        .file-tree { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 0.9rem; background: #f8f9fa; padding: 24px; border-radius: 8px; line-height: 1.9; }
+        .file-tree .dir { color: #1565c0; font-weight: 600; }
+        .file-tree .file { color: #444; }
+        .file-tree .highlight { color: #2e7d32; font-weight: 600; }
+        .file-tree .dim { color: #aaa; }
+        /* Pillar footer — 5-card reference strip below the viewport fold */
+        .slide-viewport-content { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+        .pillar-footer { display: flex; gap: 10px; justify-content: center; align-items: stretch; max-width: 1200px; margin: 40px auto 32px auto; width: 100%; }
+        .pillar-mini-card { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0; background: #f8f9fa; padding: 12px 14px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); transition: opacity 0.2s; }
+        .pillar-mini-card .pmc-emoji { font-size: 1.1rem; line-height: 1; }
+        .pillar-mini-card .pmc-title { font-size: 0.82rem; font-weight: 700; color: #1a1a1a; margin-top: 3px; }
+        .pillar-mini-card .pmc-subtitle { font-size: 0.7rem; font-style: italic; color: #666; margin-top: 1px; }
+        .pillar-mini-card .pmc-body { font-size: 0.72rem; line-height: 1.35; color: #333; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+        .pillar-mini-card .pmc-badge { display: inline-block; font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 999px; margin-top: 6px; white-space: nowrap; align-self: flex-start; }
+        .pillar-mini-card.inactive { opacity: 0.55; }
+</style>
+</head>
+<body>
+    <div class="progress" id="progress"></div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 1: GDG Kolachi Conference Title                         -->
+    <!-- ============================================================ -->
+    <div class="slide active title-slide" data-slide="1">
+
+        <!-- Main title -->
+        <h1 style="font-size: 3.2rem; letter-spacing: -0.02em; margin-bottom: 16px;">CLI 中的 Agentic Engineering（智能体工程）</h1>
+
+        <!-- Subtitle with inline brand logos + gradient text -->
+        <p class="subtitle" style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 0;">
+            <span> 经验来自 </span>
+            <span style="display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;">
+                <img src="../../!/claude-jumping.svg" alt="Claude" style="height: 54px; width: auto; object-fit: contain;">
+                <strong style="color: #D97757; font-weight: 700;">Claude Code</strong>
+            </span>
+            <span style="color: #999; font-weight: 400;">&mdash; 应用于 &mdash;</span>
+            <span style="display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;">
+                <img src="../../!/gemini-jumping.svg" alt="Gemini" style="height: 54px; width: auto; object-fit: contain;">
+                <strong style="background: linear-gradient(90deg, #1a73e8 0%, #4285f4 55%, #ea4335 100%); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700;">Gemini CLI</strong>
+            </span>
+        </p>
+
+        <!-- GDG Kolachi event badge (bottom) -->
+        <div style="
+            display: inline-block;
+            background: linear-gradient(90deg, #1a73e8 0%, #4285f4 55%, #ea4335 100%);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 7px 22px;
+            border-radius: 999px;
+            box-shadow: 0 3px 12px rgba(26,115,232,0.38);
+            margin-top: 88px;
+        ">GDG Kolachi &middot; Apr 25, 2026</div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 2: About Co-Presenter — Syed Umaid Ahmed               -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="2">
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 0;">
+
+            <!-- Avatar -->
+            <div style="position: relative; margin-bottom: 12px;">
+                <img
+                    src="../assets/introduction/Umaid/umaid.png"
+                    alt="Syed Umaid Ahmed"
+                    style="width: 280px; height: 280px; border-radius: 50%; object-fit: cover; border: 4px solid #e5e5e5; box-shadow: 0 8px 32px rgba(0,0,0,0.12); display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                    onmouseover="this.style.transform='scale(1.07)'; this.style.boxShadow='0 12px 40px rgba(21,101,192,0.35), 0 0 0 6px rgba(21,101,192,0.12)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(0,0,0,0.12)';"
+                />
+            </div>
+
+            <!-- Name + tagline -->
+            <h1 style="font-size: 2.6rem; font-weight: 700; margin-bottom: 6px; border-bottom: none; padding-bottom: 0; color: #1a1a1a;">Syed Umaid Ahmed</h1>
+            <p style="font-size: 1.2rem; color: #444; margin-bottom: 18px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 10px;">软件架构师 @ <img src="../assets/introduction/Shayan/disrupt-logo.png" alt="disrupt.com" style="height: 28px; width: auto; object-fit: contain; vertical-align: middle;" /></p>
+
+            <!-- Side-by-side cards (2-column grid, single row — mirrors Shayan's layout) -->
+            <div style="display: grid; grid-template-columns: 5fr 4fr; gap: 16px; width: 100%; max-width: 900px; align-items: stretch;">
+
+                <!-- Left: Education card (single card, two rows with divider) -->
+                <div
+                    style="background: #f8f9fa; border-radius: 12px; padding: 20px 24px; border-left: 4px solid #7b1fa2; cursor: default; transition: transform 0.25s ease, box-shadow 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 28px rgba(123,31,162,0.18)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                >
+                    <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: #7b1fa2; font-weight: 700; margin-bottom: 14px; text-align: left;">教育背景</div>
+                    <!-- PhD row -->
+                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                        <img src="../assets/introduction/Shayan/uni-fast-logo.png" alt="FAST NUCES logo" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0;" />
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.98rem; font-weight: 600; color: #1a1a1a; line-height: 1.3;">计算机视觉与人工智能博士</div>
+                            <div style="font-size: 0.87rem; color: #666; margin-top: 2px;">FAST NUCES &mdash; 在读</div>
+                        </div>
+                    </div>
+                    <!-- thin divider -->
+                    <div style="border-top: 1px solid #e0d4ec; margin: 4px 0 12px 0;"></div>
+                    <!-- Bachelor's + Master's row -->
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <img src="../assets/introduction/Shayan/uni-ned-logo.png" alt="NED University logo" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0;" />
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.98rem; font-weight: 600; color: #1a1a1a; line-height: 1.3;">电气工程学士，机电一体化硕士</div>
+                            <div style="font-size: 0.87rem; color: #666; margin-top: 2px;">NED University &mdash; 2018, 2021</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Contributions card -->
+                <div
+                    style="background: #f8f9fa; border-radius: 12px; padding: 20px 24px; border-left: 4px solid #e65100; display: flex; align-items: center; gap: 20px; transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 28px rgba(230,81,0,0.22)'; this.style.background='#fff3e0';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.background='#f8f9fa';"
+                >
+                    <img src="../assets/introduction/Umaid/animal-passport.jpeg" alt="Animal Passport Pakistan logo" style="width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; border-radius: 8px;" />
+                    <div style="text-align: left; flex: 1;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: #e65100; font-weight: 700; margin-bottom: 4px;">贡献</div>
+                        <div style="font-size: 1.0rem; font-weight: 600; color: #1a1a1a; line-height: 1.3; margin-bottom: 6px;">创始人 <code style="background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 4px; font-size: 0.93rem;">Animal Passport Pakistan</code></div>
+                        <div style="font-size: 0.87rem; color: #666; margin-top: 3px;">亮相于 Shark Tank Pakistan 🇵🇰</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 4: About Me — Shayan Rais                               -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="3">
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 0;">
+
+            <!-- Avatar -->
+            <div style="position: relative; margin-bottom: 12px;">
+                <img
+                    src="../assets/introduction/Shayan/shayan.png"
+                    alt="Shayan Rais"
+                    style="width: 280px; height: 280px; border-radius: 50%; object-fit: cover; border: 4px solid #e5e5e5; box-shadow: 0 8px 32px rgba(0,0,0,0.12); display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;"
+                    onmouseover="this.style.transform='scale(1.07)'; this.style.boxShadow='0 12px 40px rgba(21,101,192,0.35), 0 0 0 6px rgba(21,101,192,0.12)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(0,0,0,0.12)';"
+                />
+            </div>
+
+            <!-- Name + tagline -->
+            <h1 style="font-size: 2.6rem; font-weight: 700; margin-bottom: 6px; border-bottom: none; padding-bottom: 0; color: #1a1a1a;">Shayan Rais</h1>
+            <p style="font-size: 1.2rem; color: #444; margin-bottom: 18px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 10px;">软件架构师 @ <img src="../assets/introduction/Shayan/disrupt-logo.png" alt="disrupt.com" style="height: 28px; width: auto; object-fit: contain; vertical-align: middle;" /></p>
+
+            <!-- Side-by-side cards (2-column grid) -->
+            <div style="display: grid; grid-template-columns: 5fr 4fr; gap: 16px; width: 100%; max-width: 900px; align-items: stretch;">
+
+                <!-- Card 1: Education (two degrees) -->
+                <div
+                    style="background: #f8f9fa; border-radius: 12px; padding: 20px 24px; border-left: 4px solid #7b1fa2; cursor: default; transition: transform 0.25s ease, box-shadow 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 28px rgba(123,31,162,0.18)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                >
+                    <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: #7b1fa2; font-weight: 700; margin-bottom: 14px; text-align: left;">教育背景</div>
+                    <!-- Master's row -->
+                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                        <img src="../assets/introduction/Shayan/uni-fast-logo.png" alt="FAST NUCES logo" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0;" />
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.98rem; font-weight: 600; color: #1a1a1a; line-height: 1.3;">计算机科学硕士</div>
+                            <div style="font-size: 0.87rem; color: #666; margin-top: 2px;">FAST NUCES &mdash; 2019</div>
+                        </div>
+                    </div>
+                    <!-- thin divider -->
+                    <div style="border-top: 1px solid #e0d4ec; margin: 4px 0 12px 0;"></div>
+                    <!-- Bachelor's row -->
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <img src="../assets/introduction/Shayan/uni-ned-logo.png" alt="NED University logo" style="width: 44px; height: 44px; object-fit: contain; flex-shrink: 0;" />
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.98rem; font-weight: 600; color: #1a1a1a; line-height: 1.3;">计算机信息系统学士</div>
+                            <div style="font-size: 0.87rem; color: #666; margin-top: 2px;">NED University &mdash; 2014</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Achievement (clickable → GitHub) -->
+                <a
+                    href="https://github.com/shanraisshan/claude-code-best-practice"
+                    target="_blank"
+                    rel="noopener"
+                    style="background: #f8f9fa; border-radius: 12px; padding: 20px 24px; border-left: 4px solid #e65100; display: flex; align-items: center; gap: 20px; text-decoration: none; color: inherit; transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 28px rgba(230,81,0,0.22)'; this.style.background='#fff3e0';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.background='#f8f9fa';"
+                >
+                    <img src="../../!/claude-jumping.svg" alt="Claude mascot" style="width: 56px; height: 56px; object-fit: contain; flex-shrink: 0;" />
+                    <div style="text-align: left; flex: 1;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: #e65100; font-weight: 700; margin-bottom: 4px;">贡献</div>
+                        <div style="font-size: 1.0rem; font-weight: 600; color: #1a1a1a; line-height: 1.3;">创建者 <code style="background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 4px; font-size: 0.93rem;">claude-code-best-practice</code></div>
+                        <div style="font-size: 0.87rem; color: #666; margin-top: 3px;">巴基斯坦获星最多的 AI 仓库 <img src="../assets/logo/github.svg" alt="GitHub" style="height: 22px; width: auto; vertical-align: middle; margin: 0 4px;" /> 近 50,000 颗星 <span style="color: #e65100;">&#9733;</span></div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 4: GitHub Stars (proof point for Shayan's bio)           -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="4">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 120px); padding: 0;">
+            <img
+                src="../assets/introduction/Shayan/github-stars.png"
+                alt="claude-code-best-practice GitHub 星标增长"
+                style="width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 120px); border-radius: 12px; box-shadow: 0 10px 36px rgba(0,0,0,0.18); border: 1px solid #e5e5e5; display: block; object-fit: contain;"
+            />
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 5: Agenda                                                -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="5">
+        <h1 style="color: #c62828;">&#x1F6A8; 问题陈述</h1>
+
+        <!-- Sub-line -->
+        <p style="font-size: 1.6rem; font-weight: 600; color: #333; margin-top: 20px; margin-bottom: 24px;">获取卡拉奇天气</p>
+
+        <!-- Bullet points -->
+        <ol style="padding-left: 32px; margin: 0 0 40px 0; line-height: 2;">
+            <li style="font-size: 1.25rem; color: #444;">单一事实来源</li>
+            <li style="font-size: 1.25rem; color: #444;">重复性地</li>
+        </ol>
+
+        <!-- Section 2: Learning Outcome -->
+        <div style="max-width: 860px;">
+            <div class="info-box" style="margin: 0;">
+                <p style="font-size: 1.05rem; color: #0d47a1; margin: 0; font-style: italic;">通过解决这个问题，我们将一路学习<strong>智能体工程</strong>的不同概念。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 7: AI Jargon Word Cloud                                 -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="6">
+        <h1 style="font-size: 1.6rem; margin-bottom: 8px; color: #888; border-bottom: none; padding-bottom: 0; font-weight: 400; letter-spacing: 1px; text-transform: uppercase;">Jargon you'll hear</h1>
+        <p style="font-size: 1rem; color: #aaa; margin-bottom: 0; font-style: italic;">I'll unpack each of these as we go &mdash; for now, just let them wash over you.</p>
+        <div style="position: relative; width: 100%; min-height: calc(100vh - 130px); overflow: hidden;">
+
+            <!-- ===== HERO TIER: Blue chips (bigger, bolder, dominant) ===== -->
+            <!-- agentic engineering — demoted to orange, bottom-left area -->
+            <span style="position: absolute; top: 91%; left: 54%; transform: rotate(3deg); background: #e65100; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">agentic engineering</span>
+
+            <!-- progressive disclosure — centre-right, row 2 -->
+            <span style="position: absolute; top: 22%; left: 55%; transform: rotate(-4deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">progressive disclosure</span>
+
+            <!-- orchestration — left-centre -->
+            <span style="position: absolute; top: 42%; left: 6%; transform: rotate(3deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.6rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">orchestration</span>
+
+            <!-- dumb zone — centre, row 4 -->
+            <span style="position: absolute; top: 60%; left: 36%; transform: rotate(-5deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.55rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">dumb zone</span>
+
+            <!-- agentic workflows — bottom-right -->
+            <span style="position: absolute; top: 72%; left: 58%; transform: rotate(4deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">agentic workflows</span>
+
+            <!-- harness — hero blue -->
+            <span style="position: absolute; top: 52%; left: 64%; transform: rotate(3deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">harness</span>
+
+            <!-- compaction — hero blue -->
+            <span style="position: absolute; top: 80%; left: 8%; transform: rotate(-3deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">compaction</span>
+
+            <!-- context window — hero blue, top-left anchor slot -->
+            <span style="position: absolute; top: 3%; left: 5%; transform: rotate(2deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">context window</span>
+
+            <!-- ralph wiggum loop — hero blue, row 1b gap -->
+            <span style="position: absolute; top: 10%; left: 28%; transform: rotate(-3deg); background: #1565c0; color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 1.5rem; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 18px rgba(21,101,192,0.45), 0 0 0 2px rgba(21,101,192,0.2);">ralph wiggum loop</span>
+
+            <!-- ===== SUPPORTING TIER: Purple chips (smaller, softer) ===== -->
+            <!-- MCP — nudged from 14% to 16% to clear context window hero pill above -->
+            <span style="position: absolute; top: 16%; left: 3%; transform: rotate(5deg); background: #7b1fa2; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">MCP</span>
+
+            <!-- hooks -->
+            <span style="position: absolute; top: 31%; left: 46%; transform: rotate(-4deg); background: #7b1fa2; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">hooks</span>
+
+            <!-- ===== SUPPORTING TIER: Green chips ===== -->
+            <!-- context rot -->
+            <span style="position: absolute; top: 36%; left: 30%; transform: rotate(5deg); background: #2e7d32; color: #fff; padding: 7px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">context rot</span>
+
+            <!-- prompt engineering -->
+            <span style="position: absolute; top: 55%; left: 3%; transform: rotate(-4deg); background: #2e7d32; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">prompt engineering</span>
+
+            <!-- AI slop -->
+            <span style="position: absolute; top: 68%; left: 24%; transform: rotate(4deg); background: #2e7d32; color: #fff; padding: 7px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">AI slop</span>
+
+            <!-- inference -->
+            <span style="position: absolute; top: 83%; left: 64%; transform: rotate(-3deg); background: #2e7d32; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">inference</span>
+
+            <!-- ===== SUPPORTING TIER: Amber/Orange chips ===== -->
+            <!-- hallucination -->
+            <span style="position: absolute; top: 5%; left: 78%; transform: rotate(-5deg); background: #e65100; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">hallucination</span>
+
+            <!-- context bloat -->
+            <span style="position: absolute; top: 20%; left: 22%; transform: rotate(3deg); background: #e65100; color: #fff; padding: 7px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">context bloat</span>
+
+            <!-- one-shot prompting -->
+            <span style="position: absolute; top: 45%; left: 52%; transform: rotate(-3deg); background: #e65100; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">one-shot prompting</span>
+
+            <!-- token burn -->
+            <span style="position: absolute; top: 81%; left: 42%; transform: rotate(5deg); background: #e65100; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">token burn</span>
+
+            <!-- vibe coding — moved from hero-blue to orange -->
+            <span style="position: absolute; top: 91%; left: 22%; transform: rotate(-2deg); background: #e65100; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.18);">vibe coding</span>
+
+            <!-- scroll affordance -->
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; text-align: center; padding-bottom: 10px; pointer-events: none;">
+                <span style="font-size: 0.78rem; color: #bbb; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 4px;">向下滚动查看词汇表 <span style="font-size: 0.95rem; line-height: 1;">&#8595;</span></span>
+            </div>
+        </div>
+
+        <!-- ===== LEGEND: 2-column definition table ===== -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 40px; margin-top: 32px; padding: 28px 0 40px 0; border-top: 2px solid #e5e5e5;">
+            <!-- Left column: 7 blue hero + 2 purple -->
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">progressive disclosure</span> &mdash; 仅在需要时向 AI 提供所需信息，而非一次性全部给出</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">orchestration</span> &mdash; 像指挥带领乐队一样协调多个 AI 智能体</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">dumb zone</span> &mdash; 当上下文过多时，AI 反而会变笨的区间</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">agentic workflows</span> &mdash; 能自主规划、行动、检验并调整的多步骤 AI 工作流</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">harness</span> &mdash; 包裹在模型周围的脚手架——文件、终端、工具——让聊天机器人变成真正的劳动者</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">compaction</span> &mdash; 自动压缩旧对话，让 AI 持续工作而不触及记忆上限</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">context window</span> &mdash; AI 的工作记忆——一次能"看到"多少内容，超出后早期细节会被遗忘</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #1565c0; font-weight: 700;">ralph wiggum loop</span> &mdash; AI 在同一个错误的步骤里兜圈子，像个停不下来的迷茫孩子</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #7b1fa2; font-weight: 700;">MCP</span> &mdash; 让 AI 连接外部工具（GitHub、Slack、数据库）的通用适配器</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #7b1fa2; font-weight: 700;">hooks</span> &mdash; 在 AI 执行任何操作前或后自动运行的脚本</p>
+            </div>
+            <!-- Right column: 4 green + 6 orange -->
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #2e7d32; font-weight: 700;">context rot</span> &mdash; 对话拖得越久，早期细节越模糊，质量随之下降</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #2e7d32; font-weight: 700;">prompt engineering</span> &mdash; 组织提问方式让 AI 精确理解你的意图</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #2e7d32; font-weight: 700;">AI slop</span> &mdash; 看起来精美但毫无实质的敷衍 AI 输出</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #2e7d32; font-weight: 700;">inference</span> &mdash; 模型实际运行并生成答案的时刻。<em>训练</em>是模型学习的时候（很久以前，一次性的）。<em>推理</em>是模型此刻正在回答你</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #e65100; font-weight: 700;">hallucination</span> &mdash; AI 自信地编造听起来真实但实际虚假的信息</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #e65100; font-weight: 700;">context bloat</span> &mdash; 给 AI 塞入过多信息，导致它变慢并失去焦点</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #e65100; font-weight: 700;">one-shot prompting</span> &mdash; 给 AI 一个例子，要求它照着做</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #e65100; font-weight: 700;">token burn</span> &mdash; 在不必要的来回或冗长的提示中浪费宝贵的 AI"字数"</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #e65100; font-weight: 700;">vibe coding</span> &mdash; 用大白话描述你想要什么，指望 AI 完美实现</p>
+                <p style="font-size: 0.82rem; margin: 0; color: #444; line-height: 1.4;"><span style="color: #e65100; font-weight: 700;">agentic engineering</span> &mdash; 建立防护栏，让 AI 像可靠的队友而非赌博一样行事</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 7: Audience Question — GPT vs ChatGPT                  -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="7">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
+            <h1 style="border-bottom: none; padding-bottom: 0; font-size: 3rem; font-weight: 700; color: #1a1a1a; margin-bottom: 20px;">GPT 和 ChatGPT 有什么区别？</h1>
+            <p style="font-size: 0.95rem; color: #bbb; margin: 0; letter-spacing: 0.05em; text-transform: uppercase;">讨论</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 8: Boris Three-Tweets GIF (was SLIDE 4)                 -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="8">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
+            <figure style="max-width: 900px; width: 100%;">
+                <img src="../../!/root/boris-slider.gif" alt="Boris Cherny 的幻灯片，展示不同团队使用 Claude Code 的方式频谱" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+                <figcaption style="margin-top: 20px; font-size: 1rem; color: #666; font-style: italic;">
+                    Boris Cherny（Claude Code 创始人）&mdash; 不同团队使用 Claude Code 的方式完全不同。<br />
+                    没有唯一"正确"的方式。但确实存在一些值得了解的规律。
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: Model + Harness (Brain + Body)                      -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="9">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 75vh; text-align: center;">
+            <h1 style="border-bottom: none; padding-bottom: 0; font-size: 3rem; margin-bottom: 28px;">什么是 Claude Code？</h1>
+            <p style="font-size: 1.4rem; color: #555; margin: 0; max-width: 900px;"><strong>Model</strong>（大脑 &#x1F9E0; &mdash; 如 Opus、GPT）<span style="color: #999; margin: 0 10px;">+</span> <strong>Harness</strong>（身体 &#x1F4AA; &mdash; 如工具、MCP、记忆）</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 9: Models — Can answer / Can't answer                  -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="10">
+
+        <!-- Headline -->
+        <div style="text-align: center; margin-bottom: 36px;">
+            <div style="font-size: 3.2rem; line-height: 1; margin-bottom: 12px;">&#x1F99C;</div>
+            <h1 style="border-bottom: none; padding-bottom: 0; font-size: 2.8rem; margin-bottom: 8px;">「随机鹦鹉」</h1>
+            <p style="font-size: 1.1rem; color: #777; margin: 0;"><strong>Stochastic</strong>（随机）意味着概率性——模型并不<em>知道</em>答案，而是从概率分布中<em>采样</em>。</p>
+        </div>
+
+        <!-- Probability distribution visual -->
+        <div style="max-width: 720px; margin: 0 auto 32px; background: #f8f9fa; border-radius: 12px; padding: 28px 36px;">
+            <p style="font-size: 1rem; color: #555; margin: 0 0 20px; text-align: center;">提示词：&nbsp;<code style="font-size: 1.1rem; background: #fff; border: 1px solid #ddd; padding: 4px 12px; border-radius: 6px;">&ldquo;The sky is ___&rdquo;</code></p>
+
+            <!-- bar: blue 62% -->
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+                <div style="width: 120px; text-align: right; font-size: 0.95rem; color: #333; font-family: 'SF Mono', Monaco, monospace; flex-shrink: 0;">blue</div>
+                <div style="flex: 1; background: #e8eaf6; border-radius: 4px; height: 32px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; left: 0; top: 0; height: 100%; width: 62%; background: linear-gradient(90deg, #3949ab, #5c6bc0); border-radius: 4px; transition: width 0.6s ease;"></div>
+                </div>
+                <div style="width: 48px; font-size: 1rem; font-weight: 700; color: #3949ab; flex-shrink: 0;">62%</div>
+            </div>
+
+            <!-- bar: clear 14% -->
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+                <div style="width: 120px; text-align: right; font-size: 0.95rem; color: #333; font-family: 'SF Mono', Monaco, monospace; flex-shrink: 0;">clear</div>
+                <div style="flex: 1; background: #e8eaf6; border-radius: 4px; height: 32px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; left: 0; top: 0; height: 100%; width: 14%; background: linear-gradient(90deg, #1e88e5, #42a5f5); border-radius: 4px;"></div>
+                </div>
+                <div style="width: 48px; font-size: 1rem; font-weight: 700; color: #1e88e5; flex-shrink: 0;">14%</div>
+            </div>
+
+            <!-- bar: dark 8% -->
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+                <div style="width: 120px; text-align: right; font-size: 0.95rem; color: #333; font-family: 'SF Mono', Monaco, monospace; flex-shrink: 0;">dark</div>
+                <div style="flex: 1; background: #e8eaf6; border-radius: 4px; height: 32px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; left: 0; top: 0; height: 100%; width: 8%; background: linear-gradient(90deg, #546e7a, #78909c); border-radius: 4px;"></div>
+                </div>
+                <div style="width: 48px; font-size: 1rem; font-weight: 700; color: #546e7a; flex-shrink: 0;">8%</div>
+            </div>
+
+            <!-- bar: falling 0.3% -->
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 120px; text-align: right; font-size: 0.95rem; color: #aaa; font-family: 'SF Mono', Monaco, monospace; flex-shrink: 0;">falling</div>
+                <div style="flex: 1; background: #e8eaf6; border-radius: 4px; height: 32px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; left: 0; top: 0; height: 100%; width: 0.3%; background: #ef9a9a; border-radius: 4px;"></div>
+                </div>
+                <div style="width: 48px; font-size: 0.9rem; font-weight: 700; color: #aaa; flex-shrink: 0;">0.3%</div>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #aaa; margin: 16px 0 0; text-align: center; font-style: italic;">每次运行时模型都会<em>采样</em>——temperature（温度）参数控制采样的范围。</p>
+        </div>
+
+        <!-- Attribution -->
+        <p style="font-size: 0.78rem; color: #bbb; text-align: center; margin: 0 0 32px;">Bender, Gebru, McMillan-Major, Mitchell &mdash; <em>On the Dangers of Stochastic Parrots</em> (2021)</p>
+
+        <!-- LLM nature tags -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 20px 0 8px;">
+            <span style="background: rgba(57,73,171,0.08); color: #3949ab; border: 1px solid rgba(57,73,171,0.22); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">随机的</span>
+            <span style="background: rgba(233,30,99,0.07); color: #c2185b; border: 1px solid rgba(233,30,99,0.2); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">谄媚的</span>
+            <span style="background: rgba(230,81,0,0.08); color: #e65100; border: 1px solid rgba(230,81,0,0.22); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">幻觉的</span>
+            <span style="background: rgba(84,110,122,0.08); color: #455a64; border: 1px solid rgba(84,110,122,0.22); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">无状态的</span>
+            <span style="background: rgba(123,31,162,0.07); color: #7b1fa2; border: 1px solid rgba(123,31,162,0.2); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">有偏见的</span>
+            <span style="background: rgba(46,125,50,0.07); color: #2e7d32; border: 1px solid rgba(46,125,50,0.2); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">自信的</span>
+            <span style="background: rgba(21,101,192,0.07); color: #1565c0; border: 1px solid rgba(21,101,192,0.2); padding: 5px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">模式匹配</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 10: Model Limitations &mdash; Real-time access          -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="11">
+        <h1>&#x1F9E0; 模型 —— 例如 Opus、GPT、Gemini</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0;">
+            <div class="col-card" style="border-left: 4px solid #4caf50;">
+                <h4 style="color: #2e7d32; text-transform: none; letter-spacing: 0; margin-bottom: 10px;">&#x2705; 可以回答</h4>
+                <p style="font-size: 1.05rem; color: #333; margin: 0 0 8px;"><em>「日本的首都是哪里？」</em></p>
+                <p style="font-size: 1.05rem; color: #333; margin: 0 0 8px;"><em>「巴基斯坦何时独立？」</em></p>
+                <p style="font-size: 1.05rem; color: #333; margin: 0;"><em>「谁写了《罗密欧与朱丽叶》？」</em></p>
+            </div>
+            <div class="col-card" style="border-left: 4px solid #f44336;">
+                <h4 style="color: #c62828; text-transform: none; letter-spacing: 0; margin-bottom: 10px;">&#x274C; 无法回答</h4>
+                <p style="font-size: 1.05rem; color: #333; margin: 0 0 8px;"><em>「昨天谁赢了比赛？」</em></p>
+                <p style="font-size: 1.05rem; color: #333; margin: 0 0 8px;"><em>「今天美元兑巴基斯坦卢比的汇率是多少？」</em></p>
+                <p style="font-size: 1.05rem; color: #333; margin: 0;"><em>「Anthropic 昨天发布了什么？」</em></p>
+            </div>
+        </div>
+        <p style="font-size: 1rem; color: #555; margin: 0 0 16px;">每个模型——无论多新——都有知识截止日期。该日期之后的事件对模型来说根本不存在。</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 0;">
+            <div class="trigger-box" style="margin: 0;">
+                <h4>Opus 4.7 &mdash; Anthropic</h4>
+                <p style="margin: 0 0 4px;">知识截止日期： <strong>January 2026</strong></p>
+                <p style="font-size: 0.82rem; color: #666; margin: 0;">发布于 2026-04-17</p>
+            </div>
+            <div class="trigger-box" style="margin: 0;">
+                <h4>GPT-5.5 &mdash; OpenAI</h4>
+                <p style="margin: 0 0 4px;">知识截止日期： <strong>December 1, 2025</strong></p>
+                <p style="font-size: 0.82rem; color: #666; margin: 0;">发布于 2026-04-23——全新，但仍有截止日期。</p>
+            </div>
+            <div class="trigger-box" style="margin: 0;">
+                <h4>Gemini 3.1 Pro &mdash; Google</h4>
+                <p style="margin: 0 0 4px;">知识截止日期： <strong>January 2025</strong></p>
+                <p style="font-size: 0.82rem; color: #666; margin: 0;">发布于 2026-02-19</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 12: Limitations                                         -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="12">
+        <h1>&#x1F9E0; 局限性</h1>
+        <p>原始模型<strong>无法访问实时信息</strong>——没有互联网、没有文件、没有时钟。</p>
+        <div style="text-align: center; margin: 24px 0;">
+            <img src="../assets/harness/model-limitation.jpg" alt="Anthropic Workbench 截图，显示模型拒绝实时天气查询" style="max-width: 100%; max-height: 55vh; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 13: Horse Harness — The Pivot Analogy                  -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="13">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 120px); text-align: center; gap: 0;">
+
+            <!-- SVG Horse with Harness — annotated callout version -->
+            <!-- viewBox expanded: left -130, top -50, width 780, height 450 -->
+            <!-- Horse body coordinates unchanged; callout labels placed in expanded margins -->
+            <svg viewBox="-130 -50 780 450" width="780" height="450" xmlns="http://www.w3.org/2000/svg" aria-label="Horse with harness illustration with model-harness callouts" style="display: block; max-width: 100%; height: auto;">
+
+                <!-- ===== DEFS: arrowhead marker ===== -->
+                <defs>
+                    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L8,3 Z" fill="#555"/>
+                    </marker>
+                    <!-- Accent arrowhead in harness red -->
+                    <marker id="arrow-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L8,3 Z" fill="#C0392B"/>
+                    </marker>
+                </defs>
+
+                <!-- === HORSE BODY (warm brown silhouette) === -->
+                <!-- Torso -->
+                <ellipse cx="260" cy="210" rx="120" ry="68" fill="#8B6340"/>
+                <!-- Neck -->
+                <path d="M175 175 Q165 130 185 100 Q200 80 220 90 Q230 100 225 130 Q220 155 205 170 Z" fill="#8B6340"/>
+                <!-- Head -->
+                <ellipse cx="198" cy="78" rx="32" ry="22" fill="#8B6340" transform="rotate(-20 198 78)"/>
+                <!-- Muzzle/snout -->
+                <ellipse cx="173" cy="88" rx="18" ry="12" fill="#A07850" transform="rotate(-20 173 88)"/>
+                <!-- Ear -->
+                <path d="M210 60 L218 44 L225 61 Z" fill="#8B6340"/>
+                <!-- Eye -->
+                <circle cx="186" cy="72" r="4" fill="#2a1a0a"/>
+                <circle cx="185" cy="71" r="1.5" fill="#fff"/>
+                <!-- Nostril -->
+                <ellipse cx="165" cy="91" rx="4" ry="2.5" fill="#5a3a1a" transform="rotate(-20 165 91)"/>
+
+                <!-- Front legs -->
+                <rect x="195" y="270" width="22" height="68" rx="8" fill="#7A5530"/>
+                <rect x="228" y="270" width="22" height="68" rx="8" fill="#7A5530"/>
+                <!-- Hooves front -->
+                <rect x="193" y="330" width="26" height="14" rx="5" fill="#3a2a18"/>
+                <rect x="226" y="330" width="26" height="14" rx="5" fill="#3a2a18"/>
+
+                <!-- Rear legs -->
+                <rect x="295" y="268" width="22" height="70" rx="8" fill="#7A5530"/>
+                <rect x="325" y="268" width="22" height="70" rx="8" fill="#7A5530"/>
+                <!-- Hooves rear -->
+                <rect x="293" y="330" width="26" height="14" rx="5" fill="#3a2a18"/>
+                <rect x="323" y="330" width="26" height="14" rx="5" fill="#3a2a18"/>
+
+                <!-- Tail -->
+                <path d="M378 195 Q420 185 430 210 Q440 235 415 255 Q400 265 385 255" stroke="#5a3a1a" stroke-width="8" fill="none" stroke-linecap="round"/>
+                <path d="M385 255 Q370 270 375 288" stroke="#5a3a1a" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+                <!-- Mane -->
+                <path d="M215 88 Q208 100 205 115 Q203 128 207 140" stroke="#5a3a1a" stroke-width="7" fill="none" stroke-linecap="round"/>
+                <path d="M222 85 Q215 97 212 112 Q210 125 213 136" stroke="#5a3a1a" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+                <!-- === HARNESS (dark leather straps, highlighted in accent red-brown) === -->
+
+                <!-- Bridle — around the head/neck -->
+                <ellipse cx="198" cy="78" rx="35" ry="24" fill="none" stroke="#C0392B" stroke-width="3.5" transform="rotate(-20 198 78)"/>
+                <!-- Noseband (horizontal strap across muzzle) -->
+                <line x1="160" y1="85" x2="190" y2="75" stroke="#C0392B" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- Cheek piece (vertical strap on side of head) -->
+                <line x1="186" y1="56" x2="182" y2="93" stroke="#C0392B" stroke-width="3" stroke-linecap="round"/>
+
+                <!-- Collar / neck band -->
+                <ellipse cx="210" cy="148" rx="22" ry="36" fill="none" stroke="#C0392B" stroke-width="4" transform="rotate(-8 210 148)"/>
+
+                <!-- Breast collar (horizontal strap across chest) -->
+                <path d="M200 160 Q235 168 270 162" stroke="#C0392B" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+                <!-- Back band / surcingle (strap around the belly/back) -->
+                <ellipse cx="270" cy="208" rx="58" ry="70" fill="none" stroke="#C0392B" stroke-width="4" stroke-dasharray="none"/>
+                <!-- Crupper (rear strap looping under tail) -->
+                <path d="M330 185 Q365 180 378 195" stroke="#C0392B" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+                <!-- Traces (long straps from collar back to load) -->
+                <line x1="228" y1="168" x2="360" y2="200" stroke="#922B21" stroke-width="3" stroke-linecap="round"/>
+                <line x1="228" y1="172" x2="360" y2="218" stroke="#922B21" stroke-width="3" stroke-linecap="round"/>
+
+                <!-- Reins (from bit to driver — trailing to the left edge) -->
+                <path d="M168 84 Q155 80 145 75 Q135 68 128 72" stroke="#C0392B" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="5 3"/>
+                <path d="M128 72 Q110 60 90 65" stroke="#922B21" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="4 4"/>
+
+                <!-- Bit (small ring at mouth) -->
+                <circle cx="160" cy="89" r="5" fill="none" stroke="#888" stroke-width="2.5"/>
+
+                <!-- ===== CALLOUT ARROWS + LABELS ===== -->
+                <!-- Each callout: thin grey connector line → pill chip with primary term + italic subtitle -->
+
+                <!-- ── 1. REINS → Control loop (left side) ── -->
+                <!-- anchor: end of reins at x=90, y=65 → label centre at x=-65, y=48 -->
+                <line x1="90" y1="65" x2="-22" y2="48" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)" stroke-linecap="round"/>
+                <!-- pill background -->
+                <rect x="-128" y="28" width="104" height="42" rx="8" fill="#C0392B"/>
+                <!-- primary term -->
+                <text x="-76" y="46" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fff">控制循环</text>
+                <!-- italic reason -->
+                <text x="-76" y="61" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-style="italic" fill="rgba(255,255,255,0.85)">决定下一次调用</text>
+                <!-- horse-part label — small tag above arrow -->
+                <text x="62" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#888">缰绳</text>
+
+                <!-- ── 2. BIT → Tool allowlist (top-left, above the mouth) ── -->
+                <!-- anchor: bit circle at x=160, y=84 → label centre at x=100, y=-25 -->
+                <line x1="160" y1="84" x2="118" y2="-12" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)" stroke-linecap="round"/>
+                <!-- pill background -->
+                <rect x="50" y="-44" width="116" height="42" rx="8" fill="#C0392B"/>
+                <!-- primary term -->
+                <text x="108" y="-26" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fff">工具白名单</text>
+                <!-- italic reason -->
+                <text x="108" y="-11" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-style="italic" fill="rgba(255,255,255,0.85)">限制它能做什么</text>
+                <!-- horse-part label -->
+                <text x="166" y="80" text-anchor="start" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#888">马嚼子</text>
+
+                <!-- ── 3. BLINDERS → Context management (top-right, above head) ── -->
+                <!-- anchor: top of bridle / head at x=215, y=55 → label centre at x=330, y=-25 -->
+                <line x1="215" y1="55" x2="285" y2="-12" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)" stroke-linecap="round"/>
+                <!-- pill background -->
+                <rect x="232" y="-44" width="152" height="42" rx="8" fill="#C0392B"/>
+                <!-- primary term -->
+                <text x="308" y="-26" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fff">上下文管理</text>
+                <!-- italic reason -->
+                <text x="308" y="-11" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-style="italic" fill="rgba(255,255,255,0.85)">缩小它能看到的内容</text>
+                <!-- horse-part label -->
+                <text x="210" y="50" text-anchor="end" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#888">眼罩</text>
+
+                <!-- ── 4. DRIVER (surcingle/back band) → Evaluator (right side, mid) ── -->
+                <!-- anchor: right edge of surcingle at x=328, y=208 → label at x=530, y=195 -->
+                <line x1="328" y1="208" x2="462" y2="198" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)" stroke-linecap="round"/>
+                <!-- pill background -->
+                <rect x="464" y="178" width="90" height="42" rx="8" fill="#C0392B"/>
+                <!-- primary term -->
+                <text x="509" y="196" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fff">评估器</text>
+                <!-- italic reason -->
+                <text x="509" y="211" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-style="italic" fill="rgba(255,255,255,0.85)">决定何时完成</text>
+                <!-- horse-part label -->
+                <text x="332" y="204" text-anchor="start" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#888">驾驭者</text>
+
+                <!-- ── 5. TRACES → State persistence (bottom-right) ── -->
+                <!-- anchor: mid-trace at x=310, y=210 → label at x=490, y=310 -->
+                <line x1="355" y1="215" x2="465" y2="305" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)" stroke-linecap="round"/>
+                <!-- pill background -->
+                <rect x="464" y="293" width="136" height="42" rx="8" fill="#C0392B"/>
+                <!-- primary term -->
+                <text x="532" y="311" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#fff">状态持久化</text>
+                <!-- italic reason -->
+                <text x="532" y="326" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" font-style="italic" fill="rgba(255,255,255,0.85)">将工作传递下去</text>
+                <!-- horse-part label -->
+                <text x="350" y="210" text-anchor="start" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#888">马具绳</text>
+
+            </svg>
+
+            <!-- One-liner — kept, placed below the diagram -->
+            <p style="font-size: 1.8rem; font-weight: 700; color: #1a1a1a; margin: 12px 0 6px; letter-spacing: -0.02em; line-height: 1.2;">马的马具。模型的 Harness。</p>
+            <p style="font-size: 1.2rem; font-weight: 400; color: #C0392B; margin: 0; letter-spacing: 0.01em;">模型就是那匹马。有蛮力，没有方向。Harness 才是让马做事的一切。</p>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 14: Tool Calling &mdash; how the harness reaches the world -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="14">
+        <h1>&#x26A1; 工具调用 —— Harness 如何连接世界</h1>
+        <div style="text-align: center; margin: 24px 0;">
+            <img src="../assets/harness/tool-calling.png"
+                 alt="示意图：Claude 如何向 Harness 发送工具调用请求，Harness 对真实世界系统执行调用，结果回流到 Claude 的上下文"
+                 style="max-width: 100%; max-height: 55vh; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 10: Harness (1 of 2) &mdash; mind, methods, memory       -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="15">
+        <h1>&#x1F4AA; Harness —— 大脑周围的身体</h1>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 28px 0;">
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #009688; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F9D1;&#x200D;&#x1F4BC;</div>
+                <h4 style="color: #00796b; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>Agents</strong> —— 专家</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0 0 4px;">专职的 Claude 工作者——独立的上下文、工具、焦点。</p>
+                <p style="font-size: 0.7rem; color: #2e7d32; margin: 0; font-weight: 600;">&#x2705; fresh working memory per run</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #4caf50; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F3AF;</div>
+                <h4 style="color: #2e7d32; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>Skills</strong> —— 技能</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0 0 4px;">专家（或 Claude）实际能做什么。</p>
+                <p style="font-size: 0.7rem; color: #2e7d32; margin: 0; font-weight: 600;">&#x2705; progressive disclosure &mdash; loaded on demand</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #ef6c00; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F4D8;</div>
+                <h4 style="color: #ef6c00; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>Workflows</strong> —— 操作手册</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0 0 4px;">可重复的分步配方——像空调安装指南。</p>
+                <p style="font-size: 0.7rem; color: #2e7d32; margin: 0; font-weight: 600;">&#x2705; reproducible recipes</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #9c27b0; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F4DD;</div>
+                <h4 style="color: #7b1fa2; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>CLAUDE.md</strong> —— 你的记忆</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0 0 4px;">你提供给模型的知识。</p>
+                <p style="font-size: 0.7rem; color: #c62828; margin: 0; font-weight: 600;">&#x26A0;&#xFE0F; 200行问题</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #3f51b5; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 6px;">&#x1F4AD;</div>
+                <h4 style="color: #283593; text-transform: none; letter-spacing: 0; margin-bottom: 4px;"><strong>Context</strong> —— 工作记忆</h4>
+                <p style="font-size: 0.85rem; color: #555; margin: 0 0 6px;">Claude 此刻脑中持有的内容——每次新对话都重置。</p>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="flex: 1; background: #e0e0e0; border-radius: 3px; height: 6px; overflow: hidden;">
+                        <div style="background: #3f51b5; width: 20%; height: 100%;"></div>
+                    </div>
+                    <span style="font-size: 0.7rem; color: #666; white-space: nowrap;">20% of 1M tokens</span>
+                </div>
+                <p style="font-size: 0.7rem; color: #c62828; margin: 6px 0 0; font-weight: 600;">&#x26A0;&#xFE0F; dumb-zone problem</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 11: Harness (2 of 2) &mdash; senses, rules, reflexes     -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="16">
+        <h1>&#x1F4AA; Harness —— 大脑周围的身体</h1>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 28px 0;">
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #4caf50; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x270B;</div>
+                <h4 style="color: #2e7d32; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>Tools</strong> —— 双手</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0;">内置：Read、Edit、Bash、WebSearch。</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #2196f3; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F50C;</div>
+                <h4 style="color: #1565c0; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>MCP</strong> —— 适配器</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0 0 4px;">AI 的 USB-C——插入外部工具（数据库、浏览器、API）。</p>
+                <p style="font-size: 0.75rem; color: #999; margin: 0; font-style: italic;">例如 &#x1F441;&#xFE0F; Chrome 中的 Claude</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #f44336; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F6E1;&#xFE0F;</div>
+                <h4 style="color: #c62828; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>Permissions</strong> —— 护栏</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0;">允许 / 询问 / 拒绝工具使用。</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #009688; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1FA9D;</div>
+                <h4 style="color: #00796b; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>Hooks</strong> —— 反射</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0;">事件触发时运行的<strong>确定性</strong>脚本。</p>
+            </div>
+            <div class="col-card" style="flex: 0 1 calc(33.333% - 12px); border-left: 4px solid #ff9800; text-align: center;">
+                <div style="font-size: 2.8rem; line-height: 1; margin-bottom: 10px;">&#x1F4DD;</div>
+                <h4 style="color: #ef6c00; text-transform: none; letter-spacing: 0; margin-bottom: 6px;"><strong>System Prompt</strong> &mdash; Claude&rsquo;s memory</h4>
+                <p style="font-size: 0.9rem; color: #555; margin: 0 0 4px;">Anthropic 内置的知识。</p>
+                <p style="font-size: 0.75rem; color: #999; margin: 0 0 3px; font-style: italic;">例如 身份 · 语气 · 安全</p>
+                <p style="font-size: 0.7rem; color: #2e7d32; margin: 0; font-weight: 600;">&#x2705; always on</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 12: Problem solved with harness &mdash; success case     -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="17">
+        <h1>&#x1F389; 耶！Harness 解决了问题</h1>
+        <p>Harness 通过 <strong>WebSearch</strong> 连接外部网络，从实时来源获取真实答案。</p>
+        <div style="text-align: center; margin: 24px 0;">
+            <img src="../assets/harness/harness-limitation-2.jpg" alt="Claude Code 使用 Web Search 搜索 AccuWeather、Weather25 和 TimeAndDate 来回答「卡拉奇的天气怎么样？」" style="max-width: 100%; max-height: 55vh; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 13: Suspense / transition &mdash; But...?                -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="18">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 75vh; text-align: center;">
+            <div style="font-size: 12rem; color: #3f51b5; line-height: 1; font-weight: 700;">?</div>
+            <p style="font-size: 1.6rem; color: #555; margin: 24px 0 0; max-width: 900px; font-weight: 600;">真的吗？</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 14: Non-determinism 1 &mdash; Refuses to use tools       -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="19">
+        <h1>&#x1F4AA; 非确定性 —— 并不总是使用工具</h1>
+        <p>相似的提示——但这次<strong>模型决定不使用工具</strong>。</p>
+        <div style="text-align: center; margin: 24px 0;">
+            <img src="../assets/harness/harness-limitation-1.jpg" alt="Claude Code 拒绝检查实时天气并要求使用 WebFetch 的权限" style="max-width: 100%; max-height: 55vh; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 15: Non-determinism 2 &mdash; Tools can fail             -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="20">
+        <h1>&#x1F4AA; 非确定性 —— 工具可能失败</h1>
+        <p>模型首先尝试了<strong>一个来源</strong>——它<strong>失败了（403）</strong>——于是回退到了<strong>另一个</strong>。</p>
+        <div style="text-align: center; margin: 24px 0;">
+            <img src="../assets/harness/harness-limitation-3.jpg" alt="Claude Code 显示来自 timeanddate.com 的 403 错误并回退到 wttr.in" style="max-width: 100%; max-height: 55vh; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 18: The Two Problems &mdash; what we're solving          -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="21">
+        <h1>&#x1F6A8; 问题陈述</h1>
+        <ol style="padding-left: 32px; margin: 40px 0 0 0; line-height: 2;">
+            <li style="font-size: 1.25rem; color: #444; margin-bottom: 24px;">
+                <strong>&#x274C; 单一事实来源</strong>
+                <p style="color: #888; font-style: normal; margin: 4px 0 0 0; font-size: 1rem;">模型并不总是走同一条路。</p>
+            </li>
+            <li style="font-size: 1.25rem; color: #444;">
+                <strong>&#x274C; Repetitively</strong>
+                <p style="color: #888; font-style: normal; margin: 4px 0 0 0; font-size: 1rem;">模型有时失败/忘记使用工具。</p>
+            </li>
+        </ol>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 19: Vibe Coding &mdash; Karpathy&rsquo;s original tweet  -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="22">
+        <h1>氛围编程</h1>
+        <div style="text-align: center; margin: 16px 0;">
+            <img src="../assets/concepts/vibe-coding.jpg" alt="Andrej Karpathy 2025年2月3日的推文，创造了「氛围编程」一词——「完全沉浸于氛围，拥抱指数级增长，忘记代码甚至存在」" style="max-width: 100%; max-height: 55vh; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);" />
+        </div>
+        <p style="text-align: center; color: #666; margin: 20px 0 0; font-size: 1.05rem;"><strong>Andrej Karpathy</strong> &mdash; OpenAI 创始团队 · 前特斯拉 AI 总监 · Eureka Labs 创始人。</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: Vibe Coding vs Agentic Engineering                   -->
+    <!-- ============================================================ -->
+    <div class="slide" data-slide="23">
+        <h1>氛围编程 vs 智能体工程</h1>
+        <div class="two-col">
+            <div>
+                <div class="code-block" style="margin-top: 16px;"><span class="comment"># Plain TodoApp</span>
+todoapp/
+  <span class="key">backend/</span>
+    main.py
+    routes/
+      todos.py
+      users.py
+    models/
+      todo.py
+      user.py
+    tests/
+      test_todos.py
+  <span class="key">frontend/</span>
+    components/
+      TodoList.tsx
+      Sidebar.tsx
+    pages/
+      index.tsx
+      todos.tsx
+    lib/
+      api.ts</div>
+            </div>
+            <div>
+                <div class="code-block" style="margin-top: 16px;"><span class="comment"># With Claude Code Best Practices</span>
+todoapp/
+  <span class="claude-file">.claude/</span>                  <span class="claude-file comment"># Claude Code config</span>
+    <span class="claude-file">agents/</span>               <span class="claude-file comment"># Custom subagents</span>
+    <span class="claude-file">skills/</span>               <span class="claude-file comment"># Domain knowledge</span>
+    <span class="claude-file">commands/</span>             <span class="claude-file comment"># Slash commands</span>
+    <span class="claude-file">hooks/</span>                <span class="claude-file comment"># Lifecycle scripts</span>
+    <span class="claude-file">rules/</span>                <span class="claude-file comment"># Modular instructions</span>
+    <span class="claude-file">settings.json</span>         <span class="claude-file comment"># Team settings</span>
+    <span class="claude-file">settings.local.json</span>   <span class="claude-file comment"># Personal settings</span>
+  <span class="key">backend/</span>
+    main.py
+    routes/
+      todos.py
+      users.py
+    models/
+      todo.py
+      user.py
+    tests/
+      test_todos.py
+    <span class="claude-file">CLAUDE.md</span>             <span class="claude-file comment"># Backend instructions</span>
+  <span class="key">frontend/</span>
+    components/
+      TodoList.tsx
+      Sidebar.tsx
+    pages/
+      index.tsx
+      todos.tsx
+    lib/
+      api.ts
+    <span class="claude-file">CLAUDE.md</span>             <span class="claude-file comment"># Frontend instructions</span>
+  <span class="claude-file">.mcp.json</span>               <span class="claude-file comment"># Managed MCP servers</span>
+  <span class="claude-file">CLAUDE.md</span>               <span class="claude-file comment"># Project instructions</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TOPIC 1: AGENTS (Slides 9-14)                                 -->
+    <!-- ============================================================ -->
+
+    <!-- Slide 8: Agents Section Divider -->
+    <div class="slide section-slide" data-slide="24" data-level="agents">
+        <div class="slide-viewport-content">
+            <h1>👤 Agents</h1>
+            <div style="text-align: center; margin: 12px auto 20px auto;">
+                <span style="background: #fff3cd; color: #7a5c00; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; font-family: 'SF Mono', Monaco, 'Courier New', monospace; box-shadow: 0 2px 8px rgba(122,92,0,0.18);">/agents</span>
+            </div>
+            <p class="section-desc">示例：<strong>weather reporter</strong>、前端工程师、QA 工程师。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px;">
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x2705; 每次运行都重置工作记忆</span>
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x1F3AF; 限定范围的工具、模型、权限</span>
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x26A1; 可并行化</span>
+            </div>
+            <pre class="file-tree" style="max-width: 440px; margin: 32px auto 0 auto; font-size: 0.9rem; line-height: 1.8; padding: 16px 24px; text-align: left;">root/
+├── .claude/
+│   └── agents/
+│       └── weather-agent.md
+└── README.md</pre>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9: The Restaurant Kitchen -->
+    <div class="slide" data-slide="25">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>创建你的第一个 Agent —— <code>/agents</code></h1>
+            <div style="max-width: 600px;">
+                <div class="col-card" style="border-left: 4px solid #D97757;">
+                    <div class="how-to-trigger" style="margin: 16px 0 12px 0;">
+                        <h4>命令</h4>
+                        <p>输入 <code>/agents</code>。</p>
+                    </div>
+                    <p style="font-size: 1rem; color: #444;">打开交互菜单——选择「Create new agent」，CLI 会为你起草 agent 文件。</p>
+                    <p style="margin-top: 12px; font-size: 0.9rem; color: #666;">创建 <code>.claude/agents/&lt;name&gt;.md</code>——任何人都能编辑的普通 markdown 文件。</p>
+                </div>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Prompting vs Agent table -->
+    <div class="slide" data-slide="26">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>演示</h1>
+            <video
+                src="../assets/concepts/agents/agent-creation.mov"
+                controls
+                preload="metadata"
+                style="max-width: 1100px; max-height: 70vh; width: 100%; height: auto; display: block; margin: 40px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                你的浏览器不支持视频标签。
+            </video>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide: Agent Created (image only) -->
+    <div class="slide" data-slide="27" data-level="agents">
+        <h1>&#x1F389; 耶！Agents 解决了问题</h1>
+        <div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center;">
+            <img src="../assets/concepts/agents/agent-created.png" alt="Agent 已创建" style="max-width: 1200px; max-height: 80vh; width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);" />
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 27: Skeptical counter-beat (mirrors slide 17) -->
+    <div class="slide" data-slide="28" data-level="agents">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 120px); text-align: center;">
+            <div style="font-size: 12rem; color: #3f51b5; line-height: 1; font-weight: 700;">?</div>
+            <p style="font-size: 1.6rem; color: #555; margin: 24px 0 0; max-width: 900px; font-weight: 600;">别急……</p>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 28: Callback to problem statement — agents solve half -->
+    <div class="slide" data-slide="29" data-level="agents">
+        <h1>&#x1F6A8; 问题陈述</h1>
+        <div style="min-height: calc(100vh - 120px);">
+        <ol style="padding-left: 32px; margin: 40px 0 0 0; line-height: 2;">
+            <li style="font-size: 1.25rem; color: #444; margin-bottom: 24px;">
+                <strong>&#x2705; 单一事实来源</strong>
+                <p style="color: #888; font-style: normal; margin: 4px 0 0 0; font-size: 1rem;">Agent 始终调用 Open-Meteo API——不再有来源漂移。</p>
+            </li>
+            <li style="font-size: 1.25rem; color: #444;">
+                <strong>&#x274C; Repetitively</strong>
+                <p style="color: #888; font-style: normal; margin: 4px 0 0 0; font-size: 1rem;">无法保证 Claude 始终调用这个 agent。</p>
+            </li>
+        </ol>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Agent Config Fields -->
+    <div class="slide" data-slide="30" data-level="agents">
+            <h1>Agent 配置字段（frontmatter）</h1>
+            <div style="margin: 24px 0;">
+                <div class="field-row" style="padding-bottom: 6px; border-bottom: 2px solid #ddd;">
+                    <span class="field-name" style="color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">字段</span>
+                    <span class="field-desc" style="color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">描述</span>
+                    <span class="field-enforced" style="color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; min-width: 110px; text-align: right;">由谁强制执行</span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">name <span class="field-recommended">推荐</span></span>
+                    <span class="field-desc">唯一标识符——例如 <code>weather-agent</code></span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">description <span class="field-required">必填</span></span>
+                    <span class="field-desc">何时调用。使用 <code>"PROACTIVELY"</code> 实现自动调用</span>
+                    <span class="field-enforced"><span class="pill-prompt">prompt</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">model</span>
+                    <span class="field-desc"><code>haiku</code>、<code>sonnet</code>、<code>opus</code> 或 <code>inherit</code>（默认）。weather-agent 使用 <code>sonnet</code></span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">tools</span>
+                    <span class="field-desc">工具白名单。weather-agent 允许 <code>WebFetch</code>、<code>Read</code>、<code>Write</code> 等。</span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">skills</span>
+                    <span class="field-desc">启动时预加载到 agent 上下文中的 skills——<strong>weather-agent 预加载 <code>weather-fetcher</code></strong></span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">maxTurns</span>
+                    <span class="field-desc">agent 停止前的最大智能体轮数。weather-agent 使用 <code>5</code></span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">memory</span>
+                    <span class="field-desc">持久化记忆：<code>user</code>、<code>project</code> 或 <code>local</code>。weather-agent 使用 <code>project</code></span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+                <div class="field-row">
+                    <span class="field-name">color</span>
+                    <span class="field-desc">任务列表中的视觉颜色。weather-agent 使用 <code>green</code></span>
+                    <span class="field-enforced"><span class="pill-harness">harness</span></span>
+                </div>
+            </div>
+            <p style="font-style: italic; color: #444; text-align: center; max-width: 900px; margin: 24px auto 0 auto; background: #fff3cd; padding: 16px 24px; border-radius: 8px;"><code>skills:</code> 字段让 agent 与众不同。它在启动时将 <code>any-skill</code> 直接预加载到 agent 的大脑中——在 agent 收到任何指令之前。</p>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 30: Agent tips and tricks — part 1 -->
+    <div class="slide" data-slide="31" data-level="agents">
+        <h1><code>claude-code-best-practice</code> 技巧与窍门</h1>
+        <div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center;">
+            <img src="../assets/concepts/agents/agent-tips-1.png" alt="Claude Code 技巧与窍门——第1部分" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 20px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 31: Agent tips and tricks — part 2 -->
+    <div class="slide" data-slide="32" data-level="agents">
+        <h1><code>claude-code-best-practice</code> 技巧与窍门</h1>
+        <div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center;">
+            <img src="../assets/concepts/agents/agent-tips-2.png" alt="Claude Code 技巧与窍门——第2部分" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 20px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card" style="border-left: 4px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- NEW SLIDE 27: CLAUDE.md concept intro                         -->
+    <!-- ============================================================ -->
+
+    <!-- Slide 32: CLAUDE.md concept intro -->
+    <div class="slide section-slide" data-slide="33">
+        <div class="slide-viewport-content">
+            <h1>&#x1F4DD; CLAUDE.md</h1>
+            <div style="text-align: center; margin: 12px auto 20px auto;">
+                <span style="background: #fff3cd; color: #7a5c00; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; font-family: 'SF Mono', Monaco, 'Courier New', monospace; box-shadow: 0 2px 8px rgba(122,92,0,0.18);">CLAUDE.md</span>
+            </div>
+            <p class="section-desc">你提供给模型的知识——每次会话都读取。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px;">
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x2705; 每次会话都加载</span>
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x1F465; 可通过 git 团队共享</span>
+                <span style="background: #c62828; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(198,40,40,0.35);">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <pre class="file-tree" style="max-width: 440px; margin: 32px auto 0 auto; font-size: 0.9rem; line-height: 1.8; padding: 16px 24px; text-align: left;">root/
+&#x251C;&#x2500;&#x2500; CLAUDE.md
+&#x2514;&#x2500;&#x2500; README.md</pre>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 33: Create your first CLAUDE.md — /init -->
+    <div class="slide" data-slide="34" data-level="claude-md">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>创建你的第一个 CLAUDE.md —— <code>/init</code></h1>
+            <div style="max-width: 600px;">
+                <div class="col-card" style="border-left: 4px solid #9c27b0;">
+                    <div class="how-to-trigger" style="margin: 16px 0 12px 0;">
+                        <h4>命令</h4>
+                        <p>在 Claude Code 中输入 <code>/init</code>。</p>
+                    </div>
+                    <p style="font-size: 1rem; color: #444;">Claude 扫描你的代码库并为你起草初始 CLAUDE.md——项目约定、关键模式、常用命令。</p>
+                    <p style="margin-top: 12px; font-size: 0.9rem; color: #666;">在你的仓库根目录创建 <code>CLAUDE.md</code>——你可以编辑并提交的普通 markdown 文件。</p>
+                </div>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 34: CLAUDE.md — the real thing (screenshot) -->
+    <div class="slide" data-slide="35" data-level="claude-md">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>&#x1F4DD; CLAUDE.md —— 真实案例</h1>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <img src="../assets/concepts/claudemd/claudemd.png" alt="真实的 CLAUDE.md 文件，展示项目规则和 agent 调用说明" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 20px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 35: claude-code-best-practice Tips & Tricks (CLAUDE.md) -->
+    <div class="slide" data-slide="36" data-level="claude-md">
+        <h1><code>claude-code-best-practice</code> 技巧与窍门</h1>
+        <div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center;">
+            <img src="../assets/concepts/claudemd/claudemd-tips.png" alt="Claude Code tips and tricks for CLAUDE.md" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 20px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 36: CLAUDE.md problem — keep it under 200 lines -->
+    <div class="slide" data-slide="37" data-level="claude-md">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>&#x26A0;&#xFE0F; CLAUDE.md 问题——保持在 200 行以内</h1>
+            <div style="min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center;">
+                <img src="../assets/concepts/claudemd/claudemd-problem.png" alt="CLAUDE.md 200行遵守问题示意图" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 20px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- NEW SLIDE 28: Skills concept intro                            -->
+    <!-- ============================================================ -->
+
+    <!-- Slide: Skills -->
+    <div class="slide section-slide" data-slide="38">
+        <div class="slide-viewport-content">
+            <h1>&#x1F3AF; Skills</h1>
+            <div style="text-align: center; margin: 12px auto 20px auto;">
+                <span style="background: #fff3cd; color: #7a5c00; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; font-family: 'SF Mono', Monaco, 'Courier New', monospace; box-shadow: 0 2px 8px rgba(122,92,0,0.18);">.claude/skills/</span>
+            </div>
+            <p class="section-desc">示例：<strong>weather fetching</strong>、排序 CSV 行、生成 SVG 卡片。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px;">
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x2705; 渐进式披露——按需加载</span>
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x267B;&#xFE0F; 跨 agent 复用</span>
+            </div>
+            <pre class="file-tree" style="max-width: 440px; margin: 32px auto 0 auto; font-size: 0.9rem; line-height: 1.8; padding: 16px 24px; text-align: left;">root/
+&#x251C;&#x2500;&#x2500; .claude/
+&#x2502;   &#x2514;&#x2500;&#x2500; skills/
+&#x2502;       &#x2514;&#x2500;&#x2500; weather-fetcher/
+&#x2502;           &#x2514;&#x2500;&#x2500; SKILL.md
+&#x2514;&#x2500;&#x2500; README.md</pre>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- NEW SLIDE 38: Create your first skill                         -->
+    <!-- ============================================================ -->
+
+    <div class="slide" data-slide="39" data-level="skills">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>创建你的第一个 Skill</h1>
+            <div class="two-col" style="margin-top: 28px;">
+                <div class="col-card" style="border-left: 4px solid #4caf50;">
+                    <h4>通过提示词编写</h4>
+                    <p>只需描述你想让 Claude 做什么。它会为你起草 skill 文件。</p>
+                    <p style="font-size: 0.92rem; color: #555; margin-top: 12px; font-style: italic;">「创建一个从 Open-Meteo 获取指定城市天气的 skill。」</p>
+                </div>
+                <div class="col-card" style="border-left: 4px solid #4caf50;">
+                    <h4>使用 Anthropic 的 skill-creator</h4>
+                    <p>Anthropic 提供了一个官方的 <code>skill-creator</code> skill。调用它，它会引导你生成格式正确的 skill。</p>
+                    <p style="font-size: 0.9rem; color: #2e7d32; font-weight: 600; margin-top: 12px;">推荐——始终生成正确的 SKILL.md 格式。</p>
+                </div>
+            </div>
+            <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 20px 28px; border-radius: 8px; max-width: 900px; margin: 32px auto 0 auto;">
+                <p style="font-weight: 700; margin: 0 0 8px 0;">&#x26A0;&#xFE0F; 注意（方法1）</p>
+                <p style="margin: 0; font-size: 0.95rem; color: #444;">提示词方法有时会创建错误的结构。它不是生成包含 <code>SKILL.md</code> 的文件夹（例如 <code>weather-fetcher/SKILL.md</code>），而是创建一个普通的 <code>weather-fetcher.md</code> 文件。错误的格式不会被 Claude Code 识别为 skill。</p>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- Slide 39: Skills — a real one (screenshot)                    -->
+    <!-- ============================================================ -->
+
+    <div class="slide" data-slide="40" data-level="skills">
+        <div style="min-height: calc(100vh - 200px);">
+            <h1>&#x1F3AF; Skills —— 真实案例</h1>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <img src="../assets/concepts/skills/skill-created.jpg" alt="磁盘上的真实 skill 文件——.claude/skills/ 下命名文件夹中的 SKILL.md" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 20px auto 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- Slide 40: Skill config fields with frontmatter (was 39)       -->
+    <!-- ============================================================ -->
+
+    <div class="slide" data-slide="41" data-level="skills">
+        <h1>Skill 配置字段（frontmatter）</h1>
+        <p style="font-style: italic; color: #666; margin: 8px 0 20px 0;">大多数字段控制 skill 的加载方式和时机——由 harness 强制执行。只有 <code>description</code> 属于提示词领域。</p>
+        <div style="margin: 0 0 24px 0;">
+            <div class="field-row" style="padding-bottom: 6px; border-bottom: 2px solid #ddd;">
+                <span class="field-name" style="color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">字段</span>
+                <span class="field-desc" style="color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">描述</span>
+                <span class="field-enforced" style="color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; min-width: 110px; text-align: right;">由谁强制执行</span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">name <span class="field-recommended">推荐</span></span>
+                <span class="field-desc">显示名称和 <code>/slash-command</code>（默认目录名）</span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">description <span class="field-required">必填</span></span>
+                <span class="field-desc">何时调用——用于自动发现。写清楚。</span>
+                <span class="field-enforced"><span class="pill-prompt">prompt</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">argument-hint</span>
+                <span class="field-desc"><code>/</code> 菜单中显示的自动补全提示（例如 <code>[city-name]</code>）</span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">disable-model-invocation</span>
+                <span class="field-desc">设为 <code>true</code> 以防止 Claude 自动调用此 skill</span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">user-invocable</span>
+                <span class="field-desc">设为 <code>false</code> 以从 <code>/</code> 菜单隐藏——仅作为背景知识</span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">allowed-tools</span>
+                <span class="field-desc">此 skill 激活时无需权限提示即可使用的工具</span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">model</span>
+                <span class="field-desc">skill 激活时使用的模型：<code>haiku</code>、<code>sonnet</code>、<code>opus</code></span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-name">context</span>
+                <span class="field-desc">设为 <code>fork</code> 以在隔离的子智能体上下文中运行 skill</span>
+                <span class="field-enforced"><span class="pill-harness">harness</span></span>
+            </div>
+        </div>
+        <p style="font-style: italic; color: #444; text-align: center; max-width: 900px; margin: 24px auto 0 auto; background: #fff3cd; padding: 14px 24px; border-radius: 8px;">小巧的 <code>description</code>，完整内容按需加载——这就是<strong>渐进式披露</strong>。Claude 的主上下文保持精简，直到真正需要该 skill。</p>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- NEW SLIDE 29: Context concept intro                           -->
+    <!-- ============================================================ -->
+
+    <!-- Slide: Context -->
+    <div class="slide section-slide" data-slide="42">
+        <div class="slide-viewport-content">
+            <h1>&#x1F4AD; Context</h1>
+            <div style="text-align: center; margin: 12px auto 20px auto;">
+                <span style="background: #fff3cd; color: #7a5c00; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; font-family: 'SF Mono', Monaco, 'Courier New', monospace; box-shadow: 0 2px 8px rgba(122,92,0,0.18);">/context</span>
+            </div>
+            <p class="section-desc">模型的<strong>工作记忆</strong>——它此刻能看到的内容。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px;">
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x2705; 每次对话都重置</span>
+                <span style="background: #c62828; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(198,40,40,0.35);">&#x26A0;&#xFE0F; 笨区问题</span>
+                <span style="background: #c62828; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(198,40,40,0.35);">&#x26A0;&#xFE0F; <code style="background: rgba(255,255,255,0.2); color: #fff; padding: 2px 8px; border-radius: 4px; font-family: 'SF Mono', Monaco, 'Courier New', monospace;">/compact</code></span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 20px; width: 100%; max-width: 420px; margin-left: auto; margin-right: auto;">
+                <div style="flex: 1; min-width: 0; background: #e0e0e0; border-radius: 3px; height: 6px; overflow: hidden;">
+                    <div style="background: #3f51b5; width: 20%; height: 100%;"></div>
+                </div>
+                <span style="font-size: 0.7rem; color: #666; white-space: nowrap;">20% of 1M tokens</span>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 42: Context — Claude's Brain -->
+    <div class="slide" data-slide="43" data-level="context">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>Claude 的大脑</h1>
+            <div class="analogy-box">
+                <h4>这样想</h4>
+                <p>想象 Claude 有一个<strong>大脑</strong>，装着它此刻意识到的所有内容——你的问题、它打开的每个文件、每个工具结果、它对你说过的每个字。如果一个想法不在大脑里，Claude 就无法使用它。就这么简单。</p>
+            </div>
+            <img src="../assets/concepts/context/context-window.jpeg" alt="Context window diagram showing how the 1M token limit is divided across system prompt, tools, files, and conversation" style="width: 100%; max-width: 800px; margin: 24px auto; display: block; border-radius: 8px;" />
+            <div class="use-cases">
+                <div class="use-case-item">
+                    <span class="use-case-icon">&#x1F4AC;</span>
+                    <div class="use-case-text">
+                        <strong>你的消息</strong>
+                        <span>每个问题、澄清和跟进</span>
+                    </div>
+                </div>
+                <div class="use-case-item">
+                    <span class="use-case-icon">&#x1F4C4;</span>
+                    <div class="use-case-text">
+                        <strong>Claude 打开的每个文件</strong>
+                        <span>读了一份 500 页的 PDF？现在全都在大脑里了。</span>
+                    </div>
+                </div>
+                <div class="use-case-item">
+                    <span class="use-case-icon">&#x1F527;</span>
+                    <div class="use-case-text">
+                        <strong>每个工具结果</strong>
+                        <span>网页搜索、命令输出、截图——全都保存在记忆中</span>
+                    </div>
+                </div>
+            </div>
+            <div class="warning-box">
+                <h4>要知道的两件事</h4>
+                <p><strong>1. 大脑是有限的。</strong>它能容纳大约 100 万个 token——约 75 万字。很大，但不是无限的。<strong>2. 大脑在每次对话结束时清空。</strong>当你开始新对话时，Claude 对上一次对话<em>什么都不</em>记得，除非你再次告诉它。</p>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 43: Context — What Loads at Session Start -->
+    <div class="slide" data-slide="44" data-level="context">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>会话启动时加载什么</h1>
+            <p>当你打开 Claude Code 的那一刻，某些东西会在你<strong>输入任何字之前</strong>进入 Claude 的大脑。其余的在一旁待命——只有在你真正需要时才加载。这叫做<strong>渐进式披露</strong>。</p>
+            <img src="../assets/concepts/context/context.jpg" alt="Diagram showing what loads into Claude's context window at session start" style="width: 100%; max-width: 800px; margin: 24px auto; display: block; border-radius: 8px;" />
+            <div class="use-cases" style="margin-top: 24px;">
+                <div class="use-case-item">
+                    <span class="use-case-icon">&#x1F4CB;</span>
+                    <div class="use-case-text">
+                        <strong>CLAUDE.md —— 完整内容</strong>
+                        <span>常驻指令，每一行。启动时始终固定在大脑中。</span>
+                    </div>
+                </div>
+                <div class="use-case-item">
+                    <span class="use-case-icon">&#x1F393;</span>
+                    <div class="use-case-text">
+                        <strong>Skills —— 仅描述</strong>
+                        <span>Claude 知道有哪些 skills 以及每个 skill 做什么——完整内容在实际调用 skill 时加载。</span>
+                    </div>
+                </div>
+                <div class="use-case-item">
+                    <span class="use-case-icon">&#x1F464;</span>
+                    <div class="use-case-text">
+                        <strong>Agents —— 仅描述</strong>
+                        <span>专家名册。完整系统提示词在 agent 被派遣时加载。</span>
+                    </div>
+                </div>
+            </div>
+            <div class="trigger-box">
+                <h4>一句话总结</h4>
+                <p>启动时只加载 skills 和 agents 的<strong>描述</strong>——其余按需获取。这就是<strong>渐进式披露</strong>。它让大脑保持轻盈。</p>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 44: Context — Lost in the Middle (Liu et al., Stanford 2023) -->
+    <div class="slide" data-slide="45" data-level="context">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1 style="text-align: center;">&#x1F4C4; 迷失在中间</h1>
+            <p style="text-align: center; color: #666; font-style: italic; font-size: 1.1rem; margin-top: -20px; margin-bottom: 30px;">by Nelson F. Liu &middot; Stanford University &middot; 2023</p>
+
+            <div style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
+                <!-- Left column: image -->
+                <div style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center;">
+                    <img src="../assets/concepts/context/lost-in-the-middle.png" alt="Lost in the Middle paper illustration showing U-shaped attention curve across context positions" style="max-width: 420px; max-height: 55vh; width: auto; height: auto; display: block; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+                </div>
+
+                <!-- Right column: explanation -->
+                <div style="flex: 1 1 300px;">
+                    <ol style="padding-left: 20px; margin: 0; display: flex; flex-direction: column; gap: 18px;">
+                        <li>
+                            <strong>首因效应和近因效应有效。</strong>
+                            上下文<strong>开头</strong>（Claude 首先看到的）和<strong>结尾</strong>（Claude 最近看到的）的信息获得高度关注。这些是安全区。
+                        </li>
+                        <li>
+                            <strong>中间是笨区。</strong>
+                            埋在长上下文中间的内容实际上会消失。模型<em>拥有</em>这些 token，但在生成过程中不会强烈加权它们。它在工作记忆中——但并没有真正被<em>阅读</em>。
+                        </li>
+                        <li>
+                            <strong>实际启示。</strong>
+                            将关键指令放在最顶部（在 <code style="background: #f1f3f4; padding: 1px 6px; border-radius: 4px;">CLAUDE.md</code> 中）或靠近用户最近的消息。如果你的内容落在中间，更大的上下文窗口也无济于事。
+                        </li>
+                    </ol>
+
+                    <div style="margin-top: 24px; background: #fff8e1; border-left: 4px solid #f9a825; padding: 14px 18px; border-radius: 0 8px 8px 0;">
+                        <p style="margin: 0; font-size: 0.95rem; color: #5a4100;">这就是本演示一直在警告的<strong>「笨区问题」</strong>——现在你知道它从哪来了。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 45: Workflow concept-intro -->
+    <div class="slide section-slide" data-slide="46" data-level="workflow">
+        <div class="slide-viewport-content">
+            <h1>&#x1F4D8; Workflow</h1>
+            <div style="text-align: center; margin: 12px auto 20px auto;">
+                <span style="background: #fff3cd; color: #7a5c00; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(122,92,0,0.18);">.claude/commands/</span>
+            </div>
+            <p class="section-desc">可重复的<strong>分步配方</strong>——让 Claude 每次都按同一本手册运行的操作指南。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 28px;">
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x2705; 可复现的配方</span>
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x1F501; 每次运行，步骤相同</span>
+                <span style="background: #2e7d32; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 1rem; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 8px rgba(46,125,50,0.35);">&#x1F465; 可通过 git 团队共享</span>
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 46: Orchestration Workflow diagram -->
+    <div class="slide" data-slide="47" data-level="workflow">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>&#x1F4CB; 编排工作流</h1>
+            <img src="../../orchestration-workflow/orchestration-workflow.svg" alt="命令 → Agent → Skill 架构流程"
+                 style="max-width: 1100px; max-height: 70vh; width: 100%; height: auto; display: block; margin: 20px auto 0 auto;" />
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 47: Workflow in action (GIF) -->
+    <div class="slide" data-slide="48" data-level="workflow">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>&#x1F4F9; Workflow 实战</h1>
+            <div style="text-align: center; margin: 24px 0;">
+                <img src="../../orchestration-workflow/orchestration-workflow.gif" alt="Claude 端到端运行天气编排工作流" style="max-width: 1200px; max-height: 80vh; width: auto; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: contain;" />
+            </div>
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 48: Comparison header -->
+    <div class="slide section-slide" data-slide="49">
+        <div class="slide-viewport-content">
+            <h1>&#x2696;&#xFE0F; 对比</h1>
+            <p class="section-desc">Claude Code vs Gemini CLI——相同模式，不同 CLI。</p>
+            <div style="display: flex; gap: 32px; justify-content: center; margin-top: 32px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 12px; background: #fff3e0; border-radius: 10px; padding: 14px 24px; box-shadow: 0 2px 8px rgba(213,109,59,0.15);">
+                    <img src="../../!/claude-jumping.svg" alt="Claude" style="height: 44px; width: auto;" />
+                    <span style="font-size: 1.15rem; font-weight: 700; color: #D97757;">Claude Code</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; background: #e8f0fe; border-radius: 10px; padding: 14px 24px; box-shadow: 0 2px 8px rgba(26,115,232,0.15);">
+                    <img src="../../!/gemini-jumping.svg" alt="Gemini" style="height: 44px; width: auto;" />
+                    <span style="font-size: 1.15rem; font-weight: 700; color: #1a73e8;">Gemini CLI</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 49: Comparison — file structure -->
+    <div class="slide" data-slide="50">
+        <h1>&#x1F4C1; 文件结构</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+            <!-- Claude Code column -->
+            <div style="background: #fff3e0; border-left: 4px solid #D97757; border-radius: 8px; padding: 24px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+                    <img src="../../!/claude-jumping.svg" alt="Claude" style="height: 32px; width: auto;" />
+                    <span style="font-size: 1.05rem; font-weight: 700; color: #D97757;">Claude Code</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">项目记忆</div>
+                        <code style="font-size: 0.92rem; color: #D97757; background: none; padding: 0;">CLAUDE.md</code>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">Agents</div>
+                        <code style="font-size: 0.92rem; color: #D97757; background: none; padding: 0;">.claude/agents/*.md</code>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">Skills</div>
+                        <code style="font-size: 0.92rem; color: #D97757; background: none; padding: 0;">.claude/skills/*/SKILL.md</code>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">斜杠命令</div>
+                        <code style="font-size: 0.92rem; color: #D97757; background: none; padding: 0;">.claude/commands/*.md</code>
+                    </div>
+                </div>
+            </div>
+            <!-- Gemini CLI column -->
+            <div style="background: #e8f0fe; border-left: 4px solid #1a73e8; border-radius: 8px; padding: 24px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+                    <img src="../../!/gemini-jumping.svg" alt="Gemini" style="height: 32px; width: auto;" />
+                    <span style="font-size: 1.05rem; font-weight: 700; color: #1a73e8;">Gemini CLI</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">项目记忆</div>
+                        <code style="font-size: 0.92rem; color: #1a73e8; background: none; padding: 0;">GEMINI.md</code>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">Agents</div>
+                        <code style="font-size: 0.92rem; color: #1a73e8; background: none; padding: 0;">.gemini/agents/*.md</code>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">Skills / 工具</div>
+                        <code style="font-size: 0.92rem; color: #1a73e8; background: none; padding: 0;">.gemini/commands/*.toml</code>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 10px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">斜杠命令</div>
+                        <code style="font-size: 0.92rem; color: #1a73e8; background: none; padding: 0;">.gemini/commands/*.toml</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="info-box" style="margin: 0;">
+            <h4>相同理念，不同文件夹</h4>
+            <p>两个 CLI 都在隐藏的项目文件夹中使用纯文本文件。Gemini CLI 的 skills/commands 共享相同的 <code>.toml</code> 格式——查看厂商文档获取最新规范。</p>
+        </div>
+    </div>
+
+    <!-- Slide 50: Comparison — model & context window -->
+    <div class="slide" data-slide="51">
+        <h1>&#x1F9E0; 模型与上下文窗口</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+            <!-- Claude Code column -->
+            <div style="background: #fff3e0; border-left: 4px solid #D97757; border-radius: 8px; padding: 24px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+                    <img src="../../!/claude-jumping.svg" alt="Claude" style="height: 32px; width: auto;" />
+                    <span style="font-size: 1.05rem; font-weight: 700; color: #D97757;">Claude Code</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: #fff; border-radius: 6px; padding: 12px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">最新模型</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #1a1a1a;">Claude Opus 4.7</div>
+                        <div style="font-size: 0.78rem; color: #666; margin-top: 2px;">知识截止日期： <strong>January 2026</strong> &mdash; 发布于 2026-04-17</div>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 12px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">上下文窗口</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #1a1a1a;">1M tokens</div>
+                        <div style="font-size: 0.78rem; color: #666; margin-top: 2px;">约 75 万字——一次会话大约相当于 10 本完整小说</div>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 12px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">输出 token</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #1a1a1a;">8K standard &mdash; 64K extended thinking</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Gemini CLI column -->
+            <div style="background: #e8f0fe; border-left: 4px solid #1a73e8; border-radius: 8px; padding: 24px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+                    <img src="../../!/gemini-jumping.svg" alt="Gemini" style="height: 32px; width: auto;" />
+                    <span style="font-size: 1.05rem; font-weight: 700; color: #1a73e8;">Gemini CLI</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: #fff; border-radius: 6px; padding: 12px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">最新模型</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #1a1a1a;">Gemini 3.1 Pro</div>
+                        <div style="font-size: 0.78rem; color: #666; margin-top: 2px;">知识截止日期： <strong>January 2025</strong> &mdash; 发布于 2026-02-19</div>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 12px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">上下文窗口</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #1a1a1a;">1M+ tokens</div>
+                        <div style="font-size: 0.78rem; color: #666; margin-top: 2px;">Gemini 2.5 / 3 Pro 扩展——查看厂商文档获取确切数字</div>
+                    </div>
+                    <div style="background: #fff; border-radius: 6px; padding: 12px 14px;">
+                        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 3px;">输出 token</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #1a1a1a;">~8K standard</div>
+                        <div style="font-size: 0.78rem; color: #666; margin-top: 2px;">扩展输出取决于模型版本——查看厂商文档</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p style="font-size: 0.78rem; color: #aaa; font-style: italic; margin: 4px 0 0;">上下文窗口和输出 token 数字反映截至 2026-04-24 的已发布规格。请对照厂商文档核实最新信息。</p>
+    </div>
+
+    <!-- Slide 51: Gemini Orchestration Workflow diagram -->
+    <div class="slide" data-slide="52" data-level="workflow">
+        <div style="min-height: calc(100vh - 120px);">
+            <h1>&#x1F4CB; Gemini 编排工作流</h1>
+            <img src="../assets/concepts/workflow/gemini-orchestration-workflow.svg" alt="Gemini CLI 命令 → Agent → Skill 架构流程"
+                 style="max-width: 1100px; max-height: 70vh; width: 100%; height: auto; display: block; margin: 20px auto 0 auto;" />
+        </div>
+        <div class="pillar-footer">
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #009688;">
+                <span class="pmc-emoji">&#x1F9D1;&#x200D;&#x1F4BC;</span>
+                <span class="pmc-title">Agents</span>
+                <span class="pmc-subtitle">&mdash; 专家</span>
+                <span class="pmc-body">专职的 Claude 工作者——独立的上下文、工具、焦点。每次运行相互隔离。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 每次运行都重置工作记忆</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #9c27b0;">
+                <span class="pmc-emoji">&#x1F4DD;</span>
+                <span class="pmc-title">CLAUDE.md</span>
+                <span class="pmc-subtitle">&mdash; 你的记忆</span>
+                <span class="pmc-body">你提供给模型的知识。每次会话读取。保持在 200 行以内。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 200行问题</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #4caf50;">
+                <span class="pmc-emoji">&#x1F3AF;</span>
+                <span class="pmc-title">Skills</span>
+                <span class="pmc-subtitle">&mdash; 技能知识</span>
+                <span class="pmc-body">专家（或 Claude）实际能做什么。按需加载——仅在需要时。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 渐进式披露</span>
+            </div>
+            <div class="pillar-mini-card inactive" style="border-left: 3px solid #3f51b5;">
+                <span class="pmc-emoji">&#x1F4AD;</span>
+                <span class="pmc-title">Context</span>
+                <span class="pmc-subtitle">&mdash; 工作记忆</span>
+                <span class="pmc-body">Claude 此刻脑中持有的内容——每次新对话都重置。容量有限；~50% 时压缩。</span>
+                <span class="pmc-badge" style="background: #fce4ec; color: #c62828;">&#x26A0;&#xFE0F; 笨区问题</span>
+            </div>
+            <div class="pillar-mini-card" style="border-left: 4px solid #ef6c00;">
+                <span class="pmc-emoji">&#x1F4D8;</span>
+                <span class="pmc-title">Workflows</span>
+                <span class="pmc-subtitle">&mdash; 操作手册</span>
+                <span class="pmc-body">可重复的分步配方——像空调安装指南。确定性、可复现。</span>
+                <span class="pmc-badge" style="background: #e8f5e9; color: #2e7d32;">&#x2705; 可复现的配方</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 52: Thank you -->
+    <div class="slide section-slide" data-slide="53">
+        <div class="slide-viewport-content">
+            <h1>&#x1F64F; 谢谢！</h1>
+            <div style="margin: 20px auto 28px auto; text-align: center;">
+                <img src="../assets/concepts/thank-you.jpg" alt="Thank you" style="max-width: 600px; max-height: 60vh; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); object-fit: contain;" onerror="this.style.display='none'" />
+            </div>
+            <p class="section-desc">有问题？有反馈？</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 16px; flex-wrap: wrap;">
+                <a href="https://github.com/shanraisshan/claude-code-best-practice" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 8px; background: #24292e; color: #fff; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-size: 0.95rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                    <img src="../assets/logo/github.svg" style="height: 20px; width: 20px; filter: invert(1);" alt="GitHub" />
+                    github.com/shanraisshan
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Corner mascots (global, appear on every slide) -->
+    <div class="header-logo">
+        <img src="../../!/claude-jumping.svg" alt="Claude Code mascot" />
+    </div>
+    <div class="header-logo right">
+        <img src="../../!/gemini-jumping.svg" alt="Gemini CLI mascot" />
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">&#8592;</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">&#8594;</button>
+    </div>
+    <div class="slide-counter" id="slideCounter">1 / --</div>
+    <div class="keyboard-hint"><kbd>&#8592;</kbd> <kbd>&#8594;</kbd> 或 <kbd>空格</kbd> 导航</div>
+
+    <script>
+        let currentSlide = 1;
+        const slides = document.querySelectorAll('[data-slide]');
+        const totalSlides = slides.length;
+
+        // Level label map — used for the level-badge on section-divider h1s
+        const LEVEL_LABELS = {
+            'agents':    'Agents',
+            'skills':    'Skills',
+            'context':   'Context',
+            'claude-md': 'CLAUDE.md',
+            'commands':  'Commands',
+            'workflow':  'Workflow'
+        };
+
+        let prevDisplayedLevel = null;
+
+        function updateLevelBadge(slideNum) {
+            document.querySelectorAll('.level-badge').forEach(b => b.remove());
+            const slideEl = document.querySelector(`[data-slide="${slideNum}"]`);
+            if (slideEl && slideEl.dataset.level && slideEl.dataset.level !== prevDisplayedLevel) {
+                const levelKey = slideEl.dataset.level;
+                const label = LEVEL_LABELS[levelKey];
+                if (label) {
+                    const h1 = slideEl.querySelector('h1');
+                    if (h1) {
+                        const badge = document.createElement('span');
+                        badge.className = 'level-badge';
+                        badge.textContent = '\u2192 ' + label;
+                        h1.appendChild(badge);
+                    }
+                }
+            }
+            if (slideEl && slideEl.dataset.level) { prevDisplayedLevel = slideEl.dataset.level; }
+            if (slideNum <= 1) { prevDisplayedLevel = null; }
+        }
+
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            document.querySelector(`[data-slide="${currentSlide}"]`).classList.add('active');
+            window.scrollTo(0, 0);
+            document.getElementById('slideCounter').textContent = `${currentSlide} / ${totalSlides}`;
+            document.getElementById('progress').style.width = `${(currentSlide / totalSlides) * 100}%`;
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            updateLevelBadge(currentSlide);
+        }
+        function nextSlide() { currentSlide++; showSlide(currentSlide); }
+        function prevSlide() { currentSlide--; showSlide(currentSlide); }
+        function goToSlide(n) { currentSlide = n; showSlide(currentSlide); }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        });
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { if (diff > 0) nextSlide(); else prevSlide(); }
+        });
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
